@@ -29,6 +29,7 @@ void Peref_SensObserverInit(TSensObserver *p)
         p->parSensors.p_VDC_AU_Offset 	= &g_Ram.FactoryParam.VDC_AU_offset;
         p->parSensors.p_I_brake_A_Mpy	= &g_Ram.FactoryParam.I_brake_A_Mpy;
         p->parSensors.p_I_brake_A_Offset 	= &g_Ram.FactoryParam.I_brake_A_offset;
+        
 	p->pOffsetMode = mAutoOffset;
 }
 
@@ -36,18 +37,24 @@ void Peref_SensObserverInit(TSensObserver *p)
 
 void Peref_SensObserverUpdate(TSensObserver *p) // 18000 Гц
 {
-	p->URinp = g_Peref.adcData1[0];              // 0 UL1_ADC   1 UL3_ADC   2 I_brake_A   3 UL2_ADC  4 TMP_DV_A  5 TempModule_A
-	p->USinp = g_Peref.adcData1[3];
-	p->UTinp = g_Peref.adcData1[1];
-	p->IUinp = g_Peref.adcData3[1];              // 0 VDC_A     1 IU_ADC    2 IV_ADC    3 IW_ADC
-	p->IVinp = g_Peref.adcData3[2];
-	p->IWinp = g_Peref.adcData3[3];
-        
-        p->VDC_AUinp = g_Peref.adcData3[0];
+	p->URinp        = g_Peref.adcData1[0];              // 0 UL1_ADC   1 UL3_ADC   2 I_brake_A   3 UL2_ADC  4 TMP_DV_A  5 TempModule_A
+	p->UTinp        = g_Peref.adcData1[1];
         p->I_brake_Ainp = g_Peref.adcData1[2];
+        p->USinp        = g_Peref.adcData1[3];
+	
+        p->VDC_AUinp    = g_Peref.adcData3[0];
+	p->IUinp        = g_Peref.adcData3[1];              // 0 VDC_A     1 IU_ADC    2 IV_ADC    3 IW_ADC
+	p->IVinp        = g_Peref.adcData3[2];
+	p->IWinp        = g_Peref.adcData3[3];
+        
+        
+        
+        
 
 	// Преобразование напряжений
-	p->URout = ADC_CONV(p->URinp, *p->parSensors.p_UR_Mpy, *p->parSensors.p_UR_Offset);
+	//p->URout = 0.00001*((g_Peref.sensObserver.URinp - g_Ram.FactoryParam.UR_Offset) * g_Ram.FactoryParam.UR_Mpy);
+        
+        p->URout = ADC_CONV(p->URinp, *p->parSensors.p_UR_Mpy, *p->parSensors.p_UR_Offset);
 	p->USout = ADC_CONV(p->USinp, *p->parSensors.p_US_Mpy, *p->parSensors.p_US_Offset);
 	p->UTout = ADC_CONV(p->UTinp, *p->parSensors.p_UT_Mpy, *p->parSensors.p_UT_Offset);
 

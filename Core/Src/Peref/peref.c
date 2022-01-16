@@ -119,7 +119,14 @@ void peref_Init(void)
     
     // конфигурируем ТУ 
     MCP23S17_init();
-      
+     
+    peref_ApFilter1Init(&g_Peref.URfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
+    peref_ApFilter1Init(&g_Peref.USfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
+    peref_ApFilter1Init(&g_Peref.UTfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
+    peref_ApFilter1Init(&g_Peref.IUfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
+    peref_ApFilter1Init(&g_Peref.IVfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
+    peref_ApFilter1Init(&g_Peref.IWfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
+    
     Peref_SensObserverInit(&g_Peref.sensObserver); // Инициализируем обработку синусойды
 
     memset(&g_Peref.sinObserver, 0, sizeof(TSinObserver));
@@ -143,6 +150,8 @@ void peref_Init(void)
 void peref_18KHzCalc(TPeref *p)//
 {
    //RST UVW
+  
+    Peref_SensObserverUpdate(&p->sensObserver);
     //----------------------------------------------------------------------------
     //---отмасштабированные данные с ацп на вход фильтра 1-ого порядка
     p->URfltr.Input = p->sensObserver.URout;
@@ -153,11 +162,11 @@ void peref_18KHzCalc(TPeref *p)//
     p->IWfltr.Input = p->sensObserver.IWout;
 
     peref_ApFilter1Calc(&p->URfltr);
-    peref_ApFilter1Calc(&p->USfltr);
+   /* peref_ApFilter1Calc(&p->USfltr);
     peref_ApFilter1Calc(&p->UTfltr);
     peref_ApFilter1Calc(&p->IUfltr);
     peref_ApFilter1Calc(&p->IVfltr);
-    peref_ApFilter1Calc(&p->IWfltr);
+    peref_ApFilter1Calc(&p->IWfltr);*/
 
     //--------------- RMS угол полярность -----------------------------
 
@@ -169,15 +178,15 @@ void peref_18KHzCalc(TPeref *p)//
     p->sinObserver.IW.Input = p->IWfltr.Output;
 
     Peref_SinObserverUpdateFloat(&p->sinObserver.UR);
-    Peref_SinObserverUpdateFloat(&p->sinObserver.US);
+  /*  Peref_SinObserverUpdateFloat(&p->sinObserver.US);
     Peref_SinObserverUpdateFloat(&p->sinObserver.UT);
     Peref_SinObserverUpdateFloat(&p->sinObserver.IU);
     Peref_SinObserverUpdateFloat(&p->sinObserver.IV);
     Peref_SinObserverUpdateFloat(&p->sinObserver.IW);
 
-    Peref_PhaseOrderUpdate(&p->phaseOrder);
+    Peref_PhaseOrderUpdate(&p->phaseOrder);*/
     
-    
+    g_Ram.Status.Ur = (Uns)p->sinObserver.UR.Output;
 }
 
 

@@ -18,7 +18,7 @@
 //--------------------- Константы-------------------------------------------
 //--------------------- Макросы --------------------------------------------
 //#define ADC_CONV(Value, Gain, Offset) 	(((LgInt)(Value - Offset) * Gain) >> 13)  #define ADC_CONV(Value, Gain, Offset) 		(0.00001 * (int16)((Value) - (Offset)) * (Gain))
-#define ADC_CONV(Value, Gain, Offset) 		(0.00001 * (int16)((Value) - (Offset)) * (Gain))
+#define ADC_CONV(Value, Gain, Offset) 		(0.00001 * ((Value) - (Offset)) * (Gain))
 #define ADC_TU_CONV(Value, Gain, Offset) 	(0.00001 * (LgInt)((Value) - (Offset)) * (Gain))
 //#define ADC_CONV(Value, Gain, Offset) 	((LgInt)(Value - Offset) * Gain)
 //-------------------- Структуры ------------------------------------------
@@ -54,7 +54,7 @@ typedef enum{
 typedef struct {
 	TSensorsParams		        parSensors;		// Параметр: параметры датчиков
 	TOffsetMode		        pOffsetMode;	        // Параметр: способ вычисления сдвига (Offset)
-	float32				URinp;			// Вход: напряжение R
+	float32			        URinp;			// Вход: напряжение R
 	float32 			USinp;			// Вход: напряжение S
 	float32 			UTinp;			// Вход: напряжение T
 	float32				IUinp;			// Вход: ток U
