@@ -119,42 +119,65 @@ void peref_Init(void)
     
     // конфигурируем ТУ 
     MCP23S17_init();
-}
-extern uint16_t adc[6];
+      
+    Peref_SensObserverInit(&g_Peref.sensObserver); // Инициализируем обработку синусойды
 
-uint32_t hui, murovei, gavno = 0, temp666, temp777 = 0;
+    memset(&g_Peref.sinObserver, 0, sizeof(TSinObserver));
+
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.UR, PRD_18KHZ);
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.US, PRD_18KHZ);
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.UT, PRD_18KHZ);
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IU, PRD_18KHZ);
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IV, PRD_18KHZ);
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IW, PRD_18KHZ);
+    
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IW, PRD_18KHZ);   
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IW, PRD_18KHZ);
+
+    g_Peref.phaseOrder.UR = &g_Peref.sinObserver.UR;	 // Привязываем
+    g_Peref.phaseOrder.US = &g_Peref.sinObserver.US;
+    g_Peref.phaseOrder.UT = &g_Peref.sinObserver.UT;     
+   
+}
 
 void peref_18KHzCalc(TPeref *p)//
 {
-    temp666 =  (31000 * adc[0]) / 65535;
-  if (temp666 > murovei)
-  {
-    murovei = temp666;
-    temp777 = 0;}
-      else
-      {
-        if (temp777 > 10)
-{
-         
-        temp777 = 0;
-         if (gavno <= 40)
-          {
-            
-            hui += (31000 * adc[0]) / 65535;
-            gavno ++;
-          }
-            else 
-            {
-              gavno = 0;
-              hui = hui / 40;
-                g_Ram.Status.Ur = hui; 
-                hui = 0;
-               // murovei = 0;
-            }
-}
-else temp777++;
-      
-      }
+   //RST UVW
+    //----------------------------------------------------------------------------
+    //---отмасштабированные данные с ацп на вход фильтра 1-ого порядка
+    p->URfltr.Input = p->sensObserver.URout;
+    p->USfltr.Input = p->sensObserver.USout;
+    p->UTfltr.Input = p->sensObserver.UTout;
+    p->IUfltr.Input = p->sensObserver.IUout;
+    p->IVfltr.Input = p->sensObserver.IVout;
+    p->IWfltr.Input = p->sensObserver.IWout;
+
+    peref_ApFilter1Calc(&p->URfltr);
+    peref_ApFilter1Calc(&p->USfltr);
+    peref_ApFilter1Calc(&p->UTfltr);
+    peref_ApFilter1Calc(&p->IUfltr);
+    peref_ApFilter1Calc(&p->IVfltr);
+    peref_ApFilter1Calc(&p->IWfltr);
+
+    //--------------- RMS угол полярность -----------------------------
+
+    p->sinObserver.UR.Input = p->URfltr.Output;
+    p->sinObserver.US.Input = p->USfltr.Output;
+    p->sinObserver.UT.Input = p->UTfltr.Output;
+    p->sinObserver.IU.Input = p->IUfltr.Output;
+    p->sinObserver.IV.Input = p->IVfltr.Output;
+    p->sinObserver.IW.Input = p->IWfltr.Output;
+
+    Peref_SinObserverUpdateFloat(&p->sinObserver.UR);
+    Peref_SinObserverUpdateFloat(&p->sinObserver.US);
+    Peref_SinObserverUpdateFloat(&p->sinObserver.UT);
+    Peref_SinObserverUpdateFloat(&p->sinObserver.IU);
+    Peref_SinObserverUpdateFloat(&p->sinObserver.IV);
+    Peref_SinObserverUpdateFloat(&p->sinObserver.IW);
+
+    Peref_PhaseOrderUpdate(&p->phaseOrder);
+    
+    
 }
 
 

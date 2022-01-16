@@ -1462,10 +1462,22 @@
                         <name>$PROJ_DIR$\..\Core\Src\Peref\peref.c</name>
                     </file>
                     <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Peref\peref_ApFilter1.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Peref\peref_ApFilter3.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\Core\Src\Peref\peref_Clock.c</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Src\Peref\peref_display.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Peref\peref_SensObserver.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Peref\peref_SinObserver.c</name>
                     </file>
                 </group>
                 <group>
@@ -1488,6 +1500,111 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_it.c</name>
+                </file>
+            </group>
+            <group>
+                <name>Inc</name>
+                <group>
+                    <name>Comm</name>
+                </group>
+                <group>
+                    <name>Core</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_Menu.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_MenuGlobal.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_MenuParams.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_TorqueObserver.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_VlvDrvCtrl.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\g_Core.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\peref_ApFilter3.h</name>
+                    </file>
+                </group>
+                <group>
+                    <name>Global</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Global\g_InterruptUpdate.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Global\g_Ram.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Global\g_structs.h</name>
+                    </file>
+                </group>
+                <group>
+                    <name>Peref</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Peref\peref.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_ApFilter1.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_ApFilter3.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_Clock.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_displ.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_display.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_displhal.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_SensObserver.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_SinObserver.h</name>
+                    </file>
+                </group>
+                <group>
+                    <name>Stat</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Stat\stat.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Stat\stat_fm25v10.h</name>
+                    </file>
+                </group>
+                <file>
+                    <name>$PROJ_DIR$\..\Core\Inc\add_ValueConv.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\Core\Inc\csl_io.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\Core\Inc\csl_memory.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\Core\Inc\delay.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\Core\Inc\main.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\Core\Inc\std.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\Core\Inc\stm32h7xx_hal_conf.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\Core\Inc\stm32h7xx_it.h</name>
                 </file>
             </group>
         </group>

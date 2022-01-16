@@ -120,6 +120,24 @@ typedef struct _TFactoryParam
         Uns             SetDefaults;            // C9. 96 Передаточное число редуктора
         Uns             SubVersionPO;           // C10. 96 Передаточное число редуктора
         THallBlock      HallBlock;              // c11. 97 Состояние датчиков холла блока
+        Uns             IU_Mpy;             	// C38. 128 Корректировка тока фазы U
+	Uns             IV_Mpy;             	// C39. 129 Корректировка тока фазы V
+	Uns             IW_Mpy;             	// C40. 130 Корректировка тока фазы W
+	Uns             IU_Offset;          	// C41. 131 Смещение тока фазы U
+	Uns             IV_Offset;          	// C42. 132 Смещение тока фазы V
+	Uns             IW_Offset;          	// C43. 133 Смещение тока фазы W
+	Uns             UR_Mpy;             	// C44. 134 Корректировка напряжения фазы R
+	Uns             US_Mpy;             	// C45. 135 Корректировка напряжения фазы S
+	Uns             UT_Mpy;             	// C46. 136 Корректировка напряжения фазы T
+	Uns             UR_Offset;          	// C47. 137 Смещение напряжения фазы R
+	Uns             US_Offset;          	// C48. 138 Смещение напряжения фазы S
+	Uns             UT_Offset;          	// C49. 139 Смещение напряжения фазы T
+        Uns             VDC_AU_Mpy;              // 
+        Uns             VDC_AU_offset;           //
+        Uns             I_brake_A_Mpy;           //
+        Uns             I_brake_A_offset;        //
+        Uns		SinTf;			// C50. 140 ПОСТ.ВРЕМЕНИ ФИЛЬТРОВ СИНУСОВ
+	Uns		RmsTf;			// C51. 141 ПОСТ.ВРЕМЕНИ ФИЛЬТРОВ RMS
 	
 }TFactoryParam;
 

@@ -2,6 +2,10 @@
 #define _RIM_DEVICES_H_
 
 #include "main.h"
+#include "peref_ApFilter1.h"  		// PIA 03.04.14
+#include "peref_ApFilter3.h"  		// PIA 04.04.14
+#include "peref_SensObserver.h" 	// PIA 07.04.14
+#include "peref_SinObserver.h"		// PIA 08.04.14
 #include "peref_Clock.h"
 
 #include "peref_display.h"
@@ -21,8 +25,8 @@
 					(y1 +  ( (y2 - y1)*(x - x1) )/(x2 - x1) ) 
 
 #define DOTS 33
-#define ADC_CHANNELS_NUM_1                                         6
-#define ADC_CHANNELS_NUM_2                                         4
+#define ADC_CHANNELS_NUM_1                                         6  // 0 UL1_ADC   1 UL3_ADC   2 I_brake_A   3 UL2_ADC  4 TMP_DV_A  5 TempModule_A
+#define ADC_CHANNELS_NUM_2                                         4  // 0 VDC_A     1 IU_ADC    2 IV_ADC    3 IW_ADC
 //--------Структура "точка"--------------------------------------------
 typedef struct {
 	Uns				proc;		// выходное значение
@@ -137,10 +141,30 @@ typedef struct {
          LOG_INPUT   BtnStop2;
          LOG_INPUT   BtnProg1;
          LOG_INPUT   BtnProg2;
-         Uns                     BtnStatus;
-         // ADC Sensors 
+         Uns         BtnStatus;
+         // ADC Sensors ----------------------------------------------------------------------------
          uint16_t adcData1[ADC_CHANNELS_NUM_1];
          uint16_t adcData3[ADC_CHANNELS_NUM_2];
+          //--- Фильтры U -----------------
+	APFILTER1  			URfltr;
+	APFILTER1  			USfltr;
+	APFILTER1  			UTfltr;
+	APFILTER3  			UR3fltr;
+	APFILTER3  			US3fltr;
+	APFILTER3  			UT3fltr;
+	//--- Фильтры I -----------------
+	APFILTER1  			IUfltr;
+	APFILTER1  			IVfltr;
+	APFILTER1  			IWfltr;
+	APFILTER3  			IU3fltr;
+	APFILTER3  			IV3fltr;
+	APFILTER3  			IW3fltr;
+        TSensObserver			sensObserver;		// Масштабирование сигналов с датчиков
+	TSinObserver			sinObserver;		// Вычисление RMS
+	TPhaseOrder			phaseOrder; 		// Чередование фаз сети
+        APFILTER1 			Phifltr;			// Фильтр угола фи
+	APFILTER1 			Umfltr;				// Фильтр среднего напряжения
+	APFILTER3 			Imfltr;				// Фильтр среднего тока
         // Дисплей------------------------------------------------------------------------------------
 	TDisplay                Display;  		
         // RTC---------------------------------------------------------------------------------------
@@ -160,7 +184,7 @@ typedef struct {
         uint8_t                 TS_outData;
         GPIO_PinState           TS_Enable; 
         //  AD5061BRJ DAC------------------------------------------------------
-         uint16_t                DAC_data;  
+        uint16_t                DAC_data;  
         // переменные-----------------------------------------------------------------------------------------
         Bool                    RamUpdFlag;
         Uns                     VoltOn;

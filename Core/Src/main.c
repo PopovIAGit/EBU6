@@ -18,7 +18,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "main.h" //111111111111111111111111111
+#include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -153,9 +153,9 @@ int main(void)
      memset(&g_Peref,	0, sizeof(TPeref));
      memset(&g_Stat,	0, sizeof(TStat));
      
-       HAL_ADC_Start_DMA(&hadc1, (uint32_t*)g_Peref.adcData1, ADC_CHANNELS_NUM_1);
+       HAL_ADC_Start_DMA(&hadc1, (uint32_t*) g_Peref.adcData1, ADC_CHANNELS_NUM_1);
        
-       HAL_ADC_Start_DMA(&hadc3, (uint32_t*)g_Peref.adcData3, ADC_CHANNELS_NUM_2);     
+       HAL_ADC_Start_DMA(&hadc3, (uint32_t*) g_Peref.adcData3, ADC_CHANNELS_NUM_2);     
            
       Core_Init(&g_Core);
       g_Ram_Init(&g_Ram);
