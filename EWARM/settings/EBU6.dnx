@@ -28,7 +28,7 @@
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>4141688012</Checksum>
+        <Checksum>3103511988</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -67,6 +67,20 @@
         <LogFile>_ "$PROJ_DIR$\LogFile1.log"</LogFile>
         <Category2>_ 2</Category2>
     </LogFile>
+    <struct_types>
+        <Fmt0>TCoreMenu-State	3	0</Fmt0>
+        <Fmt1>TFM25V10-RdData	3	0</Fmt1>
+        <Fmt2>TFactoryParam-IU_Mpy	1	0</Fmt2>
+        <Fmt3>TFactoryParam-ProductYear	1	0</Fmt3>
+    </struct_types>
+    <watch_formats>
+        <Fmt0>{W}42:15	1	0</Fmt0>
+        <Fmt1>{W}42:160	1	0</Fmt1>
+        <Fmt2>{W}42:184	1	0</Fmt2>
+        <Fmt3>{W}42:185	1	0</Fmt3>
+        <Fmt4>{W}42:244	1	0</Fmt4>
+        <Fmt5>{W}42:Data	1	0</Fmt5>
+    </watch_formats>
     <Trace2>
         <Enabled>0</Enabled>
         <ShowSource>0</ShowSource>

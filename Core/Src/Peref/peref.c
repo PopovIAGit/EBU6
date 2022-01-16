@@ -162,11 +162,11 @@ void peref_18KHzCalc(TPeref *p)//
     p->IWfltr.Input = p->sensObserver.IWout;
 
     peref_ApFilter1Calc(&p->URfltr);
-   /* peref_ApFilter1Calc(&p->USfltr);
+    peref_ApFilter1Calc(&p->USfltr);
     peref_ApFilter1Calc(&p->UTfltr);
     peref_ApFilter1Calc(&p->IUfltr);
     peref_ApFilter1Calc(&p->IVfltr);
-    peref_ApFilter1Calc(&p->IWfltr);*/
+    peref_ApFilter1Calc(&p->IWfltr);
 
     //--------------- RMS угол полярность -----------------------------
 
@@ -178,15 +178,19 @@ void peref_18KHzCalc(TPeref *p)//
     p->sinObserver.IW.Input = p->IWfltr.Output;
 
     Peref_SinObserverUpdateFloat(&p->sinObserver.UR);
-  /*  Peref_SinObserverUpdateFloat(&p->sinObserver.US);
+    Peref_SinObserverUpdateFloat(&p->sinObserver.US);
     Peref_SinObserverUpdateFloat(&p->sinObserver.UT);
     Peref_SinObserverUpdateFloat(&p->sinObserver.IU);
     Peref_SinObserverUpdateFloat(&p->sinObserver.IV);
     Peref_SinObserverUpdateFloat(&p->sinObserver.IW);
 
-    Peref_PhaseOrderUpdate(&p->phaseOrder);*/
+    Peref_PhaseOrderUpdate(&p->phaseOrder);
     
     g_Ram.Status.Ur = (Uns)p->sinObserver.UR.Output;
+    g_Ram.Status.Us = (Uns)p->sinObserver.US.Output;
+    g_Ram.Status.Ut = (Uns)p->sinObserver.UT.Output;
+
+
 }
 
 
@@ -228,11 +232,23 @@ void peref_200HzCalc(TPeref *p)
         }
 }
 
+Uns TirTimer = 2*PRD_50HZ;
 
 void peref_50HzCalc(TPeref *p)
 { 
   uint8_t DAC_tmp[2];
- 
+ //TODO переделать на нормальный PowerControl
+  if (g_Peref.VoltOn == 0) TIM1->CCR4 = 0;
+  else {
+  
+    if (g_Peref.VoltOn && TirTimer) 
+      TirTimer--;
+    if (TirTimer == 0 && TIM1->CCR4 < 100) 
+      TIM1->CCR4++;
+    else if (TirTimer == 0 && TIM1->CCR4 == 100) 
+      TIM1->CCR4 = 100;  
+  }
+  
    // TC ----------------------------------------------------------------------
     /*  g_Ram.Status.StateTs.all = (1<<TmpTC);  // перебор ТС раз в 2 секунды
    if (TmpTC> 7) TmpTC = 0;

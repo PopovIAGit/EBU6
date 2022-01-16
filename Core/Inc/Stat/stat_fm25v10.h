@@ -32,7 +32,7 @@ typedef struct {
 	Byte  Func;						// Функция
 	Uns   Count;					// Количество байт данных
 	Uns  *Buffer;					// Указатель на буфер данных Byte заменил на Uns
-	Byte  RdData;					// Текущий считанный байт
+	Uns  RdData;					// Текущий считанный байт
 	Byte  WrData;					// Текущий записанный байт
 	Byte  State;					// Текущий шаг выполнения
 	Bool  Error;					// Флаг ошибки в работе памяти

@@ -243,6 +243,7 @@ void DELAY_US(uint32_t us);
 extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi6;
 extern RTC_HandleTypeDef hrtc;
+extern TIM_HandleTypeDef htim1;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

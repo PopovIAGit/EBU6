@@ -60,6 +60,10 @@ C:\Projects\EBU-6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat_fm2
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\float.h \
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\delay.h \
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref.h \
+  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter1.h \
+  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter3.h \
+  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_SensObserver.h \
+  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_SinObserver.h \
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_Clock.h \
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_display.h \
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\std.h \

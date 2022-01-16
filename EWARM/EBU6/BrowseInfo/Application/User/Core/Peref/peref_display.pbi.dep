@@ -77,6 +77,10 @@ C:\Projects\EBU-6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_d
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Stat\stat_fm25v10.h \
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Stat\stat.h \
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Stat\stat_fm25v10.h \
+  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter1.h \
+  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter3.h \
+  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_SensObserver.h \
+  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_SinObserver.h \
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_Clock.h \
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_display.h \
   C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_displhal.h
