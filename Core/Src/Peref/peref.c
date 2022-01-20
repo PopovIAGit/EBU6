@@ -127,6 +127,8 @@ void peref_Init(void)
     peref_ApFilter1Init(&g_Peref.IVfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
     peref_ApFilter1Init(&g_Peref.IWfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
     
+     peref_ApFilter1Init(&g_Peref.VDCfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
+    
     Peref_SensObserverInit(&g_Peref.sensObserver); // Инициализируем обработку синусойды
 
     memset(&g_Peref.sinObserver, 0, sizeof(TSinObserver));
@@ -138,8 +140,8 @@ void peref_Init(void)
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.IV, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.IW, PRD_18KHZ);
     
-    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IW, PRD_18KHZ);   
-    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IW, PRD_18KHZ);
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.VDC_AU, PRD_18KHZ);   
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.I_brake_A, PRD_18KHZ);
 
     g_Peref.phaseOrder.UR = &g_Peref.sinObserver.UR;	 // Привязываем
     g_Peref.phaseOrder.US = &g_Peref.sinObserver.US;
@@ -160,13 +162,17 @@ void peref_18KHzCalc(TPeref *p)//
     p->IUfltr.Input = p->sensObserver.IUout;
     p->IVfltr.Input = p->sensObserver.IVout;
     p->IWfltr.Input = p->sensObserver.IWout;
-
+    
+    p->VDCfltr.Input = p->sensObserver.VDC_AUout;
+    
     peref_ApFilter1Calc(&p->URfltr);
     peref_ApFilter1Calc(&p->USfltr);
     peref_ApFilter1Calc(&p->UTfltr);
     peref_ApFilter1Calc(&p->IUfltr);
     peref_ApFilter1Calc(&p->IVfltr);
     peref_ApFilter1Calc(&p->IWfltr);
+    
+    peref_ApFilter1Calc(&p->VDCfltr);
 
     //--------------- RMS угол полярность -----------------------------
 
@@ -176,6 +182,8 @@ void peref_18KHzCalc(TPeref *p)//
     p->sinObserver.IU.Input = p->IUfltr.Output;
     p->sinObserver.IV.Input = p->IVfltr.Output;
     p->sinObserver.IW.Input = p->IWfltr.Output;
+    
+ //   p->sinObserver.VDC_AU.Input = p->VDCfltr.Output;
 
     Peref_SinObserverUpdateFloat(&p->sinObserver.UR);
     Peref_SinObserverUpdateFloat(&p->sinObserver.US);
@@ -183,6 +191,8 @@ void peref_18KHzCalc(TPeref *p)//
     Peref_SinObserverUpdateFloat(&p->sinObserver.IU);
     Peref_SinObserverUpdateFloat(&p->sinObserver.IV);
     Peref_SinObserverUpdateFloat(&p->sinObserver.IW);
+    
+ //   Peref_SinObserverUpdateFloat(&p->sinObserver.VDC_AU);
 
     Peref_PhaseOrderUpdate(&p->phaseOrder);
     
@@ -190,6 +200,7 @@ void peref_18KHzCalc(TPeref *p)//
     g_Ram.Status.Us = (Uns)p->sinObserver.US.Output;
     g_Ram.Status.Ut = (Uns)p->sinObserver.UT.Output;
 
+    g_Ram.Status.VDC = (Uns)p->VDCfltr.Output;
 
 }
 
@@ -233,12 +244,12 @@ void peref_200HzCalc(TPeref *p)
 }
 
 Uns TirTimer = 2*PRD_50HZ;
-
+uint32_t hui = 0;
 void peref_50HzCalc(TPeref *p)
 { 
   uint8_t DAC_tmp[2];
  //TODO переделать на нормальный PowerControl
-  if (g_Peref.VoltOn == 0) TIM1->CCR4 = 0;
+/*  if (g_Peref.VoltOn == 0) TIM1->CCR4 = 0;
   else {
   
     if (g_Peref.VoltOn && TirTimer) 
@@ -247,7 +258,26 @@ void peref_50HzCalc(TPeref *p)
       TIM1->CCR4++;
     else if (TirTimer == 0 && TIM1->CCR4 == 100) 
       TIM1->CCR4 = 100;  
+  }*/
+  if (g_Peref.VoltOn == 0) 
+  {
+    TIM1->CCR4 = 100;
+    hui = 0;
   }
+  else {
+  
+    if (g_Peref.VoltOn && TirTimer) 
+      TirTimer--;
+    if (TirTimer == 0 && TIM1->CCR4 > 0 ) 
+      TIM1->CCR4--;
+      else 
+        if (TirTimer == 0 && TIM1->CCR4 == 0) 
+          TIM1->CCR4 = 0;  
+    if (hui >= 500) 
+        TIM1->CCR4 = 100;
+        else 
+          hui++;
+   }
   
    // TC ----------------------------------------------------------------------
     /*  g_Ram.Status.StateTs.all = (1<<TmpTC);  // перебор ТС раз в 2 секунды
@@ -272,7 +302,7 @@ void peref_50HzCalc(TPeref *p)
     
   // ADC----------------------------------------------------------------------
       
-   
+   HAL_GPIO_WritePin(Module_OFF_GPIO_Port, Module_OFF_Pin, 1);
 }
 
 void peref_10HzCalc(TPeref *p)//
@@ -339,6 +369,11 @@ void peref_10HzCalc(TPeref *p)//
        
      // volt on control
      p->VoltOn = HAL_GPIO_ReadPin(VOLT_ON_GPIO_Port, VOLT_ON_Pin);
+     //
+     p->ModFault = HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
+     
+     p->Modul_Off = 1;
+     HAL_GPIO_WritePin(Module_OFF_GPIO_Port, Module_OFF_Pin, p->Modul_Off);
 }
 
 void ADT7301_Update(ADT7301 *p)

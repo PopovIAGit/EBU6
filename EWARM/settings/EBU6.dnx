@@ -28,7 +28,7 @@
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>3103511988</Checksum>
+        <Checksum>3942276629</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -70,8 +70,7 @@
     <struct_types>
         <Fmt0>TCoreMenu-State	3	0</Fmt0>
         <Fmt1>TFM25V10-RdData	3	0</Fmt1>
-        <Fmt2>TFactoryParam-IU_Mpy	1	0</Fmt2>
-        <Fmt3>TFactoryParam-ProductYear	1	0</Fmt3>
+        <Fmt2>TFactoryParam-ProductYear	1	0</Fmt2>
     </struct_types>
     <watch_formats>
         <Fmt0>{W}42:15	1	0</Fmt0>

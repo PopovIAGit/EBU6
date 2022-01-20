@@ -152,6 +152,7 @@ typedef struct {
 	APFILTER3  			UR3fltr;
 	APFILTER3  			US3fltr;
 	APFILTER3  			UT3fltr;
+        APFILTER1  			VDCfltr;
 	//--- Фильтры I -----------------
 	APFILTER1  			IUfltr;
 	APFILTER1  			IVfltr;
@@ -188,6 +189,8 @@ typedef struct {
         // переменные-----------------------------------------------------------------------------------------
         Bool                    RamUpdFlag;
         Uns                     VoltOn;
+        Uns                     ModFault;
+        Uns                     Modul_Off;
       
 } TPeref;
 

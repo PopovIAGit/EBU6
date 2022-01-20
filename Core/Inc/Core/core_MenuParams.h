@@ -45,7 +45,7 @@ const struct MENU_PARAM params[] = {
 		"A21.явер жхйкнб ", "    ", 	0,  65530,  	0, M_SHOW|M_RMAX(4),						//21 21
 		"A22.релоепюрспю ", "    ", -100U,    100,      0, M_SHOW|M_SIGN|M_RMAX(2),					//22 22
 		"A23.бепяхъ он   ", "    ", 	0,  65530,  	0, M_SHOW|M_RMAX(3)|M_PREC(3),				        //24 24
-		"A24.RESERV      ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//28 28
+		"A24.мюоп VDC    ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//28 28
 		"A25.RESERV      ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//28 28
                 "A26.RESERV      ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//28 28
 		"A27.RESERV      ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//28 28

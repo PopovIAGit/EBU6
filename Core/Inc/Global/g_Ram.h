@@ -33,7 +33,7 @@ typedef struct _TStatus
 	Uns             CycleCnt;       // 21. 21 Счетчик циклов
 	Int             Temper;         // 22. 22 Температура блока
 	Uns             VersionPO;      // 23. 23 Версия ПО
-	Uns 		Rsvd24;	        // 24. 25-39 Резерв
+	Uns 		VDC;	        // 24. 25-39 Резерв
         Uns 		Rsvd25;	        // 25. 25-39 Резерв
         Uns 		Rsvd26;	        // 26. 25-39 Резерв
         Uns 		Rsvd27;	        // 27. 25-39 Резерв
