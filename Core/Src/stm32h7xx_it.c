@@ -60,6 +60,8 @@ extern DMA_HandleTypeDef hdma_adc1;
 extern DMA_HandleTypeDef hdma_adc3;
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc3;
+extern SPI_HandleTypeDef hspi1;
+extern SPI_HandleTypeDef hspi6;
 extern TIM_HandleTypeDef htim2;
 /* USER CODE BEGIN EV */
 
@@ -251,18 +253,47 @@ void ADC_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
-    if (CPU_led_timer++ >= HZ)
+    if (CPU_led_timer++ >= PRD_18KHZ)
     {
         CPU_led_timer = 0;
         HAL_GPIO_TogglePin(LED_CPU_GPIO_Port, LED_CPU_Pin);
-    }
+    } 
   // RTOS
-  InterruptUpdate();
+     
+      InterruptUpdate();
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
 
   /* USER CODE END TIM2_IRQn 1 */
+}
+
+/**
+  * @brief This function handles SPI1 global interrupt.
+  */
+void SPI1_IRQHandler(void)
+{
+  /* USER CODE BEGIN SPI1_IRQn 0 */
+
+  /* USER CODE END SPI1_IRQn 0 */
+  HAL_SPI_IRQHandler(&hspi1);
+  /* USER CODE BEGIN SPI1_IRQn 1 */
+
+  /* USER CODE END SPI1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles SPI6 global interrupt.
+  */
+void SPI6_IRQHandler(void)
+{
+  /* USER CODE BEGIN SPI6_IRQn 0 */
+
+  /* USER CODE END SPI6_IRQn 0 */
+  HAL_SPI_IRQHandler(&hspi6);
+  /* USER CODE BEGIN SPI6_IRQn 1 */
+
+  /* USER CODE END SPI6_IRQn 1 */
 }
 
 /**

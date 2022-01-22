@@ -175,6 +175,7 @@ typedef struct {
         //--------------------------
         ADT7301                 Temper;
         Int                     BlockTemper;
+        Uns                     TenControl;
         // ADC ADS1118------------------------------------
         TADS1118                ADC_Out_Config;
         uint16_t                ADC_Out_data;
@@ -188,9 +189,11 @@ typedef struct {
         uint16_t                DAC_data;  
         // переменные-----------------------------------------------------------------------------------------
         Bool                    RamUpdFlag;
-        Uns                     VoltOn;
-        Uns                     ModFault;
-        Uns                     Modul_Off;
+        Uns                     VoltOn;         // in:   
+        Uns                     ModFault;       // In: 
+        Uns                     Modul_Off;      // out: 
+        Uns                     Mcu220380;      // out:1 220  0 380
+        Uns                     Ref15;          // out: 1 3квт   0 1.5квт
       
 } TPeref;
 

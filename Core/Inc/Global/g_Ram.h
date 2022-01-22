@@ -115,29 +115,70 @@ typedef struct _TFactoryParam
   	Uns             MaxTorque;          	// C4. 94 Максимальный момент привода
 	Uns             Inom;               	// C5. 95 Номинальный ток
   	Uns             GearRatio;          	// C6. 96 Передаточное число редуктора
-        Uns 		IndicatorType;          // C7. 96 Передаточное число редуктора
-        Uns		DisplResTout;           // C8. 96 Передаточное число редуктора
-        Uns             SetDefaults;            // C9. 96 Передаточное число редуктора
-        Uns             SubVersionPO;           // C10. 96 Передаточное число редуктора
-        THallBlock      HallBlock;              // c11. 97 Состояние датчиков холла блока
-        Uns             IU_Mpy;             	// C38. 128 Корректировка тока фазы U
-	Uns             IV_Mpy;             	// C39. 129 Корректировка тока фазы V
-	Uns             IW_Mpy;             	// C40. 130 Корректировка тока фазы W
-	Uns             IU_Offset;          	// C41. 131 Смещение тока фазы U
-	Uns             IV_Offset;          	// C42. 132 Смещение тока фазы V
-	Uns             IW_Offset;          	// C43. 133 Смещение тока фазы W
-	Uns             UR_Mpy;             	// C44. 134 Корректировка напряжения фазы R
-	Uns             US_Mpy;             	// C45. 135 Корректировка напряжения фазы S
-	Uns             UT_Mpy;             	// C46. 136 Корректировка напряжения фазы T
-	Uns             UR_Offset;          	// C47. 137 Смещение напряжения фазы R
-	Uns             US_Offset;          	// C48. 138 Смещение напряжения фазы S
-	Uns             UT_Offset;          	// C49. 139 Смещение напряжения фазы T
-        Uns             VDC_AU_Mpy;              // 
-        Uns             VDC_AU_offset;           //
-        Uns             I_brake_A_Mpy;           //
-        Uns             I_brake_A_offset;        //
-        Uns		SinTf;			// C50. 140 ПОСТ.ВРЕМЕНИ ФИЛЬТРОВ СИНУСОВ
-	Uns		RmsTf;			// C51. 141 ПОСТ.ВРЕМЕНИ ФИЛЬТРОВ RMS
+        Uns 		IndicatorType;          // C7. 97 Передаточное число редуктора
+        Uns		DisplResTout;           // C8. 98 Передаточное число редуктора
+        Uns             SetDefaults;            // C9. 99 Передаточное число редуктора
+        Uns             SubVersionPO;           // C10. 100 Передаточное число редуктора
+        THallBlock      HallBlock;              // c11. 101 Состояние датчиков холла блока
+        Uns             IU_Mpy;             	// C12. 102 Корректировка тока фазы U
+	Uns             IV_Mpy;             	// C13. 103 Корректировка тока фазы V
+	Uns             IW_Mpy;             	// C14. 104 Корректировка тока фазы W
+	Uns             IU_Offset;          	// C15. 105 Смещение тока фазы U
+	Uns             IV_Offset;          	// C16. 106 Смещение тока фазы V
+	Uns             IW_Offset;          	// C17. 107 Смещение тока фазы W
+	Uns             UR_Mpy;             	// C18. 108 Корректировка напряжения фазы R
+	Uns             US_Mpy;             	// C19. 109 Корректировка напряжения фазы S
+	Uns             UT_Mpy;             	// C20. 110 Корректировка напряжения фазы T
+	Uns             UR_Offset;          	// C21. 111 Смещение напряжения фазы R
+	Uns             US_Offset;          	// C22. 112 Смещение напряжения фазы S
+	Uns             UT_Offset;          	// C23. 113 Смещение напряжения фазы T
+        Uns             VDC_AU_Mpy;             // С24  114
+        Uns             VDC_AU_offset;          // С25  115
+        Uns             I_brake_A_Mpy;          // С26  116
+        Uns             I_brake_A_offset;       // С27  117
+        Uns		SinTf;			// C28. 118 ПОСТ.ВРЕМЕНИ ФИЛЬТРОВ СИНУСОВ
+	Uns		RmsTf;			// C29. 119 ПОСТ.ВРЕМЕНИ ФИЛЬТРОВ RMS
+        Uns		OnTen;		        // С30. 120 Выключение тэна
+	Uns		Ref15;		        // С31. 121 выбор мощности 3квт или 1.5 квт
+ 	Uns		MCU220380;		// С32. 122 выбор типа питания 220 380
+ 	Uns		reserv123;		// С33. 123 Резерв
+ 	Uns		reserv124;		// С34. 124 Резерв
+ 	Uns		reserv125;		// С35. 125 Резерв
+        Uns		reserv126;		// С36. 126 Резерв
+        Uns		reserv127;		// С37. 127 Резерв
+        Uns		reserv128;		// С38. 128 Резерв
+        Uns		reserv129;		// С39. 129 Резерв
+        Uns		reserv130;		// С40. 130 Резерв
+        Uns		reserv131;		// С41. 131 Резерв
+        Uns		reserv132;		// С42. 132 Резерв
+        Uns		reserv133;		// С43. 133 Резерв
+        Uns		reserv134;		// С44. 134 Резерв
+        Uns		reserv135;		// С45. 135 Резерв
+        Uns		reserv136;		// С46. 136 Резерв
+	Uns		reserv137;		// С47. 137 Резерв
+ 	Uns		reserv138;		// С48. 138 Резерв
+ 	Uns		reserv139;		// С49. 139 Резерв
+ 	Uns		reserv140;		// С50. 140 Резерв
+ 	Uns		reserv141;		// С51. 141 Резерв
+        Uns		reserv142;		// С52. 142 Резерв
+        Uns		reserv143;		// С53. 143 Резерв
+        Uns		reserv144;		// С54. 144 Резерв
+        Uns		reserv145;		// С55. 145 Резерв
+        Uns		reserv146;		// С56. 146 Резерв
+        Uns		reserv147;		// С57. 147 Резерв
+        Uns		reserv148;		// С58. 148 Резерв
+        Uns		reserv149;		// С59. 149 Резерв
+        Uns		reserv150;		// С60. 150 Резерв
+        Uns		reserv151;		// С61. 151 Резерв
+        Uns		reserv152;		// С62. 152 Резерв
+        Uns		reserv153;		// С63. 153 Резерв
+        Uns		reserv154;		// С64. 154 Резерв
+        Uns		reserv155;		// С65. 155 Резерв
+        Uns		reserv156;		// С66. 156 Резерв
+        Uns		reserv157;		// С67. 157 Резерв
+        Uns		reserv158;		// С68. 158 Резерв
+        Uns		reserv159;		// С69. 159 Резерв
+
 	
 }TFactoryParam;
 

@@ -1,6 +1,6 @@
-C:\Projects\EBU-6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\add_ValueConv.pbi: \
-  C:\Projects\EBU-6\EBU6\Core\Src\add_ValueConv.c \
-  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\std.h \
+C:\Projects\EBU-6\EBU6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\add_ValueConv.pbi: \
+  C:\Projects\EBU-6\EBU6\EBU6\Core\Src\add_ValueConv.c \
+  C:\Projects\EBU-6\EBU6\EBU6\EWARM\..\Core\Inc\std.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\stdlib.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\ycheck.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\yvals.h \
@@ -14,6 +14,6 @@ C:\Projects\EBU-6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\add_ValueConv
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\math.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_float_setup.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\float.h \
-  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\add_ValueConv.h \
-  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\std.h \
-  C:\Projects\EBU-6\EBU6\EWARM\..\Core\Inc\Peref\peref_Clock.h
+  C:\Projects\EBU-6\EBU6\EBU6\EWARM\..\Core\Inc\add_ValueConv.h \
+  C:\Projects\EBU-6\EBU6\EBU6\EWARM\..\Core\Inc\std.h \
+  C:\Projects\EBU-6\EBU6\EBU6\EWARM\..\Core\Inc\Peref\peref_Clock.h

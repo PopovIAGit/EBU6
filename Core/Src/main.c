@@ -88,7 +88,7 @@ uint16_t adc[6];
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+Uns tmp1 = 0;
 /* USER CODE END 0 */
 
 /**
@@ -149,7 +149,7 @@ int main(void)
      // �?нициализация модулей
      memset(&g_Core, 	0, sizeof(TCore));
      memset(&g_Ram, 	0, sizeof(TRam));
- //  memset(&g_Comm, 	0, sizeof(TComm));
+   //  memset(&g_Comm, 	0, sizeof(TComm));
      memset(&g_Peref,	0, sizeof(TPeref));
      memset(&g_Stat,	0, sizeof(TStat));
      
@@ -181,24 +181,24 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if (g_Peref.VoltOn)
+  /*  if (tmp1)
     {
       HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
       HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA2);
       HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB1);
       HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
-   //   HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC1);
-  //    HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC2);
+      HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC1);
+      HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC2);
     }
     else 
     {
       HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
       HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA2);
-      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB1);
+     HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB1);
       HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
       HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC1);
       HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC2);
-    }
+    }*/
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -595,12 +595,10 @@ static void MX_HRTIM_Init(void)
   {
     Error_Handler();
   }
-  pOutputCfg.Polarity = HRTIM_OUTPUTPOLARITY_LOW;
   if (HAL_HRTIM_WaveformOutputConfig(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB1, &pOutputCfg) != HAL_OK)
   {
     Error_Handler();
   }
-  pOutputCfg.Polarity = HRTIM_OUTPUTPOLARITY_HIGH;
   if (HAL_HRTIM_WaveformOutputConfig(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC1, &pOutputCfg) != HAL_OK)
   {
     Error_Handler();
@@ -610,12 +608,10 @@ static void MX_HRTIM_Init(void)
   {
     Error_Handler();
   }
-  pOutputCfg.Polarity = HRTIM_OUTPUTPOLARITY_LOW;
   if (HAL_HRTIM_WaveformOutputConfig(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2, &pOutputCfg) != HAL_OK)
   {
     Error_Handler();
   }
-  pOutputCfg.Polarity = HRTIM_OUTPUTPOLARITY_HIGH;
   if (HAL_HRTIM_WaveformOutputConfig(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC2, &pOutputCfg) != HAL_OK)
   {
     Error_Handler();
@@ -814,7 +810,7 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.Pulse = 100;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
@@ -866,7 +862,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 5000;
+  htim2.Init.Period = 5554;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -1134,13 +1130,13 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LCD_EN_GPIO_Port, LCD_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, MU_DU_SD_Pin|CLOSED_SD_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOF, MU_DU_SD_Pin|CLOSED_SD_Pin|TEN_OFF_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(REF1_5_ON_OFF_GPIO_Port, REF1_5_ON_OFF_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(REF1_5_ON_OFF_GPIO_Port, REF1_5_ON_OFF_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, TEN_OFF_Pin|EBU_220_380_MCU_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(EBU_220_380_MCU_GPIO_Port, EBU_220_380_MCU_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOG, BREAKE_Pin|CS_TC_Pin|ENB_TC_Pin, GPIO_PIN_RESET);
@@ -1236,29 +1232,23 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+/*
 void DELAY_MS(uint32_t ms)
 {
         volatile uint32_t nCount;
-        /*RCC_ClocksTypeDef RCC_Clocks;
-        RCC_GetClocksFreq (&RCC_Clocks);
 
-        nCount=(RCC_Clocks.HCLK_Frequency/1000)*ms;*/
           
         nCount = (HAL_RCC_GetHCLKFreq()/1000)*ms;
         for (; nCount!=0; nCount--);
-}
-
+}*/
+/*
 void DELAY_US(uint32_t us)
 {
         volatile uint32_t nCount;
-       /* RCC_ClocksTypeDef RCC_Clocks;
-        RCC_GetClocksFreq (&RCC_Clocks);
-
-        nCount=(RCC_Clocks.HCLK_Frequency/1000000)*us;*/
         
         nCount = (HAL_RCC_GetSysClockFreq()/1000000)*us;   
         for (; nCount!=0; nCount--);
-}
+}*/
 /* USER CODE END 4 */
 
 /**

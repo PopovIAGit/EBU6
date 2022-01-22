@@ -38,11 +38,11 @@
 #endif
 */
 
-#define tas_delay()       DELAY_US(15)
-#define tddr_delay()      DELAY_US(75)
-#define tdsw_delay()      DELAY_US(16)
-#define tah_delay()       DELAY_US(4)
-#define tcl_delay()       DELAY_US(38)
+#define tas_delay()    __asm("NOP")  // DELAY_US(15)
+#define tddr_delay()   __asm("NOP") //  DELAY_US(75)
+#define tdsw_delay()  __asm("NOP")  //  DELAY_US(16)
+#define tah_delay()   __asm("NOP")  //  DELAY_US(4)
+#define tcl_delay()   __asm("NOP") //   DELAY_US(38)
 
 
 
@@ -295,7 +295,7 @@ void DisplayStart(void)
         g_Core.DisplayTimer--;
         if (!g_Core.DisplayTimer) g_Peref.Display.Enable = true;
     }
-
+/*
     if (g_Core.DisplayRestartTimer > 0)
     {
         g_Peref.Display.ResTout = 5;
@@ -304,5 +304,5 @@ void DisplayStart(void)
     else
     {
         g_Peref.Display.ResTout = g_Ram.FactoryParam.DisplResTout * (Uns)DISPL_SCALE;
-    }
+    }*/
 }

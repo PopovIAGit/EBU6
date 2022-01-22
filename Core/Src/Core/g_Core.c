@@ -7,6 +7,12 @@ TFM25V10 Eeprom1;
 
 TCore	g_Core;
 
+Uns ramptime = 0;
+Float freq = 50;
+Float timeFreq = 0;
+Uns angle = 0;
+Uns Deadtime = 0;
+
 void Core_Init(TCore *p)
 {	
   p->DisplayTimer = 1 * PRD_10HZ;
@@ -17,7 +23,47 @@ void Core_Init(TCore *p)
 
 void core18kHZupdate(void)
 {
+//    HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
+//    HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
+    
+//    HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
+//    HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
+      timeFreq = 1/freq;
 
+    HAL_GPIO_TogglePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin);
+ 
+
+     
+      
+      if (angle)
+      {
+          if (ramptime++ < timeFreq * PRD_18KHZ)
+          {
+            HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
+            HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
+           // HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, 1);
+          }
+          else if (ramptime > timeFreq * PRD_18KHZ)
+          {
+            angle = 0;
+            ramptime = 0;
+          }
+      }
+      else 
+      {
+          if (ramptime++ < timeFreq * PRD_18KHZ)
+          {
+            HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
+            HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
+           // HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, 0);
+          }
+          else if (ramptime > timeFreq * PRD_18KHZ)
+          {
+            angle = 1;
+            ramptime = 0;
+          }
+      }
+    
 }
 
 void core200HZupdate(void)

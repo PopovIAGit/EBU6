@@ -16,7 +16,7 @@ STATIC_ASSERT(TaskCount(Task200Hz)< TASK_COUNT_MAX_200HZ);
 STATIC_ASSERT(TaskCount(Task50Hz) < TASK_COUNT_MAX_50HZ);
 STATIC_ASSERT(TaskCount(Task10Hz) < TASK_COUNT_MAX_10HZ);
 
-unsigned  count18kHz = 0,         //—четчик прерываний частотой 18 кvц
+unsigned        count18kHz = 0,         //—четчик прерываний частотой 18 кvц
         	count2kHz  = 0,         //—четчик прерываний частотой 2  кvц
         	count200Hz = 0,         //—четчик прерываний частотой 200 vц
         	count50Hz  = 0,         //—четчик прерываний частотой 10  vц
@@ -38,11 +38,13 @@ void InterruptUpdate(void)  //Функция обработки прерываний
 {
 //Сброс бита переполнения
 //  TIM_ClearFlag(TIM2, TIM_FLAG_Update); // todo cheak
-  
+
   int i;
-  
+   
+    
+
   //выполнение задач 18кГц и одной задачи 10Гц
-  for (i=tskMaxCnt18kHz; i!=0; i--)
+ /* for (i=tskMaxCnt18kHz; i!=0; i--)
   {
     Task18kHz[i-1].Func(Task18kHz[i-1].Data);
   } 
@@ -50,7 +52,8 @@ void InterruptUpdate(void)  //Функция обработки прерываний
   {
     Task10Hz[tskCnt10Hz].Func(Task10Hz[tskCnt10Hz].Data);
     tskCnt10Hz ++;
-  }
+         
+  }*/
   
 	for (i=tskMaxCnt18kHz; i!=0; i--)
 	{
@@ -79,6 +82,8 @@ void InterruptUpdate(void)  //Функция обработки прерываний
         Task10Hz[tskCnt10Hz].Func(Task10Hz[tskCnt10Hz].Data);
 		
         tskCnt10Hz++;
+        
+        
     }
 
     if (count18kHz == 9)
@@ -86,7 +91,7 @@ void InterruptUpdate(void)  //Функция обработки прерываний
         count18kHz = 0;
         count2kHz++;
         tskCnt2kHz = 0;
-        if (count2kHz == 10)
+        if (count2kHz == 10) //10
         {
             count2kHz = 0;
             count200Hz++;

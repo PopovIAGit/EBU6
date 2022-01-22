@@ -72,8 +72,6 @@ typedef struct
 	TSinPhaseObserverFloat IU;
 	TSinPhaseObserverFloat IV;
 	TSinPhaseObserverFloat IW;
-        TSinPhaseObserverFloat VDC_AU;
-        TSinPhaseObserverFloat I_brake_A;
 
 }TSinObserver;
 

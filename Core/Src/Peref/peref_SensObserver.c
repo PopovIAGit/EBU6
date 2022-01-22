@@ -28,7 +28,7 @@ void Peref_SensObserverInit(TSensObserver *p)
         p->parSensors.p_VDC_AU_Mpy	= &g_Ram.FactoryParam.VDC_AU_Mpy;
         p->parSensors.p_VDC_AU_Offset 	= &g_Ram.FactoryParam.VDC_AU_offset;
         p->parSensors.p_I_brake_A_Mpy	= &g_Ram.FactoryParam.I_brake_A_Mpy;
-        p->parSensors.p_I_brake_A_Offset 	= &g_Ram.FactoryParam.I_brake_A_offset;
+        p->parSensors.p_I_brake_A_Offset= &g_Ram.FactoryParam.I_brake_A_offset;
         
 	p->pOffsetMode = mAutoOffset;
 }

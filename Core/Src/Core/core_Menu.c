@@ -1321,7 +1321,7 @@ void ReadWriteAllParams(Byte cmd, TCoreMenu *p)	// в Core_MenuInit()
 		while (!IsMemParReady()) 
                 {
                   FM25V10_Update(&Eeprom1); 
-                  DELAY_US(1);
+                  __asm("NOP");
                 }
 		// Инициализация фильтров, масштабов и т.д.
 		RefreshParams(DefAddr);

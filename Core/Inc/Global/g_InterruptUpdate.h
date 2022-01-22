@@ -12,10 +12,10 @@
 
 #define TaskCount(List)	(SIZE(List) / SIZE(TPeriodicalFunction))
 
-#define TASK_COUNT_MAX_2kHZ  5		
-#define TASK_COUNT_MAX_200HZ 10		
-#define TASK_COUNT_MAX_50HZ  40		
-#define TASK_COUNT_MAX_10HZ  100	
+#define TASK_COUNT_MAX_2kHZ  10		
+#define TASK_COUNT_MAX_200HZ 20		
+#define TASK_COUNT_MAX_50HZ  80		
+#define TASK_COUNT_MAX_10HZ  200	
 
 typedef void (*TPrdFunc)(void *Data);	
 
@@ -34,7 +34,8 @@ extern void InterruptUpdate (void);
 
 TPeriodicalFunction Task18kHz[] =         
 {  
-  PrdElemInit(peref_18KHzCalc,                &g_Peref)
+  PrdElemInit(peref_18KHzCalc,                &g_Peref),
+  PrdElemInit(core18kHZupdate,                NULL)  
 };
 
 //Чюда вставл§ем функции дл§ соответствующей группы
@@ -43,8 +44,7 @@ TPeriodicalFunction Task18kHz[] =
 
 TPeriodicalFunction Task2kHz[] =          //Не более 8-х задач
 {
-  PrdElemInit(FM25V10_Update,		      &Eeprom1),
-
+ // PrdElemInit(FM25V10_Update,		      &Eeprom1),
   PrdElemInit(peref_2KHzCalc,                 &g_Peref)
 };
 // ================================ 200 vц ==================================
@@ -59,6 +59,7 @@ TPeriodicalFunction Task200Hz[] =       	//не более  20-ти задач
 
 TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
 {
+ 
     PrdElemInit(Core_SetDeff,				&menu),
     PrdElemInit(coreTS,					&g_Core),
     PrdElemInit(coreTLocalControl,			&g_Core),
@@ -76,15 +77,14 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
 
 TPeriodicalFunction Task10Hz[] =        //не более  200-т задач
 {  
-  
-    
-    PrdElemInit(peref_10HzCalc,			&g_Peref),	//	20
+   
     PrdElemInit(g_Ram_Update,			&g_Ram),
+    PrdElemInit(peref_74HC595D,			&g_Peref),
     PrdElemInit(Core_MenuUpdate,		&menu),			// 1
     PrdElemInit(Core_MENU_Display,		&menu),			// 2
     PrdElemInit(DisplayStart,			NULL),	//	20
     PrdElemInit(RtcControl,				NULL),	
-    PrdElemInit(peref_10HzCalc,                 &g_Peref)
+   // PrdElemInit(peref_10HzCalc,                 &g_Peref)
 };
 //------------†конец файла-----------------------------------------------
 

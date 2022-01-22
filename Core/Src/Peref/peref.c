@@ -139,9 +139,6 @@ void peref_Init(void)
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.IU, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.IV, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.IW, PRD_18KHZ);
-    
-    Peref_SinObserverInitFloat(&g_Peref.sinObserver.VDC_AU, PRD_18KHZ);   
-    Peref_SinObserverInitFloat(&g_Peref.sinObserver.I_brake_A, PRD_18KHZ);
 
     g_Peref.phaseOrder.UR = &g_Peref.sinObserver.UR;	 // Привязываем
     g_Peref.phaseOrder.US = &g_Peref.sinObserver.US;
@@ -182,8 +179,6 @@ void peref_18KHzCalc(TPeref *p)//
     p->sinObserver.IU.Input = p->IUfltr.Output;
     p->sinObserver.IV.Input = p->IVfltr.Output;
     p->sinObserver.IW.Input = p->IWfltr.Output;
-    
- //   p->sinObserver.VDC_AU.Input = p->VDCfltr.Output;
 
     Peref_SinObserverUpdateFloat(&p->sinObserver.UR);
     Peref_SinObserverUpdateFloat(&p->sinObserver.US);
@@ -192,15 +187,7 @@ void peref_18KHzCalc(TPeref *p)//
     Peref_SinObserverUpdateFloat(&p->sinObserver.IV);
     Peref_SinObserverUpdateFloat(&p->sinObserver.IW);
     
- //   Peref_SinObserverUpdateFloat(&p->sinObserver.VDC_AU);
-
     Peref_PhaseOrderUpdate(&p->phaseOrder);
-    
-    g_Ram.Status.Ur = (Uns)p->sinObserver.UR.Output;
-    g_Ram.Status.Us = (Uns)p->sinObserver.US.Output;
-    g_Ram.Status.Ut = (Uns)p->sinObserver.UT.Output;
-
-    g_Ram.Status.VDC = (Uns)p->VDCfltr.Output;
 
 }
 
@@ -213,7 +200,9 @@ void peref_2KHzCalc(TPeref *p)
 
 void peref_200HzCalc(TPeref *p)
 {
-
+        
+        
+        
          switch (memtemp)
         {
           case 0:  break;
@@ -249,17 +238,7 @@ void peref_50HzCalc(TPeref *p)
 { 
   uint8_t DAC_tmp[2];
  //TODO переделать на нормальный PowerControl
-/*  if (g_Peref.VoltOn == 0) TIM1->CCR4 = 0;
-  else {
-  
-    if (g_Peref.VoltOn && TirTimer) 
-      TirTimer--;
-    if (TirTimer == 0 && TIM1->CCR4 < 100) 
-      TIM1->CCR4++;
-    else if (TirTimer == 0 && TIM1->CCR4 == 100) 
-      TIM1->CCR4 = 100;  
-  }*/
-  if (g_Peref.VoltOn == 0) 
+/*  if (g_Peref.VoltOn == 0) 
   {
     TIM1->CCR4 = 100;
     hui = 0;
@@ -277,32 +256,19 @@ void peref_50HzCalc(TPeref *p)
         TIM1->CCR4 = 100;
         else 
           hui++;
-   }
-  
-   // TC ----------------------------------------------------------------------
-    /*  g_Ram.Status.StateTs.all = (1<<TmpTC);  // перебор ТС раз в 2 секунды
-   if (TmpTC> 7) TmpTC = 0;
-   if (TimerTC++ >= PRD_50HZ*2) 
-   {
-      TmpTC++; 
-      TimerTC = 0;
    }*/
-  HAL_GPIO_WritePin(ENB_TC_GPIO_Port, ENB_TC_Pin, p->TS_Enable);
-  peref_74HC595D(p);
   
   // TU------------------------------------------------------------------------
-  MCP23S17_update(p);
+//  MCP23S17_update(p);
    // DAC----------------------------------------------------------------------
-  HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_RESET);    
+/*  HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_RESET);    
   HAL_SPI_Receive(&hspi6,(uint8_t*)DAC_tmp, 2, 100);    
   HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_SET);
   
   p->DAC_data = DAC_tmp[0];
-  p->DAC_data |= DAC_tmp[1]<<8;
+  p->DAC_data |= DAC_tmp[1]<<8;*/
     
-  // ADC----------------------------------------------------------------------
-      
-   HAL_GPIO_WritePin(Module_OFF_GPIO_Port, Module_OFF_Pin, 1);
+ 
 }
 
 void peref_10HzCalc(TPeref *p)//
@@ -361,11 +327,16 @@ void peref_10HzCalc(TPeref *p)//
      p->BlockTemper = *p->Temper.Temper;  
        
      // ten control
-     if (p->BlockTemper >= 30) //ToDo подвязять параметр в 
+     if (p->BlockTemper >= g_Ram.FactoryParam.OnTen) //ToDo подвязять параметр в 
      {
-        HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, GPIO_PIN_SET);
+        p->TenControl = 1; // вфключаем иэн
      }
-     else HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, GPIO_PIN_RESET);
+     else if (p->BlockTemper < (g_Ram.FactoryParam.OnTen - 10))
+     {
+        p->TenControl = 0; // включаем тэн
+     }
+
+  //   HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, p->TenControl);
        
      // volt on control
      p->VoltOn = HAL_GPIO_ReadPin(VOLT_ON_GPIO_Port, VOLT_ON_Pin);
@@ -374,6 +345,35 @@ void peref_10HzCalc(TPeref *p)//
      
      p->Modul_Off = 1;
      HAL_GPIO_WritePin(Module_OFF_GPIO_Port, Module_OFF_Pin, p->Modul_Off);
+     
+     // mcu220
+     HAL_GPIO_WritePin(EBU_220_380_MCU_GPIO_Port, EBU_220_380_MCU_Pin, g_Ram.FactoryParam.MCU220380);
+     p->Mcu220380 = g_Ram.FactoryParam.MCU220380;
+     // ref15
+     HAL_GPIO_WritePin(REF1_5_ON_OFF_GPIO_Port, REF1_5_ON_OFF_Pin, g_Ram.FactoryParam.Ref15);
+     p->Ref15 = g_Ram.FactoryParam.Ref15;
+     
+     
+      // ADC----------------------------------------------------------------------  
+  if (p->Mcu220380 == 1) //220
+  {
+    g_Ram.Status.Ur  = p->sinObserver.UR.Output;
+    g_Ram.Status.Us  = 1;
+    g_Ram.Status.Ut  = 1;
+  }
+  else  //380
+  {
+    g_Ram.Status.Ur  = p->sinObserver.UR.Output;
+    g_Ram.Status.Us  = p->sinObserver.US.Output;
+    g_Ram.Status.Ut  = p->sinObserver.UT.Output;
+  }
+  
+  g_Ram.Status.VDC = (Uns)p->VDCfltr.Output;
+  
+  g_Ram.Status.Iu  = p->sinObserver.IU.Output;
+  g_Ram.Status.Iv  = p->sinObserver.IV.Output;
+  g_Ram.Status.Iw  = p->sinObserver.IW.Output;
+     
 }
 
 void ADT7301_Update(ADT7301 *p)
@@ -385,9 +385,11 @@ void ADT7301_Update(ADT7301 *p)
 	
 	HAL_GPIO_WritePin(CS_TEMP_GPIO_Port, CS_TEMP_Pin, GPIO_PIN_RESET); 
 	
-	HAL_SPI_Receive(&hspi1, Data, 2, 10); 
+	HAL_SPI_Receive(&hspi1, Data, 2, 1); 
           
-        DELAY_US(3);
+        asm("NOP");
+        asm("NOP");
+        asm("NOP");
         HAL_GPIO_WritePin(CS_TEMP_GPIO_Port, CS_TEMP_Pin, GPIO_PIN_SET); 
 	
         data16 = Data[0]<<8;
@@ -505,11 +507,11 @@ void RtcControl(void)
 void peref_74HC595D(TPeref *p)
 {
 
+    HAL_GPIO_WritePin(ENB_TC_GPIO_Port, ENB_TC_Pin, p->TS_Enable);
+  
     p->TS_outData = g_Ram.Status.StateTs.all & 0xFF;
 
-    
-      
-    HAL_SPI_Transmit(&hspi6, &p->TS_outData, 1, 100);
+    HAL_SPI_Transmit_IT(&hspi6, &p->TS_outData, 1);
     HAL_GPIO_WritePin(CS_TC_GPIO_Port, CS_TC_Pin, GPIO_PIN_SET); 
     HAL_GPIO_WritePin(CS_TC_GPIO_Port, CS_TC_Pin, GPIO_PIN_RESET);  
     
