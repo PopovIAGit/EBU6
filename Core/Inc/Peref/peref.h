@@ -162,7 +162,7 @@ typedef struct {
 	APFILTER3  			IW3fltr;
         TSensObserver			sensObserver;		// Масштабирование сигналов с датчиков
 	TSinObserver			sinObserver;		// Вычисление RMS
-	TPhaseOrder			phaseOrder; 		// Чередование фаз сети
+	
         APFILTER1 			Phifltr;			// Фильтр угола фи
 	APFILTER1 			Umfltr;				// Фильтр среднего напряжения
 	APFILTER3 			Imfltr;				// Фильтр среднего тока

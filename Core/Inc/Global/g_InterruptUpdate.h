@@ -77,14 +77,14 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
 
 TPeriodicalFunction Task10Hz[] =        //не более  200-т задач
 {  
-   
+  //  PrdElemInit(peref_10HzCalc,                 &g_Peref),
     PrdElemInit(g_Ram_Update,			&g_Ram),
     PrdElemInit(peref_74HC595D,			&g_Peref),
     PrdElemInit(Core_MenuUpdate,		&menu),			// 1
     PrdElemInit(Core_MENU_Display,		&menu),			// 2
     PrdElemInit(DisplayStart,			NULL),	//	20
-    PrdElemInit(RtcControl,				NULL),	
-   // PrdElemInit(peref_10HzCalc,                 &g_Peref)
+    PrdElemInit(RtcControl,				NULL)	
+  
 };
 //------------ конец файла-----------------------------------------------
 

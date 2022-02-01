@@ -56,6 +56,47 @@ void Peref_SinObserverUpdateFloat(TSinPhaseObserverFloat *p)		// –мс, угол, пол€
 	}
 }
 
+void ileg_fq_calc(ILEG_FQ *v)
+{
+	//v->Signal = _IQ21mpy(v->Input, *v->Mash1);
+          v->Signal = v->Input * *v->Mash1;
+	/*
+	if (_IQabs(*v->Ramp - v->RampPrev) > _IQ(0.75))
+	{
+		v->Sum     = v->Sum + _IQmpy(v->Sum1, v->Mash2);
+		v->Output  = _IQsqrt(_IQ21mpy(v->Sum, *v->Mash3));
+		v->Sum1    = 0;
+		v->Sum     = 0;
+		v->Counter = 0;
+	}
+	else if (++v->Counter >= (Uns)_IQ7(1.0))
+	{
+		v->Sum     = v->Sum + _IQmpy(v->Sum1, v->Mash2);
+		v->Sum1    = 0;
+		v->Counter = 0;
+	}
+	else v->Sum1 = v->Sum1 + _IQmpy(v->Signal, v->Signal);
+	*/
+        if (fabsf(*v->Ramp - v->RampPrev) > 0.75)
+        {
+            	v->Sum     = v->Sum + (v->Sum1 * v->Mash2);
+		v->Output  = sqrtf(v->Sum * *v->Mash3);
+		v->Sum1    = 0;
+		v->Sum     = 0;
+		v->Counter = 0;
+        }
+        else if (++v->Counter >= 128)
+        {
+              	v->Sum     = v->Sum + (v->Sum1 * v->Mash2);
+		v->Sum1    = 0;
+		v->Counter = 0;
+        }
+        else v->Sum1 = v->Sum1 + (v->Signal * v->Signal);
+          
+          
+	v->RampPrev = *v->Ramp;
+}
+
 /*void Peref_SinObserverUpdate(TSinPhaseObserver *p)		// –мс, угол, пол€рность сигнала Int
 {
 	register Uns Sign;

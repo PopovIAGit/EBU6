@@ -4,14 +4,17 @@
 
 
 TFM25V10 Eeprom1;
-
 TCore	g_Core;
 
-Uns ramptime = 0;
-Float freq = 50;
-Float timeFreq = 0;
-Uns angle = 0;
-Uns Deadtime = 0;
+float   PwmFreq;				// частота ШИМ
+float   PwmDeltat;			// шаг дискретизации токов
+Uns     PWMPreScale = 1;
+float corr = 1.0; // 5000 = 50гц
+float timeFreq;
+float SpeedRef, OutVolt;
+
+
+void PWM_keys_disable(void);
 
 void Core_Init(TCore *p)
 {	
@@ -19,8 +22,28 @@ void Core_Init(TCore *p)
   p->Status.bit.Stop = 1;  
   FM25V10_Init(&Eeprom1);   
   Core_MenuInit(&menu);
+ 
+   g_Core.rg1.Gain                 = 1.0;
+   g_Core.rg1.Offset               = 0.0;
+   
+   PwmFreq   = _IQdiv((HZ), PWMPreScale);
+   PwmDeltat = _IQdiv(1, PwmFreq);
+   
+   g_Core.rg1.StepAngleMax         = 50.0 * PwmDeltat;
+   
+   g_Core.vhz.NumPoints = 3;
+   g_Core.vhz.Points[0].Input = 0 / BASE_FREQ;
+   g_Core.vhz.Points[0].Output = 20.0 / BASE_VOLTAGE;
+   g_Core.vhz.Points[1].Input = 500.0 / BASE_FREQ;
+   g_Core.vhz.Points[1].Output = 38.0 / BASE_VOLTAGE;
+   g_Core.vhz.Points[2].Input = 5000.0 / BASE_FREQ;
+   g_Core.vhz.Points[2].Output = 380.0 / BASE_VOLTAGE;
+   
+   g_Core.svgen3ph.Scalar = true;
+   
+   g_Core.Pwm.Period = _IQdiv((200000000/4), PwmFreq) - 1;
 }
-
+Uns abc = 0;
 void core18kHZupdate(void)
 {
 //    HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
@@ -28,42 +51,182 @@ void core18kHZupdate(void)
     
 //    HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
 //    HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
-      timeFreq = 1/freq;
 
-    HAL_GPIO_TogglePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin);
- 
+  
+      g_Core.rg1.Freq = (float)SpeedRef; //ToDo задание скорости - убрать
+  
 
-     
+      rampgen_calc(&g_Core.rg1);         // пила основной гармоники 1.0 - 50 Гц
+      g_Core.vhz.Input = SpeedRef;
+      interp2D_calc(&g_Core.vhz);
       
-      if (angle)
-      {
-          if (ramptime++ < timeFreq * PRD_18KHZ)
-          {
-            HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
-            HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
-           // HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, 1);
-          }
-          else if (ramptime > timeFreq * PRD_18KHZ)
-          {
-            angle = 0;
-            ramptime = 0;
-          }
-      }
-      else 
-      {
-          if (ramptime++ < timeFreq * PRD_18KHZ)
-          {
-            HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
-            HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
-           // HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, 0);
-          }
-          else if (ramptime > timeFreq * PRD_18KHZ)
-          {
-            angle = 1;
-            ramptime = 0;
-          }
-      }
-    
+      OutVolt = g_Core.vhz.Output;
+      
+      g_Core.ipark.Ds = OutVolt;
+      g_Core.ipark.Qs = 0;
+      
+      g_Core.ipark.Angle = g_Core.rg1.Out;
+      g_Core.park.Angle = g_Core.rg1.Out;
+      
+      
+      ipark_calc(&g_Core.ipark);
+      park_calc(&g_Core.park);
+      
+      		g_Core.svgen3ph.RampGenOut = g_Core.ipark.Angle;
+		g_Core.svgen3ph.Valpha     = g_Core.ipark.Alpha;		
+		g_Core.svgen3ph.Vbeta      = g_Core.ipark.Beta;	
+      
+      svgendq3ph_calc(&g_Core.svgen3ph);
+      
+      		g_Core.Pwm.MfuncC1 = g_Core.svgen3ph.Ta;
+		g_Core.Pwm.MfuncC2 = g_Core.svgen3ph.Tb;
+		g_Core.Pwm.MfuncC3 = g_Core.svgen3ph.Tc;
+      
+                pwm_calc(&g_Core.Pwm);
+                
+             // abc =  g_Core.Pwm.Period -  g_Core.Pwm.Cmpr1;
+              HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
+
+            //  HRTIM1->sMasterRegs.MCMP1R = abc;
+              
+            abc = __HAL_HRTIM_GETCOMPARE(&hhrtim, HRTIM_TIMERINDEX_MASTER, HRTIM_COMPAREUNIT_1);
+}
+
+
+void svgendq3ph_calc(SVGENDQ_3PH *v)
+{
+	register Float Sine, Cosine;
+	
+	if(v->RampGenOut < M_1DIV3)
+		v->RampGenOut3 = v->RampGenOut * 3;
+	else if ((v->RampGenOut >= M_1DIV3) && (v->RampGenOut < M_2DIV3))
+		v->RampGenOut3 = (v->RampGenOut - M_1DIV3) * 3;
+	 else
+		v->RampGenOut3 = (v->RampGenOut - M_2DIV3) * 3;
+	
+	Sine   = _IQsinPU(v->RampGenOut3);
+	Cosine = _IQcosPU(v->RampGenOut3);
+	
+	v->VPredMod = (v->PredmodAmp * ((v->Vds * Cosine) - (v->Vqs * Sine)));
+
+	if (v->Scalar)
+	{
+		v->VaRef = v->Valpha;
+                v->VbRef = ((M_SQRT_3 * v->Vbeta) - v->Valpha) / 2;
+		v->VcRef = -v->VaRef - v->VbRef;
+	}
+		
+	v->Ta = _IQsat(v->VaRef - v->dVa - v->VPredMod, MAX_Tx_OUT, -MAX_Tx_OUT);
+	v->Tb = _IQsat(v->VbRef - v->dVb - v->VPredMod, MAX_Tx_OUT, -MAX_Tx_OUT);
+	v->Tc = _IQsat(v->VcRef - v->dVc - v->VPredMod, MAX_Tx_OUT, -MAX_Tx_OUT);     
+
+}
+
+void pwm_calc(PWM *p)
+{
+	// Saturate inputs
+	p->MfuncC1 = _IQsat(p->MfuncC1, 1.0, -1.0);
+	p->MfuncC2 = _IQsat(p->MfuncC2, 1.0, -1.0);
+	p->MfuncC3 = _IQsat(p->MfuncC3, 1.0, -1.0);
+	
+	// Compute the compare A (Q0) from the EPWM1AO & EPWM1BO duty cycle ratio
+	p->Cmpr1 = _IQmpy((p->MfuncC1 + 1.0) / 2, p->Period);
+	
+	// Compute the compare B (Q0) from the EPWM2AO & EPWM2BO duty cycle ratio
+	p->Cmpr2 = _IQmpy((p->MfuncC2 + 1.0) / 2, p->Period);
+	
+	// Compute the compare C (Q0) from the EPWM3AO & EPWM3BO duty cycle ratio
+	p->Cmpr3 = _IQmpy((p->MfuncC3 + 1.0) / 2, p->Period);
+}
+
+
+void rampgen_calc(RAMPGEN *v)
+{
+	// Compute the angle rate
+	v->Angle += (v->StepAngleMax * v->Freq);
+	
+	// Saturate the angle rate within (0,1)
+	if (v->Angle > corr)     
+        {
+          v->Angle -= corr;
+          HAL_GPIO_TogglePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin);
+        }        
+        
+	else if (v->Angle < 0){ 
+          v->Angle += corr;
+        //  HAL_GPIO_TogglePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin);
+        }
+	
+	// Compute the ramp output
+	v->Out = (v->Angle * v->Gain) + v->Offset;
+
+	// Saturate the ramp output within (0,1)
+	if (v->Out > corr)  {
+          v->Out -= corr;   
+          
+        }
+	else if (v->Out < 0) v->Out += corr;
+}
+
+void interp2D_calc(INTERP2D *v)
+{	
+	register float Slope;
+	register Uns   Index;
+	Pt2D *P0, *P1;
+	
+	if (v->Input <= v->Points[0].Input)
+		v->Output = v->Points[0].Output;
+	else if (v->Input >= v->Points[v->NumPoints-1].Input)
+		v->Output = v->Points[v->NumPoints-1].Output;
+	else
+	{
+		for (Index=1; Index < v->NumPoints; Index++)
+			if (v->Input <= v->Points[Index].Input) break;
+		
+		P0 = &v->Points[Index-1];
+		P1 = &v->Points[Index];
+		
+		if (P0->Input == P1->Input) v->Output = P0->Output;
+		else
+		{
+			Slope = ((P1->Output - P0->Output) / (P1->Input - P0->Input));
+			v->Output = P0->Output + (Slope * (v->Input - P0->Input));
+		}
+	}
+}
+
+void ipark_calc(IPARK *v)
+{	
+	Float Cosine, Sine;
+	
+	// Using look-up IQ sine table
+	Sine   = _IQsinPU(v->Angle);
+	Cosine = _IQcosPU(v->Angle);
+	
+	v->Alpha = (v->Ds * Cosine) - (v->Qs * Sine);
+	v->Beta  = (v->Qs * Cosine) + (v->Ds * Sine);
+}
+
+void park_calc(PARK *v)
+{	
+	LgInt Cosine, Sine;
+	
+	// Using look-up IQ sine table
+	Sine   = _IQsinPU(v->Angle);
+	Cosine = _IQcosPU(v->Angle);
+	
+	v->Ds = (v->Alpha * Cosine) + (v->Beta *  Sine);
+	v->Qs = (v->Beta *  Cosine) - (v->Alpha * Sine);
+}
+
+void PWM_keys_disable(void)
+{
+      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
+      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA2);
+      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB1);
+      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
+      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC1);
+      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC2);
 }
 
 void core200HZupdate(void)

@@ -69,13 +69,24 @@ typedef struct
 	TSinPhaseObserverFloat UR;
 	TSinPhaseObserverFloat US;
 	TSinPhaseObserverFloat UT;
-	TSinPhaseObserverFloat IU;
-	TSinPhaseObserverFloat IV;
-	TSinPhaseObserverFloat IW;
 
 }TSinObserver;
 
+typedef struct {
+	Float  Input;			// Входное мгновенное значение в А (Q21)
+	Float  Signal;			// Мгновенное значения сигнала в о.е. (GLOBAL_Q)
+	Float  Output;			// Выходное действующее значение в о.е (GLOBAL_Q)
+	LgInt *Ramp;			// Сигнал ориентации вектора напряжения (GLOBAL_Q)
+	LgInt  RampPrev;		// Память сигнала ориентации вектора напряжения (GLOBAL_Q)
+	LgInt *Mash1;			// Масштабный коэффициент для перевода в о.е. (GLOBAL_Q)
+	LgInt  Mash2;			// Масштабный коэффициент по времени расчета (GLOBAL_Q)
+	LgInt *Mash3;			// Масштабный коэффициент по текущей частоте (Q21)
+	Float  Sum;                     // Интеграл мгновенных значений
+	Float  Sum1;			// Промежуточный интеграл
+	Uns    Counter;		        // Счетчик для более точного расчета интеграла
+} ILEG_FQ;
 
+void ileg_fq_calc(ILEG_FQ *);
 
 //--------------------  Глобальные переменные ------------------------------
 //--------------------  Протатипы функций ----------------------------------

@@ -127,7 +127,7 @@ void peref_Init(void)
     peref_ApFilter1Init(&g_Peref.IVfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
     peref_ApFilter1Init(&g_Peref.IWfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
     
-     peref_ApFilter1Init(&g_Peref.VDCfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
+    peref_ApFilter1Init(&g_Peref.VDCfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
     
     Peref_SensObserverInit(&g_Peref.sensObserver); // Инициализируем обработку синусойды
 
@@ -136,14 +136,10 @@ void peref_Init(void)
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.UR, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.US, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.UT, PRD_18KHZ);
-    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IU, PRD_18KHZ);
+   /* Peref_SinObserverInitFloat(&g_Peref.sinObserver.IU, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.IV, PRD_18KHZ);
-    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IW, PRD_18KHZ);
+    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IW, PRD_18KHZ);*/
 
-    g_Peref.phaseOrder.UR = &g_Peref.sinObserver.UR;	 // Привязываем
-    g_Peref.phaseOrder.US = &g_Peref.sinObserver.US;
-    g_Peref.phaseOrder.UT = &g_Peref.sinObserver.UT;     
-   
 }
 
 void peref_18KHzCalc(TPeref *p)//
@@ -176,18 +172,17 @@ void peref_18KHzCalc(TPeref *p)//
     p->sinObserver.UR.Input = p->URfltr.Output;
     p->sinObserver.US.Input = p->USfltr.Output;
     p->sinObserver.UT.Input = p->UTfltr.Output;
-    p->sinObserver.IU.Input = p->IUfltr.Output;
+ /*   p->sinObserver.IU.Input = p->IUfltr.Output;
     p->sinObserver.IV.Input = p->IVfltr.Output;
-    p->sinObserver.IW.Input = p->IWfltr.Output;
+    p->sinObserver.IW.Input = p->IWfltr.Output;*/
 
     Peref_SinObserverUpdateFloat(&p->sinObserver.UR);
     Peref_SinObserverUpdateFloat(&p->sinObserver.US);
     Peref_SinObserverUpdateFloat(&p->sinObserver.UT);
-    Peref_SinObserverUpdateFloat(&p->sinObserver.IU);
+/*    Peref_SinObserverUpdateFloat(&p->sinObserver.IU);
     Peref_SinObserverUpdateFloat(&p->sinObserver.IV);
-    Peref_SinObserverUpdateFloat(&p->sinObserver.IW);
+    Peref_SinObserverUpdateFloat(&p->sinObserver.IW);*/
     
-    Peref_PhaseOrderUpdate(&p->phaseOrder);
 
 }
 
@@ -323,7 +318,7 @@ void peref_10HzCalc(TPeref *p)//
     p->BtnProg2.Input = &btnProg2;
       
     // temper
-     ADT7301_Update(&p->Temper);
+  //   ADT7301_Update(&p->Temper);
      p->BlockTemper = *p->Temper.Temper;  
        
      // ten control
@@ -370,39 +365,42 @@ void peref_10HzCalc(TPeref *p)//
   
   g_Ram.Status.VDC = (Uns)p->VDCfltr.Output;
   
-  g_Ram.Status.Iu  = p->sinObserver.IU.Output;
-  g_Ram.Status.Iv  = p->sinObserver.IV.Output;
-  g_Ram.Status.Iw  = p->sinObserver.IW.Output;
+
      
 }
 
 void ADT7301_Update(ADT7301 *p)
 {
 	uint8_t Data[2];
-        Int data16;
+        Uns data16;
           
             Uns TempVal,ADC_Temp_Code_dec;
 	
 	HAL_GPIO_WritePin(CS_TEMP_GPIO_Port, CS_TEMP_Pin, GPIO_PIN_RESET); 
 	
-	HAL_SPI_Receive(&hspi1, Data, 2, 1); 
+	HAL_SPI_Receive(&hspi1, Data, 2, 10); 
           
+      /*  asm("NOP");
         asm("NOP");
-        asm("NOP");
-        asm("NOP");
+        asm("NOP");*/
         HAL_GPIO_WritePin(CS_TEMP_GPIO_Port, CS_TEMP_Pin, GPIO_PIN_SET); 
 	
         data16 = Data[0]<<8;
         data16 |= Data[1];
        
-          if ((0x2000 & data16) == 0x2000) //Check sign bit for negative value.
+         /* if ((0x2000 & data16) == 0x2000) //Check sign bit for negative value.
           {
            *p->Temper = (data16 - 16384)/32; //Conversion formula if negative temperature.
            }
           else
            {
            *p->Temper = (data16/32); //Conversion formula if positive temperature.
-           }  
+           }  */
+           data16 = data16>>5;
+           if (data16 & 0x0100) data16 |= 0xFE00;  
+          if (abs(data16) < 100) {*p->Temper = data16; p->ErrTimer = 0;}
+          else if (++p->ErrTimer >= p->ErrCount) {p->Error = TRUE; p->ErrTimer = 0;}
+
 }
 
 void LogInputCalc(LOG_INPUT *p)

@@ -257,10 +257,12 @@ void TIM2_IRQHandler(void)
     {
         CPU_led_timer = 0;
         HAL_GPIO_TogglePin(LED_CPU_GPIO_Port, LED_CPU_Pin);
+         
     } 
   // RTOS
      
-      InterruptUpdate();
+    InterruptUpdate();
+    
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
