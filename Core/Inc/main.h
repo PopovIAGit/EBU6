@@ -76,8 +76,6 @@ extern "C" {
 
 /* USER CODE END EM */
 
-void HAL_HRTIM_MspPostInit(HRTIM_HandleTypeDef *hhrtim);
-
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -170,18 +168,6 @@ void Error_Handler(void);
 #define USART3_TX_BLT_GPIO_Port GPIOD
 #define USART3_RX_BLT_Pin GPIO_PIN_9
 #define USART3_RX_BLT_GPIO_Port GPIOD
-#define Hin_Pin GPIO_PIN_6
-#define Hin_GPIO_Port GPIOC
-#define Lin_Pin GPIO_PIN_7
-#define Lin_GPIO_Port GPIOC
-#define HinC8_Pin GPIO_PIN_8
-#define HinC8_GPIO_Port GPIOC
-#define LinA8_Pin GPIO_PIN_8
-#define LinA8_GPIO_Port GPIOA
-#define HinA9_Pin GPIO_PIN_9
-#define HinA9_GPIO_Port GPIOA
-#define LinA10_Pin GPIO_PIN_10
-#define LinA10_GPIO_Port GPIOA
 #define TIRRIST_Pin GPIO_PIN_11
 #define TIRRIST_GPIO_Port GPIOA
 #define CS_TEMP_Pin GPIO_PIN_0
@@ -247,7 +233,7 @@ extern SPI_HandleTypeDef hspi6;
 extern RTC_HandleTypeDef hrtc;
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
-extern HRTIM_HandleTypeDef hhrtim;
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -41,18 +41,13 @@ void Core_Init(TCore *p)
    
    g_Core.svgen3ph.Scalar = true;
    
-   g_Core.Pwm.Period = _IQdiv((200000000/4), PwmFreq) - 1;
+   g_Core.Pwm.Period = _IQdiv((200000000), PwmFreq) - 1;
 }
-Uns abc = 0;
+
 void core18kHZupdate(void)
 {
-//    HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
-//    HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
+      SpeedRef = 1.0;
     
-//    HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
-//    HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
-
-  
       g_Core.rg1.Freq = (float)SpeedRef; //ToDo задание скорости - убрать
   
 
@@ -84,12 +79,24 @@ void core18kHZupdate(void)
       
                 pwm_calc(&g_Core.Pwm);
                 
-             // abc =  g_Core.Pwm.Period -  g_Core.Pwm.Cmpr1;
-              HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
+           /*     HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
+                HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA2);
+                  
+                  HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB1);
+                HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
+                  
+                HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC1);
+                HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC2);
 
-            //  HRTIM1->sMasterRegs.MCMP1R = abc;
-              
-            abc = __HAL_HRTIM_GETCOMPARE(&hhrtim, HRTIM_TIMERINDEX_MASTER, HRTIM_COMPAREUNIT_1);
+                HRTIM1->sTimerxRegs[0].CMP1xR = g_Core.Pwm.Cmpr1;
+                 HRTIM1->sTimerxRegs[1].CMP1xR = g_Core.Pwm.Cmpr2;
+                  HRTIM1->sTimerxRegs[2].CMP1xR = g_Core.Pwm.Cmpr3;*/
+                    
+                      
+              TIM1->CCR1 = g_Core.Pwm.Cmpr1;
+              TIM1->CCR2 = g_Core.Pwm.Cmpr2;
+              TIM1->CCR3 = g_Core.Pwm.Cmpr3;  
+              TIM1->CCR4 = g_Core.Pwm.Cmpr1;
 }
 
 
@@ -221,12 +228,9 @@ void park_calc(PARK *v)
 
 void PWM_keys_disable(void)
 {
-      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
-      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA2);
-      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB1);
-      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
-      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC1);
-      HAL_HRTIM_SimplePWMStop(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC2);
+HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
+HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
 }
 
 void core200HZupdate(void)
