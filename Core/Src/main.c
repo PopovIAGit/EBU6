@@ -159,17 +159,19 @@ int main(void)
       peref_Init();
       Stat_Init(&g_Stat);
         
-      HAL_TIM_Base_Start_IT (&htim2); // запустили ртос
+      
         
-      HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+  /*    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
         
       HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
       HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);  
       HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-      HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);  
+      HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);  */
+     
+      HAL_TIM_Base_Start(&htim1);
       HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-      HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);  
-
+      HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);  
+      HAL_TIM_Base_Start_IT (&htim2); // запустили ртос
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -612,8 +614,8 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 1;
-  htim1.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED3;
   htim1.Init.Period = 11111;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
@@ -639,9 +641,9 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 5000;
+  sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_LOW;
+  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
   sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
@@ -657,15 +659,10 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.Pulse = 11111;
-  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
-  {
-    Error_Handler();
-  }
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
   sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = 5;
+  sBreakDeadTimeConfig.DeadTime = 50;
   sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
   sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
   sBreakDeadTimeConfig.BreakFilter = 0;

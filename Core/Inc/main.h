@@ -60,7 +60,7 @@ extern "C" {
 #define PRD_50HZ				50			// ????????????? ?????? 50 ??
 
 #define VERSION                                 1
-#define SUBVERSION                              16
+#define SUBVERSION                              21
 
 #define CONCAT2(First, Second) (First ## Second)
 #define CONCAT(First, Second) CONCAT2(First, Second)
@@ -168,8 +168,6 @@ void Error_Handler(void);
 #define USART3_TX_BLT_GPIO_Port GPIOD
 #define USART3_RX_BLT_Pin GPIO_PIN_9
 #define USART3_RX_BLT_GPIO_Port GPIOD
-#define TIRRIST_Pin GPIO_PIN_11
-#define TIRRIST_GPIO_Port GPIOA
 #define CS_TEMP_Pin GPIO_PIN_0
 #define CS_TEMP_GPIO_Port GPIOI
 #define CS_EEPROM_Pin GPIO_PIN_1

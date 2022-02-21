@@ -12,7 +12,8 @@ Uns     PWMPreScale = 1;
 float corr = 1.0; // 5000 = 50דצ
 float timeFreq;
 float SpeedRef, OutVolt;
-
+Uns tim1data = 0;
+Uns fgf =1;
 
 void PWM_keys_disable(void);
 
@@ -78,25 +79,22 @@ void core18kHZupdate(void)
 		g_Core.Pwm.MfuncC3 = g_Core.svgen3ph.Tc;
       
                 pwm_calc(&g_Core.Pwm);
-                
-           /*     HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA1);
-                HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_A, HRTIM_OUTPUT_TA2);
-                  
-                  HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB1);
-                HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_B, HRTIM_OUTPUT_TB2);
-                  
-                HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC1);
-                HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_C, HRTIM_OUTPUT_TC2);
-
-                HRTIM1->sTimerxRegs[0].CMP1xR = g_Core.Pwm.Cmpr1;
-                 HRTIM1->sTimerxRegs[1].CMP1xR = g_Core.Pwm.Cmpr2;
-                  HRTIM1->sTimerxRegs[2].CMP1xR = g_Core.Pwm.Cmpr3;*/
                     
-                      
-              TIM1->CCR1 = g_Core.Pwm.Cmpr1;
-              TIM1->CCR2 = g_Core.Pwm.Cmpr2;
-              TIM1->CCR3 = g_Core.Pwm.Cmpr3;  
-              TIM1->CCR4 = g_Core.Pwm.Cmpr1;
+                if (fgf) 
+                {             
+                  TIM1->CCR1 = g_Core.Pwm.Cmpr1;
+                  TIM1->CCR2 = g_Core.Pwm.Cmpr2;
+                  TIM1->CCR3 = g_Core.Pwm.Cmpr3;  
+               //   TIM1->CCR4 = g_Core.Pwm.Cmpr1;
+                }
+                else 
+                {
+              
+                TIM1->CCR1 = tim1data;
+                TIM1->CCR2 = tim1data;
+                TIM1->CCR3 = tim1data;  
+              //  TIM1->CCR4 = tim1data;
+                }
 }
 
 
