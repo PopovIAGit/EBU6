@@ -161,17 +161,19 @@ int main(void)
         
       
         
-  /*    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+      HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
         
       HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
       HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);  
       HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-      HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);  */
+      HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);  
      
       HAL_TIM_Base_Start(&htim1);
       HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
       HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);  
+     
       HAL_TIM_Base_Start_IT (&htim2); // запустили ртос
+      
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -646,7 +648,7 @@ static void MX_TIM1_Init(void)
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_SET;
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
@@ -662,7 +664,7 @@ static void MX_TIM1_Init(void)
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
   sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = 50;
+  sBreakDeadTimeConfig.DeadTime = 150;
   sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
   sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
   sBreakDeadTimeConfig.BreakFilter = 0;

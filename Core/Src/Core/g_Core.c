@@ -8,12 +8,12 @@ TCore	g_Core;
 
 float   PwmFreq;				// частота ШИМ
 float   PwmDeltat;			// шаг дискретизации токов
-Uns     PWMPreScale = 1;
+Uns     PWMPreScale = 2;
 float corr = 1.0; // 5000 = 50гц
 float timeFreq;
 float SpeedRef, OutVolt;
-Uns tim1data = 0;
-Uns fgf =1;
+
+Uns InvCtrlTimer =0;
 
 void PWM_keys_disable(void);
 
@@ -27,7 +27,7 @@ void Core_Init(TCore *p)
    g_Core.rg1.Gain                 = 1.0;
    g_Core.rg1.Offset               = 0.0;
    
-   PwmFreq   = _IQdiv((HZ), PWMPreScale);
+   PwmFreq   = _IQdiv((HZ), 1);
    PwmDeltat = _IQdiv(1, PwmFreq);
    
    g_Core.rg1.StepAngleMax         = 50.0 * PwmDeltat;
@@ -45,10 +45,12 @@ void Core_Init(TCore *p)
    g_Core.Pwm.Period = _IQdiv((200000000), PwmFreq) - 1;
 }
 
+
 void core18kHZupdate(void)
 {
-      SpeedRef = 1.0;
-    
+     
+   if (++InvCtrlTimer >= PWMPreScale)
+    {   
       g_Core.rg1.Freq = (float)SpeedRef; //ToDo задание скорости - убрать
   
 
@@ -71,7 +73,11 @@ void core18kHZupdate(void)
       		g_Core.svgen3ph.RampGenOut = g_Core.ipark.Angle;
 		g_Core.svgen3ph.Valpha     = g_Core.ipark.Alpha;		
 		g_Core.svgen3ph.Vbeta      = g_Core.ipark.Beta;	
-      
+      // псевдо обратная связь
+       g_Core.svgen3ph.dVa = 1.0 - SpeedRef;
+       g_Core.svgen3ph.dVb = 1.0 - SpeedRef;
+       g_Core.svgen3ph.dVc = 1.0 - SpeedRef;
+       
       svgendq3ph_calc(&g_Core.svgen3ph);
       
       		g_Core.Pwm.MfuncC1 = g_Core.svgen3ph.Ta;
@@ -79,22 +85,16 @@ void core18kHZupdate(void)
 		g_Core.Pwm.MfuncC3 = g_Core.svgen3ph.Tc;
       
                 pwm_calc(&g_Core.Pwm);
-                    
-                if (fgf) 
-                {             
+                             
                   TIM1->CCR1 = g_Core.Pwm.Cmpr1;
-                  TIM1->CCR2 = g_Core.Pwm.Cmpr2;
-                  TIM1->CCR3 = g_Core.Pwm.Cmpr3;  
-               //   TIM1->CCR4 = g_Core.Pwm.Cmpr1;
-                }
-                else 
-                {
-              
-                TIM1->CCR1 = tim1data;
-                TIM1->CCR2 = tim1data;
-                TIM1->CCR3 = tim1data;  
-              //  TIM1->CCR4 = tim1data;
-                }
+                  TIM1->CCR2 = g_Core.Pwm.Cmpr3;
+                  TIM1->CCR3 = g_Core.Pwm.Cmpr2;  
+                  
+                  
+                InvCtrlTimer = 0;
+    }
+
+                
 }
 
 
@@ -154,7 +154,6 @@ void rampgen_calc(RAMPGEN *v)
 	if (v->Angle > corr)     
         {
           v->Angle -= corr;
-          HAL_GPIO_TogglePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin);
         }        
         
 	else if (v->Angle < 0){ 
