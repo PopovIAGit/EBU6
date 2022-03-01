@@ -31,7 +31,7 @@ Outputs
 #define BASE_VOLTAGE		380	// Базовое напряжения
 #define BASE_CURRENT		530	// Базовый ток (1 - 0.1 А)
 #define BASE_DC_VOLT		534	// Базовое напряжение в звене пост. тока
-#define MAX_Tx_OUT	        0.985
+#define MAX_Tx_OUT	        0.80
 
 #define   _IQsinPU(A)         sinf((A)*6.283185307)
 #define   _IQcosPU(A)         cosf((A)*6.283185307)

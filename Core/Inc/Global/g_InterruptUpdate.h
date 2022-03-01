@@ -52,6 +52,7 @@ TPeriodicalFunction Task2kHz[] =          //Ќе более 8-х задач
 TPeriodicalFunction Task200Hz[] =       	//не более  20-ти задач
 {
      PrdElemInit(DISPL_Update,                   &g_Peref.Display),
+     PrdElemInit(core200HZupdate,			NULL),	//	20
      PrdElemInit(peref_200HzCalc,                &g_Peref)
 };
 
@@ -70,6 +71,7 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
     PrdElemInit(LogInputCalc,			&g_Peref.BtnOpen),	//	6
     PrdElemInit(LogInputCalc,			&g_Peref.BtnProg1),	//	5
     PrdElemInit(LogInputCalc,			&g_Peref.BtnProg2),	//	6
+    PrdElemInit(core50HZupdate,			NULL),	//	20
     PrdElemInit(peref_50HzCalc,                 &g_Peref)
 };
 
@@ -77,12 +79,13 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
 
 TPeriodicalFunction Task10Hz[] =        //не более  200-т задач
 {  
-  //  PrdElemInit(peref_10HzCalc,                 &g_Peref),
+    PrdElemInit(peref_10HzCalc,                 &g_Peref),
     PrdElemInit(g_Ram_Update,			&g_Ram),
     PrdElemInit(peref_74HC595D,			&g_Peref),
     PrdElemInit(Core_MenuUpdate,		&menu),			// 1
     PrdElemInit(Core_MENU_Display,		&menu),			// 2
     PrdElemInit(DisplayStart,			NULL),	//	20
+    PrdElemInit(core10HZupdate,			NULL),	//	20
     PrdElemInit(RtcControl,				NULL)	
   
 };

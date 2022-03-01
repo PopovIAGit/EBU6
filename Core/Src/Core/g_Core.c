@@ -13,9 +13,21 @@ float corr = 1.0; // 5000 = 50ãö
 float timeFreq;
 float SpeedRef, OutVolt;
 
-Uns InvCtrlTimer =0;
+Uns InvCtrlTimer = 0;
 
 void PWM_keys_disable(void);
+void PWM_keys_enable(void);
+
+Uns StartTimer = 1 * PRD_10HZ;          // thyr pause
+
+Uns ShC_Level = 32767;                  // shc level
+
+Float speedstart = 0;   // speed start
+float SpeedMax = 0;     // to speed
+Uns SpeedTime = 0;      // speed time
+Uns  SpeedEnable = 0;   // enable
+Uns TimerInterp = 0;
+float AngleInterp(float StartValue, float EndValue, Uns Time);
 
 void Core_Init(TCore *p)
 {	
@@ -45,55 +57,70 @@ void Core_Init(TCore *p)
    g_Core.Pwm.Period = _IQdiv((200000000), PwmFreq) - 1;
 }
 
-
+Uns ModuleTemper = 0;
+Uns IDC = 0;
+Uns ModFault = 1; // 1 norm, 0 - fault
 void core18kHZupdate(void)
 {
-     
-   if (++InvCtrlTimer >= PWMPreScale)
+ //  ADC__1                                         0 UL1_ADC   1 UL3_ADC   2 I_brake_A   3 UL2_ADC  4 TMP_DV_A  5 TempModule_A
+ //  ADC__3                                         0 VDC_A     1 IU_ADC    2 IV_ADC    3 IW_ADC
+    
+      
+    ModuleTemper = g_Peref.adcData1[5]; // all in 
+    IDC  = g_Peref.adcData3[0];
+    // SHC Protect Test--------------------------------------------------
+
+    if (( g_Peref.adcData3[1] > ShC_Level) ||  (g_Peref.adcData3[2] > ShC_Level)  || (g_Peref.adcData3[3] > ShC_Level))
+    {
+      g_Core.Status.bit.Fault = 1;
+    }
+      ModFault = HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
+      if (!ModFault)  
+        g_Core.Status.bit.Fault = 1;
+
+    //--------------------------------------------------------------------------
+
+   if (!g_Core.Status.bit.Fault && SpeedRef)
+   {     
+    PWM_keys_enable();
+      
+    if (++InvCtrlTimer >= PWMPreScale)
     {   
       g_Core.rg1.Freq = (float)SpeedRef; //ToDo çàäàíèå ñêîðîñòè - óáðàòü
-  
-
       rampgen_calc(&g_Core.rg1);         // ïèëà îñíîâíîé ãàðìîíèêè 1.0 - 50 Ãö
-      g_Core.vhz.Input = SpeedRef;
+      g_Core.vhz.Input = fabsf(SpeedRef);
       interp2D_calc(&g_Core.vhz);
-      
-      OutVolt = g_Core.vhz.Output;
-      
+      OutVolt = g_Core.vhz.Output;   
       g_Core.ipark.Ds = OutVolt;
-      g_Core.ipark.Qs = 0;
-      
+      g_Core.ipark.Qs = 0;      
       g_Core.ipark.Angle = g_Core.rg1.Out;
-      g_Core.park.Angle = g_Core.rg1.Out;
-      
-      
+      g_Core.park.Angle = g_Core.rg1.Out;            
       ipark_calc(&g_Core.ipark);
       park_calc(&g_Core.park);
-      
-      		g_Core.svgen3ph.RampGenOut = g_Core.ipark.Angle;
-		g_Core.svgen3ph.Valpha     = g_Core.ipark.Alpha;		
-		g_Core.svgen3ph.Vbeta      = g_Core.ipark.Beta;	
-      // ïñåâäî îáðàòíàÿ ñâÿçü
-       g_Core.svgen3ph.dVa = 1.0 - SpeedRef;
-       g_Core.svgen3ph.dVb = 1.0 - SpeedRef;
-       g_Core.svgen3ph.dVc = 1.0 - SpeedRef;
+     
+      	g_Core.svgen3ph.RampGenOut = g_Core.ipark.Angle;
+	g_Core.svgen3ph.Valpha     = g_Core.ipark.Alpha;		
+	g_Core.svgen3ph.Vbeta      = g_Core.ipark.Beta;	
        
       svgendq3ph_calc(&g_Core.svgen3ph);
       
-      		g_Core.Pwm.MfuncC1 = g_Core.svgen3ph.Ta;
-		g_Core.Pwm.MfuncC2 = g_Core.svgen3ph.Tb;
-		g_Core.Pwm.MfuncC3 = g_Core.svgen3ph.Tc;
+      	g_Core.Pwm.MfuncC1 = g_Core.svgen3ph.Ta;
+	g_Core.Pwm.MfuncC2 = g_Core.svgen3ph.Tb;
+	g_Core.Pwm.MfuncC3 = g_Core.svgen3ph.Tc;
       
-                pwm_calc(&g_Core.Pwm);
+        pwm_calc(&g_Core.Pwm);
                              
-                  TIM1->CCR1 = g_Core.Pwm.Cmpr1;
-                  TIM1->CCR2 = g_Core.Pwm.Cmpr3;
-                  TIM1->CCR3 = g_Core.Pwm.Cmpr2;  
-                  
-                  
-                InvCtrlTimer = 0;
+        TIM1->CCR1 = g_Core.Pwm.Cmpr1;
+        TIM1->CCR2 = g_Core.Pwm.Cmpr3;
+        TIM1->CCR3 = g_Core.Pwm.Cmpr2;  
+                           
+        InvCtrlTimer = 0;
     }
-
+   }
+     else 
+     {
+      PWM_keys_disable();
+     }
                 
 }
 
@@ -158,7 +185,6 @@ void rampgen_calc(RAMPGEN *v)
         
 	else if (v->Angle < 0){ 
           v->Angle += corr;
-        //  HAL_GPIO_TogglePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin);
         }
 	
 	// Compute the ramp output
@@ -228,11 +254,26 @@ void PWM_keys_disable(void)
 HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
 HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
 HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_3);
+
+HAL_TIMEx_PWMN_Stop(&htim1, TIM_CHANNEL_1);
+HAL_TIMEx_PWMN_Stop(&htim1, TIM_CHANNEL_2);
+HAL_TIMEx_PWMN_Stop(&htim1, TIM_CHANNEL_3);
+}
+
+void PWM_keys_enable(void)
+{
+HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+
+HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
+HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);
 }
 
 void core200HZupdate(void)
 {
-
+  
 }
 
 void core50HZupdate(void)
@@ -242,7 +283,18 @@ void core50HZupdate(void)
 
 void core10HZupdate(void)
 {
-
+    if (StartTimer > 0) StartTimer--;
+    else {
+    
+      HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_D, HRTIM_OUTPUT_TD1);
+    }
+           
+    if (SpeedEnable)  SpeedRef = AngleInterp(speedstart, SpeedMax, SpeedTime);
+    else 
+    {
+      SpeedRef = 0;
+      TimerInterp = 0;
+    }
 }
 
 void coreTU(TCore *p)
@@ -363,5 +415,51 @@ void coreTLocalControl(TCore *p)
 
 }
 
+float OutputQ15 = 0.0;
+float data1 = 0;
+float data2 = 0;
+float AngleInterp(float StartValue, float EndValue, Uns Time)
+{
+ 
+   if (EndValue > 0 ){
+	if (TimerInterp == 0) 
+          OutputQ15 = StartValue;
+	//else OutputQ15 = OutputQ15 - _IQ15div(((LgInt)(StartValue - EndValue) << 15), _IQ15mpy((LgInt)Time * 3277, _IQ15(200.0)));	// ÐŸÑ€Ð¸ Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐµ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ð¸Ð· Ð´Ñ€ÑƒÐ³Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾ÐµÐºÑ‚Ð°, Ð±ÑƒÐ´ÑŒÑ‚Ðµ Ð²Ð½Ð¸Ð¼Ð°Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ð¼Ð¸!!
+        else 
+        {
+          data1 = (EndValue - StartValue); 
+          data2 = Time * 10;
+          OutputQ15 = OutputQ15 + data1/data2;
+        } 
 
+	TimerInterp++;
+	
+	if (OutputQ15 >= EndValue) 
+          return EndValue;
+	else if (OutputQ15 <= StartValue ) 
+          return StartValue;
+		 else 
+                   return OutputQ15;
+   }
+    else 
+    {
+      if (TimerInterp == 0) 
+          OutputQ15 = StartValue;
+        else 
+        {
+          data1 = (EndValue + StartValue); 
+          data2 = Time * 10;
+          OutputQ15 = OutputQ15 + data1/data2;
+        } 
+
+	TimerInterp++;
+	
+	if (OutputQ15 <= EndValue) 
+          return EndValue;
+	else if (OutputQ15 >= StartValue ) 
+          return StartValue;
+		 else 
+                   return OutputQ15;
+    }
+} 
 

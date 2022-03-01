@@ -26,6 +26,7 @@ Uns TmpTC = 0;
 
 Uns tempertmp = 0;
  Uns btnOpen, btnClose, btnStop1,btnStop2,btnProg1, btnProg2;
+extern float SpeedRef;
 
 
 char Icons[NUM_ICONS][7] =	{
@@ -266,10 +267,10 @@ void peref_50HzCalc(TPeref *p)
  
 }
 
+uint8_t murovei = 0, gavno = 0;
 void peref_10HzCalc(TPeref *p)//
 {
  
-  
   // LED control
   if (g_Ram.TestParam.Mode == 1)
   {
