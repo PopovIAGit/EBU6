@@ -137,10 +137,6 @@ void peref_Init(void)
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.UR, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.US, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.UT, PRD_18KHZ);
-   /* Peref_SinObserverInitFloat(&g_Peref.sinObserver.IU, PRD_18KHZ);
-    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IV, PRD_18KHZ);
-    Peref_SinObserverInitFloat(&g_Peref.sinObserver.IW, PRD_18KHZ);*/
-
 }
 
 void peref_18KHzCalc(TPeref *p)//
@@ -173,18 +169,11 @@ void peref_18KHzCalc(TPeref *p)//
     p->sinObserver.UR.Input = p->URfltr.Output;
     p->sinObserver.US.Input = p->USfltr.Output;
     p->sinObserver.UT.Input = p->UTfltr.Output;
- /*   p->sinObserver.IU.Input = p->IUfltr.Output;
-    p->sinObserver.IV.Input = p->IVfltr.Output;
-    p->sinObserver.IW.Input = p->IWfltr.Output;*/
 
     Peref_SinObserverUpdateFloat(&p->sinObserver.UR);
     Peref_SinObserverUpdateFloat(&p->sinObserver.US);
     Peref_SinObserverUpdateFloat(&p->sinObserver.UT);
-/*    Peref_SinObserverUpdateFloat(&p->sinObserver.IU);
-    Peref_SinObserverUpdateFloat(&p->sinObserver.IV);
-    Peref_SinObserverUpdateFloat(&p->sinObserver.IW);*/
     
-
 }
 
 
@@ -208,7 +197,7 @@ void peref_200HzCalc(TPeref *p)
             { 
                 addr = GetAdr(FactoryParam.ProductYear);
                 count = 1;
-               ReadWriteEeprom(&Eeprom1,F_WRITE,addr,&Data,1);
+               ReadWriteEeprom(&Eeprom1,F_WRITE,addr,&g_Ram.FactoryParam.ProductYear,1);
                   memtemp = 0;
             }
           }
@@ -219,7 +208,7 @@ void peref_200HzCalc(TPeref *p)
             { 
                 addr = GetAdr(FactoryParam.ProductYear);
                 count = 1;
-                ReadWriteEeprom(&Eeprom1,F_READ,addr,&Data,1);
+                ReadWriteEeprom(&Eeprom1,F_READ,addr,&g_Ram.FactoryParam.ProductYear,1);
                   memtemp = 0;
 
             }

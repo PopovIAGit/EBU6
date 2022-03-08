@@ -81,9 +81,9 @@ typedef struct _TUserParam
 	Uns             RsStation;              // B25. 65 Адрес станции
 	TParityMode	RsMode;			// B26. 66 Режим связи
 	Uns		MuffTimer;		// B27. 67
-	Uns		reserv68;		// B28. 68 Резерв
-	Uns		reserv69;		// B29. 69 Резерв
-        Uns		reserv70;		// B30. 70 Резерв
+	Uns		TimeSpeedStart;		// B28. 68 
+	Int		SpeedStart;		// B29. 69 
+        Uns		TimeSpeedStop;		// B30. 70 
 	Uns		reserv71;		// B31. 71 Резерв
 	Uns		NoMoveTime;		// B32. 72 Время отсутствия движения
 	Uns		OverwayZone;		// B33. 73 Максимальный путь уплотнения
