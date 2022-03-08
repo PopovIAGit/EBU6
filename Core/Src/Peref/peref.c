@@ -46,7 +46,7 @@ void peref_Init(void)
     g_Peref.BtnOpen.LogType = ltAnMin;
     g_Peref.BtnOpen.Enable = TRUE;
     g_Peref.BtnOpen.Input = Null;
-    g_Peref.BtnOpen.Output = &g_Peref.BtnStatus;
+ //   g_Peref.BtnOpen.Output = &g_Peref.BtnStatus;
     g_Peref.BtnOpen.Level = &BtnLevel;
     g_Peref.BtnOpen.Timeout = &BtnTout;
     g_Peref.BtnOpen.BitMask = 1<<0;
@@ -58,7 +58,7 @@ void peref_Init(void)
     g_Peref.BtnClose.LogType = ltAnMin;
     g_Peref.BtnClose.Enable = TRUE;
     g_Peref.BtnClose.Input = Null;
-    g_Peref.BtnClose.Output = &g_Peref.BtnStatus;
+ //   g_Peref.BtnClose.Output = &g_Peref.BtnStatus;
     g_Peref.BtnClose.Level = &BtnLevel;
     g_Peref.BtnClose.Timeout = &BtnTout;
     g_Peref.BtnClose.BitMask = 1<<1;
@@ -70,7 +70,7 @@ void peref_Init(void)
     g_Peref.BtnStop1.LogType = ltAnMin;
     g_Peref.BtnStop1.Enable = TRUE;
     g_Peref.BtnStop1.Input = Null;
-    g_Peref.BtnStop1.Output = &g_Peref.BtnStatus;
+  //  g_Peref.BtnStop1.Output = &g_Peref.BtnStatus;
     g_Peref.BtnStop1.Level = &BtnLevel;
     g_Peref.BtnStop1.Timeout = &BtnTout;
     g_Peref.BtnStop1.BitMask = 1<<2;
@@ -82,7 +82,7 @@ void peref_Init(void)
     g_Peref.BtnStop2.LogType = ltAnMin;
     g_Peref.BtnStop2.Enable = TRUE;
     g_Peref.BtnStop2.Input = Null;
-    g_Peref.BtnStop2.Output = &g_Peref.BtnStatus;
+ //   g_Peref.BtnStop2.Output = &g_Peref.BtnStatus;
     g_Peref.BtnStop2.Level = &BtnLevel;
     g_Peref.BtnStop2.Timeout = &BtnTout;
     g_Peref.BtnStop2.BitMask = 1<<3;
@@ -94,7 +94,7 @@ void peref_Init(void)
     g_Peref.BtnProg1.LogType = ltAnMin;
     g_Peref.BtnProg1.Enable = TRUE;
     g_Peref.BtnProg1.Input = Null;
-    g_Peref.BtnProg1.Output = &g_Peref.BtnStatus;
+ //   g_Peref.BtnProg1.Output = &g_Peref.BtnStatus;
     g_Peref.BtnProg1.Level = &BtnLevel;
     g_Peref.BtnProg1.Timeout = &BtnTout;
     g_Peref.BtnProg1.BitMask = 1<<4;
@@ -106,7 +106,7 @@ void peref_Init(void)
     g_Peref.BtnProg2.LogType = ltAnMin;
     g_Peref.BtnProg2.Enable = TRUE;
     g_Peref.BtnProg2.Input = Null;
-    g_Peref.BtnProg2.Output = &g_Peref.BtnStatus;
+ //   g_Peref.BtnProg2.Output = &g_Peref.BtnStatus;
     g_Peref.BtnProg2.Level = &BtnLevel;
     g_Peref.BtnProg2.Timeout = &BtnTout;
     g_Peref.BtnProg2.BitMask = 1<<5;

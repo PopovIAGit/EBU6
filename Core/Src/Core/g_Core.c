@@ -385,7 +385,7 @@ void coreTLocalControl(TCore *p)
                       if (SpeedRef == 0){
                         TimerInterp = 0;
                                     speedstart = 0;
-                                    SpeedMax = ((float)g_Ram.UserParam.SpeedStart)/10;
+                                    SpeedMax = (((float)g_Ram.UserParam.SpeedStart)/10)/500;
                                     SpeedEnable = 1;}
                             break;
                     case BTN_CLOSE:
@@ -393,7 +393,7 @@ void coreTLocalControl(TCore *p)
                                    if (SpeedRef == 0){
                                      TimerInterp = 0;
                                     speedstart = 0;
-                                    SpeedMax = (((float)g_Ram.UserParam.SpeedStart)/10)*-1.0;
+                                    SpeedMax = ((((float)g_Ram.UserParam.SpeedStart)/10)*-1.0)/500;
                                     SpeedEnable = 1;}
                             break;
                     case BTN_PROG1:

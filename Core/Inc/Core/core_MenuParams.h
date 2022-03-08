@@ -91,7 +91,7 @@ const struct MENU_PARAM params[] = {
 		"B26.COMM TYPE   ", "    ", 	0,      2,  	0, M_LIST|M_SADR(224),						//66
 		"B27.MUFF TIME   ", "S   ", 	3,    100,     20, M_EDIT|M_RMAX(2)|M_PREC(1),				        //67
 		"B28.¬–≈Ã –¿«√ŒÕ¿", "    ", 	0,    100,    100, M_EDIT|M_RMAX(2)|M_PREC(1),							//68
-		"B29.— Œ– Ã¿ —   ", "    ", 	0,     10,     10, M_EDIT|M_RMAX(1)|M_PREC(1),							//69
+		"B29.— Œ– Ã¿ —   ", "√÷  ", 	0,    500,    500, M_EDIT|M_RMAX(1)|M_PREC(1),							//69
 		"B30.¬–≈Ã “Œ–ÃŒ∆ ", "    ", 	0,    100,    100, M_EDIT|M_RMAX(2)|M_PREC(1),							//70
 		"   B31.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//71
 		"B32.NO MOVE TIME", "S   ", 	3,    100,     20, M_EDIT|M_RMAX(2)|M_PREC(1),				        //72
