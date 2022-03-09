@@ -187,7 +187,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-       ADT7301_Update(&g_Peref.Temper);// 
+  //     ADT7301_Update(&g_Peref.Temper);// 
   }
   /* USER CODE END 3 */
 }

@@ -44,7 +44,7 @@ TPeriodicalFunction Task18kHz[] =
 
 TPeriodicalFunction Task2kHz[] =          //Не более 8-х задач
 {
- // PrdElemInit(FM25V10_Update,		      &Eeprom1),
+  PrdElemInit(FM25V10_Update,		      &Eeprom1),
   PrdElemInit(peref_2KHzCalc,                 &g_Peref)
 };
 // ================================ 200 vц ==================================

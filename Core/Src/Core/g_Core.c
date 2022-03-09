@@ -22,7 +22,7 @@ Uns StartTimer = 1 * PRD_10HZ;          // thyr pause
 
 Uns ShC_Level = 32767;                  // shc level
 
-Float speedstart = 0;   // speed start
+float speedstart = 0;   // speed start
 float SpeedMax = 0;     // to speed
 Uns SpeedTime = 0;      // speed time
 Uns  SpeedEnable = 0;   // enable
@@ -289,11 +289,26 @@ void core10HZupdate(void)
       HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_D, HRTIM_OUTPUT_TD1);
     }
            
-    if (SpeedEnable)  SpeedRef = AngleInterp(speedstart, SpeedMax, SpeedTime);
+  /*  if (SpeedEnable)  SpeedRef = AngleInterp(speedstart, SpeedMax, SpeedTime);
     else 
     {
       SpeedRef = 0;
       TimerInterp = 0;
+    }*/
+    
+    if (SpeedEnable == 1 && SpeedRef < fabs(SpeedMax))
+    {
+      SpeedRef = AngleInterp(speedstart, SpeedMax, g_Ram.UserParam.TimeSpeedStart);
+    }
+    else if (SpeedEnable == 2 && SpeedRef != 0)
+    {
+      
+      SpeedRef = AngleInterp(speedstart, SpeedMax, g_Ram.UserParam.TimeSpeedStop);
+    }
+    else if (SpeedEnable == 2 && SpeedRef == 0)
+    {
+      SpeedEnable = 0;
+      SpeedMax = 0;
     }
 }
 
@@ -367,9 +382,19 @@ void coreTLocalControl(TCore *p)
               {
                     case BTN_OPEN: 
                                    // Mcu.Mpu.BtnKey = KEY_OPEN;
+                      if (SpeedRef == 0){
+                        TimerInterp = 0;
+                                    speedstart = 0;
+                                    SpeedMax = (((float)g_Ram.UserParam.SpeedStart)/10)/500;
+                                    SpeedEnable = 1;}
                             break;
                     case BTN_CLOSE:
                                    // Mcu.Mpu.BtnKey = KEY_CLOSE;
+                                   if (SpeedRef == 0){
+                                     TimerInterp = 0;
+                                    speedstart = 0;
+                                    SpeedMax = ((((float)g_Ram.UserParam.SpeedStart)/10)*-1.0)/500;
+                                    SpeedEnable = 1;}
                             break;
                     case BTN_PROG1:
                       {
@@ -391,11 +416,21 @@ void coreTLocalControl(TCore *p)
               switch(g_Peref.BtnStatus & BTN_STOP)
               {
                 case BTN_STOP1:
+                  if (SpeedRef != 0){
+                    TimerInterp = 0;
+                          SpeedEnable = 2;
+                          SpeedMax = 0;
+                          speedstart = SpeedRef;}
                           if (p->Status.bit.MuDu || g_Ram.UserParam.MuDuSetup == mdOff)
                          // Mcu.Mpu.BtnKey = KEY_STOP;
                 break;
                 
                 case BTN_STOP2:
+                          if (SpeedRef != 0){
+                            TimerInterp = 0;
+                          SpeedEnable = 2;
+                          SpeedMax = 0;
+                          speedstart = SpeedRef;}
                           if (p->Status.bit.MuDu || g_Ram.UserParam.MuDuSetup == mdOff)
                          // Mcu.Mpu.BtnKey = KEY_STOP;
                 break;
@@ -421,14 +456,14 @@ float data2 = 0;
 float AngleInterp(float StartValue, float EndValue, Uns Time)
 {
  
-   if (EndValue > 0 ){
+   if (EndValue > 0){
 	if (TimerInterp == 0) 
           OutputQ15 = StartValue;
 	//else OutputQ15 = OutputQ15 - _IQ15div(((LgInt)(StartValue - EndValue) << 15), _IQ15mpy((LgInt)Time * 3277, _IQ15(200.0)));	// При переносе функции из другого проекта, будьте внимательными!!
         else 
         {
           data1 = (EndValue - StartValue); 
-          data2 = Time * 10;
+          data2 = Time * 1;
           OutputQ15 = OutputQ15 + data1/data2;
         } 
 
@@ -441,14 +476,14 @@ float AngleInterp(float StartValue, float EndValue, Uns Time)
 		 else 
                    return OutputQ15;
    }
-    else 
+    else if (EndValue < 0)
     {
       if (TimerInterp == 0) 
           OutputQ15 = StartValue;
         else 
         {
           data1 = (EndValue + StartValue); 
-          data2 = Time * 10;
+          data2 = Time * 1;
           OutputQ15 = OutputQ15 + data1/data2;
         } 
 
@@ -461,5 +496,45 @@ float AngleInterp(float StartValue, float EndValue, Uns Time)
 		 else 
                    return OutputQ15;
     }
+   else if (EndValue == 0 && StartValue > 0)
+   {
+         if (TimerInterp == 0) 
+          OutputQ15 = StartValue;
+        else 
+        {
+          data1 = (EndValue + StartValue); 
+          data2 = Time * 1;
+          OutputQ15 = OutputQ15 - data1/data2;
+        } 
+
+	TimerInterp++;
+	
+	if (OutputQ15 <= EndValue) 
+          return EndValue;
+	else if (OutputQ15 >= StartValue ) 
+          return StartValue;
+		 else 
+                   return OutputQ15;
+   }
+   else if (EndValue == 0 && StartValue <0)
+   {
+         if (TimerInterp == 0) 
+          OutputQ15 = StartValue;
+        else 
+        {
+          data1 = (EndValue + StartValue); 
+          data2 = Time * 1;
+          OutputQ15 = OutputQ15 - data1/data2;
+        } 
+
+	TimerInterp++;
+	
+	if (OutputQ15 >= EndValue) 
+          return EndValue;
+	else if (OutputQ15 <= StartValue ) 
+          return StartValue;
+		 else 
+                   return OutputQ15;
+   }
 } 
 

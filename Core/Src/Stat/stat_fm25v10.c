@@ -164,7 +164,7 @@ Byte FM25V10_ReadByte(TFM25V10 *p, unsigned long Addr)
         //HAL_SPI_TransmitReceive(&hspi1, cmd, Data, 5, 100);   
 	HAL_SPI_Transmit(&hspi1, cmd, 4, 100);
         HAL_SPI_Receive(&hspi1, &Data, 1, 100);
-            HAL_GPIO_WritePin(CS_EEPROM_GPIO_Port, CS_EEPROM_Pin, GPIO_PIN_SET); 
+        HAL_GPIO_WritePin(CS_EEPROM_GPIO_Port, CS_EEPROM_Pin, GPIO_PIN_SET); 
 
 	return Data;											
 }
