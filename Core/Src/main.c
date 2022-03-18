@@ -123,7 +123,7 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_ADC3_Init();
-  MX_RTC_Init();
+//  MX_RTC_Init();
   MX_SPI1_Init();
   MX_SPI6_Init();
   MX_TIM1_Init();
@@ -181,11 +181,14 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+     
   while (1)
   {
  
     /* USER CODE END WHILE */
 
+     
+    
     /* USER CODE BEGIN 3 */
   //     ADT7301_Update(&g_Peref.Temper);// 
   }

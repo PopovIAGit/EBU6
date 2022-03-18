@@ -28,6 +28,8 @@ Uns tempertmp = 0;
  Uns btnOpen, btnClose, btnStop1,btnStop2,btnProg1, btnProg2;
 extern float SpeedRef;
 
+uint8_t pBuff_ADC [2];
+uint8_t pADS1118_ConfRegData[2];
 
 char Icons[NUM_ICONS][7] =	{
 					0x1F,0x11,0x1F,0x04,0x06,0x04,0x07,
@@ -46,7 +48,7 @@ void peref_Init(void)
     g_Peref.BtnOpen.LogType = ltAnMin;
     g_Peref.BtnOpen.Enable = TRUE;
     g_Peref.BtnOpen.Input = Null;
- //   g_Peref.BtnOpen.Output = &g_Peref.BtnStatus;
+   g_Peref.BtnOpen.Output = &g_Peref.BtnStatus;
     g_Peref.BtnOpen.Level = &BtnLevel;
     g_Peref.BtnOpen.Timeout = &BtnTout;
     g_Peref.BtnOpen.BitMask = 1<<0;
@@ -58,7 +60,7 @@ void peref_Init(void)
     g_Peref.BtnClose.LogType = ltAnMin;
     g_Peref.BtnClose.Enable = TRUE;
     g_Peref.BtnClose.Input = Null;
- //   g_Peref.BtnClose.Output = &g_Peref.BtnStatus;
+   g_Peref.BtnClose.Output = &g_Peref.BtnStatus;
     g_Peref.BtnClose.Level = &BtnLevel;
     g_Peref.BtnClose.Timeout = &BtnTout;
     g_Peref.BtnClose.BitMask = 1<<1;
@@ -70,7 +72,7 @@ void peref_Init(void)
     g_Peref.BtnStop1.LogType = ltAnMin;
     g_Peref.BtnStop1.Enable = TRUE;
     g_Peref.BtnStop1.Input = Null;
-  //  g_Peref.BtnStop1.Output = &g_Peref.BtnStatus;
+    g_Peref.BtnStop1.Output = &g_Peref.BtnStatus;
     g_Peref.BtnStop1.Level = &BtnLevel;
     g_Peref.BtnStop1.Timeout = &BtnTout;
     g_Peref.BtnStop1.BitMask = 1<<2;
@@ -82,7 +84,7 @@ void peref_Init(void)
     g_Peref.BtnStop2.LogType = ltAnMin;
     g_Peref.BtnStop2.Enable = TRUE;
     g_Peref.BtnStop2.Input = Null;
- //   g_Peref.BtnStop2.Output = &g_Peref.BtnStatus;
+    g_Peref.BtnStop2.Output = &g_Peref.BtnStatus;
     g_Peref.BtnStop2.Level = &BtnLevel;
     g_Peref.BtnStop2.Timeout = &BtnTout;
     g_Peref.BtnStop2.BitMask = 1<<3;
@@ -94,7 +96,7 @@ void peref_Init(void)
     g_Peref.BtnProg1.LogType = ltAnMin;
     g_Peref.BtnProg1.Enable = TRUE;
     g_Peref.BtnProg1.Input = Null;
- //   g_Peref.BtnProg1.Output = &g_Peref.BtnStatus;
+    g_Peref.BtnProg1.Output = &g_Peref.BtnStatus;
     g_Peref.BtnProg1.Level = &BtnLevel;
     g_Peref.BtnProg1.Timeout = &BtnTout;
     g_Peref.BtnProg1.BitMask = 1<<4;
@@ -106,7 +108,7 @@ void peref_Init(void)
     g_Peref.BtnProg2.LogType = ltAnMin;
     g_Peref.BtnProg2.Enable = TRUE;
     g_Peref.BtnProg2.Input = Null;
- //   g_Peref.BtnProg2.Output = &g_Peref.BtnStatus;
+    g_Peref.BtnProg2.Output = &g_Peref.BtnStatus;
     g_Peref.BtnProg2.Level = &BtnLevel;
     g_Peref.BtnProg2.Timeout = &BtnTout;
     g_Peref.BtnProg2.BitMask = 1<<5;
@@ -116,7 +118,7 @@ void peref_Init(void)
     g_Peref.BtnProg2.Flag = false;              
   
     // включение ТС
-    g_Peref.TS_Enable = GPIO_PIN_RESET;  //ToDo менять если надо 0 enable
+  //  g_Peref.TS_Enable = GPIO_PIN_SET;  //ToDo менять если надо 0 enable
     
     // конфигурируем ТУ 
     MCP23S17_init();
@@ -137,6 +139,13 @@ void peref_Init(void)
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.UR, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.US, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.UT, PRD_18KHZ);
+      
+        
+    // конфигурируем ADS1118 для токового входа
+   
+          ADS1118_init(&g_Peref);
+      //-------------------------------------------------------
+       
 }
 
 void peref_18KHzCalc(TPeref *p)//
@@ -219,9 +228,19 @@ void peref_200HzCalc(TPeref *p)
 
 Uns TirTimer = 2*PRD_50HZ;
 uint32_t hui = 0;
+
+uint8_t DAC_tmp[3];
+uint8_t DAC_on_off = 0x02; // по умолчанию токовый выход выключен, его нужно включить в меню при выборе управления АНАЛОГОВОЕ когда подключают токовый вход и выход (выставить 0)
+
+//данные для ADS1118 ----------------
+
+uint8_t ADC_data [2]; 
+uint8_t pBuffOut[2];
+uint16_t DAC_tmp_16;
+//-----------------------------------
 void peref_50HzCalc(TPeref *p)
 { 
-  uint8_t DAC_tmp[2];
+  
  //TODO переделать на нормальный PowerControl
 /*  if (g_Peref.VoltOn == 0) 
   {
@@ -244,14 +263,25 @@ void peref_50HzCalc(TPeref *p)
    }*/
   
   // TU------------------------------------------------------------------------
-//  MCP23S17_update(p);
+  //  MCP23S17_update(p);
+    
+      
    // DAC----------------------------------------------------------------------
-/*  HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_RESET);    
-  HAL_SPI_Receive(&hspi6,(uint8_t*)DAC_tmp, 2, 100);    
-  HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_SET);
-  
-  p->DAC_data = DAC_tmp[0];
-  p->DAC_data |= DAC_tmp[1]<<8;*/
+        
+    DAC_tmp[0] = DAC_on_off; // когда все гуд 0, чтобы выключить и было 1мА надо установить значение 0х02
+    DAC_tmp[1] = ((p->DAC_data)>>8);  
+    DAC_tmp[2] = (p->DAC_data);  
+   
+    HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_RESET);    
+    HAL_SPI_Transmit(&hspi6,(uint8_t*)DAC_tmp, 3, 100);     
+    HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_SET);
+      
+    DAC_tmp_16 = (DAC_tmp[2] & 0xFF) | ((DAC_tmp[1] & 0xFF) << 8);
+     
+       //ADC 4-20 мА ---------------------------------------------------------------
+     
+        
+      ADS1118_update(&g_Peref); 
     
  
 }
@@ -495,13 +525,29 @@ void RtcControl(void)
 void peref_74HC595D(TPeref *p)
 {
 
-    HAL_GPIO_WritePin(ENB_TC_GPIO_Port, ENB_TC_Pin, p->TS_Enable);
-  
-    p->TS_outData = g_Ram.Status.StateTs.all & 0xFF;
+    static Uns TuEnbReleTimer;
+ 
+    if (g_Ram.HideParam.HideStateTs.all != g_Ram.Status.StateTs.all)
+    {
+        HAL_GPIO_WritePin(ENB_TC_GPIO_Port, ENB_TC_Pin, GPIO_PIN_RESET);
+          
+        g_Ram.Status.StateTs.all = g_Ram.HideParam.HideStateTs.all;
+        p->TS_outData = g_Ram.HideParam.HideStateTs.all;
+        HAL_GPIO_WritePin(CS_TC_GPIO_Port, CS_TC_Pin, GPIO_PIN_RESET);
+        HAL_SPI_Transmit(&hspi6, &p->TS_outData, 1, 10);
+        HAL_GPIO_WritePin(CS_TC_GPIO_Port, CS_TC_Pin, GPIO_PIN_SET);  
+          
+        //    TuEnbReleTimer = (0.3 * PRD_10HZ);
+    }
+      
+    	//if(TuEnbReleTimer > 0) TuEnbReleTimer--;
+	//else if(TuEnbReleTimer == 0 && (HAL_GPIO_ReadPin(ENB_TC_GPIO_Port, ENB_TC_Pin) == 0)) HAL_GPIO_WritePin(ENB_TC_GPIO_Port, ENB_TC_Pin, GPIO_PIN_SET);
 
-    HAL_SPI_Transmit_IT(&hspi6, &p->TS_outData, 1);
-    HAL_GPIO_WritePin(CS_TC_GPIO_Port, CS_TC_Pin, GPIO_PIN_SET); 
-    HAL_GPIO_WritePin(CS_TC_GPIO_Port, CS_TC_Pin, GPIO_PIN_RESET);  
+
+
+
+     
+       
     
     
 }
@@ -551,7 +597,57 @@ void MCP23S17_update(TPeref *p)
 }
 
 
+
 void ADS1118_init(TPeref *p)
 {
-    p->ADC_Out_Config.bit.MODE = 0;
+    
+      
+  p->ADC_Out_Config.bit.OS = 0;
+    p->ADC_Out_Config.bit.MUX =4;
+      p->ADC_Out_Config.bit.PGA = 2;
+        p->ADC_Out_Config.bit.MODE = 0;
+          p->ADC_Out_Config.bit.DR = 7; //111
+          p->ADC_Out_Config.bit.TS_MODE = 0;
+            p->ADC_Out_Config.bit.PULL_UP_EN = 0;
+              p->ADC_Out_Config.bit.NOP = 0x1;
+                p->ADC_Out_Config.bit.CNV_RDY_FL = 0;
+                  
+ pADS1118_ConfRegData[1] = g_Peref.ADC_Out_Config.all & 0xFF;
+ pADS1118_ConfRegData[0] = (g_Peref.ADC_Out_Config.all>>8) & 0xFF;
+ 
+  HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_RESET);
+  HAL_SPI_Transmit(&hspi6, (uint8_t*)pADS1118_ConfRegData,  2, 100);
+  HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_SET);
+                      
 }
+
+
+void ADS1118_update(TPeref *p)
+{
+   uint8_t pBuffIn[2]; 
+   uint8_t pBuffOut[2]; 
+   pBuffOut[1] = g_Peref.ADC_Out_Config.all & 0xFF;
+   pBuffOut[0] = (g_Peref.ADC_Out_Config.all>>8) & 0xFF;
+     
+   HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_RESET);
+   HAL_SPI_TransmitReceive(&hspi6, (uint8_t*)pBuffOut, (uint8_t*)pBuffIn, 2, 100);
+   HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_SET);
+  
+   g_Peref.ADC_Out_data = (pBuffIn[1] & 0xFF) | ((pBuffIn[0] & 0xFF) << 8);
+}
+
+
+// Чисто моя функция инита--------------------------------
+void ADS_init (void)
+{
+ uint8_t pBuff[2];
+   pBuff[1]=0xE2;
+   pBuff[0]=0x42;
+       
+       HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_RESET);
+       HAL_SPI_Transmit(&hspi6, (uint8_t*)pBuff, 2, 100);
+        HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_SET);
+}
+   
+      
+

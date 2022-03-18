@@ -90,10 +90,12 @@ typedef struct ADT7301 {
 
 //-------
 // Состояние дискретных выходов ТС
+//--------------------------------------------------------------------
+// Конфигурация ADS1118------------------------------------------
 typedef union _TADS1118 {
 	Uns all;
 	struct {
-		Uns Reserved:1;		// 0	
+		Uns OS:1;		// 0	
 		Uns NOP:2;		// 1-2	
 		Uns PULL_UP_EN:1;	// 3	
 		Uns TS_MODE:1;		// 4	
@@ -101,10 +103,11 @@ typedef union _TADS1118 {
 		Uns MODE:1;		// 8	
 		Uns PGA:3;		// 9-11	
 		Uns MUX:3;		// 12-14	
-		Uns SS:1;		// 15	
+		Uns CNV_RDY_FL:1;		// 15	
 		
 	} bit;
 } TADS1118;
+//-------------------------------------------------------------------
 
 // Типы логик обработки
 typedef enum {
@@ -223,8 +226,9 @@ uint8_t MCP23S17_read(uint8_t addr);
 void MCP23S17_init(void);
 void MCP23S17_update(TPeref *);
 
-void ADS1118_init(TPeref *);
-
+void ADS1118_init(TPeref *p);
+void ADS1118_update(TPeref *p);
+void ADS_init (void);
 // Работа с Eeprom
 
 #endif
