@@ -39,7 +39,7 @@ typedef struct {
 	Uns					        input;		        // Вход: АЦП 
 	Uns						output;	                // Выход: интерполированная величина
 	Bool						fault;		        // Флаг сбоя 
-} TTempObserver;
+} TLineObserver;
 
 // Структура для работы с драйвером
 typedef struct ADT7301 {
@@ -190,6 +190,11 @@ typedef struct {
         GPIO_PinState           TS_Enable; 
         //  AD5061BRJ DAC------------------------------------------------------
         uint16_t                DAC_data;  
+        //-----------------------------------------------------------------
+         TLineObserver          ADCtoProc;
+         TDot                   dotsADCtoProc[DOTS];
+         TLineObserver          ProctoDAC;
+         TDot                   dotsProctoDAC[DOTS];
         // переменные-----------------------------------------------------------------------------------------
         Bool                    RamUpdFlag;
         Uns                     VoltOn;         // in:   
@@ -229,6 +234,10 @@ void MCP23S17_update(TPeref *);
 void ADS1118_init(TPeref *p);
 void ADS1118_update(TPeref *p);
 void ADS_init (void);
+
+void peref_ADCtoPRCObserverInit(TPeref *);
+void peref_ProctoDACObserverInit(TPeref *);
+
 // Работа с Eeprom
 
 #endif

@@ -144,8 +144,32 @@ void peref_Init(void)
     // конфигурируем ADS1118 для токового входа
    
           ADS1118_init(&g_Peref);
-      //-------------------------------------------------------
-       
+   //-------------------------------------------------------
+      peref_ADCtoPRCObserverInit1(&g_Peref);
+      peref_ADCtoPRCObserverInit1(&g_Peref);
+          
+}
+
+void peref_ADCtoPRCObserverInit(TPeref *p)
+{
+                int i = 0;
+
+		 for (i = 0; i<DOTS; i++)
+		 {
+			p->ADCtoProc.dots[i] = p->dotsADCtoProc[i];
+                        p->ADCtoProc.dots[i].adc = g_Ram.FactoryParam.ADCdots[i];
+		 }              
+}
+
+void peref_ProctoDACObserverInit(TPeref *p)
+{
+                int i = 0;
+
+		 for (i = 0; i<DOTS; i++)
+		 {
+			p->ProctoDAC.dots[i] = p->dotsProctoDAC[i];
+                        p->ProctoDAC.dots[i].proc = g_Ram.FactoryParam.DACdots[i];
+		 }
 }
 
 void peref_18KHzCalc(TPeref *p)//
@@ -194,9 +218,7 @@ void peref_2KHzCalc(TPeref *p)
 
 void peref_200HzCalc(TPeref *p)
 {
-        
-        
-        
+// тест памяти, в основной работе не используеться
          switch (memtemp)
         {
           case 0:  break;
@@ -351,7 +373,7 @@ void peref_10HzCalc(TPeref *p)//
         p->TenControl = 0; // включаем тэн
      }
 
-  //   HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, p->TenControl);
+     HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, p->TenControl);
        
      // volt on control
      p->VoltOn = HAL_GPIO_ReadPin(VOLT_ON_GPIO_Port, VOLT_ON_Pin);
@@ -384,8 +406,6 @@ void peref_10HzCalc(TPeref *p)//
   }
   
   g_Ram.Status.VDC = (Uns)p->VDCfltr.Output;
-  
-
      
 }
 
@@ -394,15 +414,11 @@ void ADT7301_Update(ADT7301 *p)
 	uint8_t Data[2];
         Uns data16;
           
-            Uns TempVal,ADC_Temp_Code_dec;
+        Uns TempVal,ADC_Temp_Code_dec;
 	
 	HAL_GPIO_WritePin(CS_TEMP_GPIO_Port, CS_TEMP_Pin, GPIO_PIN_RESET); 
 	
 	HAL_SPI_Receive(&hspi1, Data, 2, 10); 
-          
-      /*  asm("NOP");
-        asm("NOP");
-        asm("NOP");*/
         HAL_GPIO_WritePin(CS_TEMP_GPIO_Port, CS_TEMP_Pin, GPIO_PIN_SET); 
 	
         data16 = Data[0]<<8;
@@ -524,7 +540,6 @@ void RtcControl(void)
     // 74HC595D Драйвер ТС----------------------------------------------------
 void peref_74HC595D(TPeref *p)
 {
-
     static Uns TuEnbReleTimer;
  
     if (g_Ram.HideParam.HideStateTs.all != g_Ram.Status.StateTs.all)
@@ -539,17 +554,9 @@ void peref_74HC595D(TPeref *p)
           
         //    TuEnbReleTimer = (0.3 * PRD_10HZ);
     }
-      
     	//if(TuEnbReleTimer > 0) TuEnbReleTimer--;
 	//else if(TuEnbReleTimer == 0 && (HAL_GPIO_ReadPin(ENB_TC_GPIO_Port, ENB_TC_Pin) == 0)) HAL_GPIO_WritePin(ENB_TC_GPIO_Port, ENB_TC_Pin, GPIO_PIN_SET);
 
-
-
-
-     
-       
-    
-    
 }
  //MCP23S17 драйвер ТУ --------------------------------------------------------
 void MCP23S17_write(uint8_t addr, uint8_t data)
@@ -596,8 +603,6 @@ void MCP23S17_update(TPeref *p)
     p->TU_data24  = MCP23S17_read(MCPS17_GPIOB);
 }
 
-
-
 void ADS1118_init(TPeref *p)
 {
     
@@ -640,14 +645,14 @@ void ADS1118_update(TPeref *p)
 // Чисто моя функция инита--------------------------------
 void ADS_init (void)
 {
- uint8_t pBuff[2];
-   pBuff[1]=0xE2;
-   pBuff[0]=0x42;
-       
-       HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_RESET);
-       HAL_SPI_Transmit(&hspi6, (uint8_t*)pBuff, 2, 100);
-        HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_SET);
+  uint8_t pBuff[2];
+    pBuff[1]=0xE2;
+      pBuff[0]=0x42;
+        
+          HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_RESET);
+            HAL_SPI_Transmit(&hspi6, (uint8_t*)pBuff, 2, 100);
+              HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_SET);
 }
-   
+
       
 

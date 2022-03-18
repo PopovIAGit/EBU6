@@ -136,9 +136,7 @@ int main(void)
   MX_HRTIM_Init();
   /* USER CODE BEGIN 2 */
  //запустили тамер и АЦП
-  
- //  HAL_ADC_Start(&hadc1); // включили АЦП
- //  HAL_ADC_Start(&hadc3); // 
+
    g_Ram.HideParam.StartIndic = 8;
    
    //---------------------------------------------------------
@@ -161,19 +159,9 @@ int main(void)
       //Comm_Init(&g_Comm);
       peref_Init();
       Stat_Init(&g_Stat);
-        
-//      HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_D, HRTIM_OUTPUT_TD1);
-
-        
-       
-  //    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-  //    HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);  
-  //    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-  //    HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);  
-     
+   
       HAL_TIM_Base_Start(&htim1);
- //     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-  //    HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);  
+
      
       HAL_TIM_Base_Start_IT (&htim2); // запустили ртос
       
@@ -184,13 +172,11 @@ int main(void)
      
   while (1)
   {
- 
+
     /* USER CODE END WHILE */
 
-     
-    
     /* USER CODE BEGIN 3 */
-  //     ADT7301_Update(&g_Peref.Temper);// 
+  //     ADT7301_Update(&g_Peref.Temper);// ToDo 
   }
   /* USER CODE END 3 */
 }
