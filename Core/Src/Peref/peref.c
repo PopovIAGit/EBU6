@@ -31,6 +31,93 @@ extern float SpeedRef;
 uint8_t pBuff_ADC [2];
 uint8_t pADS1118_ConfRegData[2];
 
+
+
+Uns TirTimer = 2*PRD_50HZ;
+uint32_t hui = 0;
+
+uint8_t DAC_tmp[3];
+uint8_t DAC_on_off = 0x02; // по умолчанию токовый выход выключен, его нужно включить в меню при выборе управления АНАЛОГОВОЕ когда подключают токовый вход и выход (выставить 0)
+
+//данные для ADS1118 ----------------
+
+uint8_t ADC_data[2]; 
+uint8_t pBuffOut[2];
+uint16_t DAC_tmp_16;
+
+// входное АЦП в проценты
+//----------------------------------------------------------
+// Точки 		     проценты.  АЦП.             4-20.    №
+TDot dotsADC[DOTS] = {	        0,      744,		//  4		0
+                                31,     842,            //  4.5
+                                62,     940,		//  5		1
+                                93,     1040,           //  5.5
+                                125,    1136,		//  6		2
+                                156,    1232,           //  6.5
+                                187,    1330,		//  7		3
+                                218,    1425,           //  7.5
+                                250,    1520,		//  8	        4
+                                281,    1614,           //  8.5
+                                312,    1710,		//  9	        5
+                                343,    1803,           //  9.5
+                                375,    1898,		//  10	        6
+                                406,    1993,           //  10.5
+                                437,    2085,		//  11          7
+                                468,    2183,           //  11.5
+                                500,    2276,		//  12          8
+                                531,    2373,           //  12.5
+                                562,    2465,		//  13  9
+                                593,    2560,           //  13.5
+                                625,    2655,		//  14  10
+                                656,    2751,           //  14.5
+                                687,    2845,		//  15  11
+                                718,    2939,           //  15.5
+                                750,    3033,		//  16  12
+                                781,    3128,           //  16.5
+                                812,    3221,		//  17  13
+                                843,    3317,           //  17.5
+                                875,    3409,		//  18  14
+                                906,    3506,           //  18.5
+                                937,    3598,		//  19  15
+                                968,    3695,           //  19.5
+                                1000,   3785};		//  20  16		
+//--------------------------------------------------------
+// Точки 		  	ЦАП.  Проценты.            4-20.    №
+TDot dotsDAC[DOTS] = {	        484,      0,		//  4		0
+                                548,      31,
+                                611,      62,		//  5		1
+                                672,      93,
+                                733,      125,		//  6		2
+                                794,      156,
+                                853,      187,		//  7		3
+                                912,      218,
+                                972,      250,		//  8	        4
+                                1032,     281,
+                                1093,     312,		//  9	        5
+                                1157,     343,
+                                1224,     375,		//  10	        6
+                                1290,     406,
+                                1357,     437,		//  11          7
+                                1424,     468,
+                                1489,     500,		//  12          8
+                                1552,     531,
+                                1616,     562,		//  13  9
+                                1680,     593,
+                                1743,     625,		//  14  10
+                                1806,     656,
+                                1870,     687,		//  15  11
+                                1932,     718,
+                                1996,     750,		//  16  12
+                                2059,     781,
+                                2123,     812,		//  17  13
+                                2186,     843,
+                                2248,     875,		//  18  14
+                                2310,     906,
+                                2373,     937,		//  19  15
+                                2436,     968,
+                                2498,     1000};	//  20  16		
+//--------------------------------------------------------
+
 char Icons[NUM_ICONS][7] =	{
 					0x1F,0x11,0x1F,0x04,0x06,0x04,0x07,
 					0x1F,0x11,0x11,0x1F,0x04,0x1F,0x00,
@@ -141,12 +228,12 @@ void peref_Init(void)
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.UT, PRD_18KHZ);
       
         
-    // конфигурируем ADS1118 для токового входа
-   
-          ADS1118_init(&g_Peref);
+    // конфигурируем ADS1118 для токового входа   
+      ADS1118_init(&g_Peref);
    //-------------------------------------------------------
-      peref_ADCtoPRCObserverInit1(&g_Peref);
-      peref_ADCtoPRCObserverInit1(&g_Peref);
+      peref_ApFilter1Init(&g_Peref.ADCToProcfltr, PRD_50HZ, g_Ram.FactoryParam.RmsTf);
+      peref_ADCtoPRCObserverInit(&g_Peref);
+      peref_ProctoDACObserverInit(&g_Peref);
           
 }
 
@@ -156,7 +243,7 @@ void peref_ADCtoPRCObserverInit(TPeref *p)
 
 		 for (i = 0; i<DOTS; i++)
 		 {
-			p->ADCtoProc.dots[i] = p->dotsADCtoProc[i];
+			p->ADCtoProc.dots[i] = dotsADC[i];
                         p->ADCtoProc.dots[i].adc = g_Ram.FactoryParam.ADCdots[i];
 		 }              
 }
@@ -167,7 +254,7 @@ void peref_ProctoDACObserverInit(TPeref *p)
 
 		 for (i = 0; i<DOTS; i++)
 		 {
-			p->ProctoDAC.dots[i] = p->dotsProctoDAC[i];
+			p->ProctoDAC.dots[i] = dotsDAC[i];
                         p->ProctoDAC.dots[i].proc = g_Ram.FactoryParam.DACdots[i];
 		 }
 }
@@ -248,48 +335,25 @@ void peref_200HzCalc(TPeref *p)
         }
 }
 
-Uns TirTimer = 2*PRD_50HZ;
-uint32_t hui = 0;
-
-uint8_t DAC_tmp[3];
-uint8_t DAC_on_off = 0x02; // по умолчанию токовый выход выключен, его нужно включить в меню при выборе управления АНАЛОГОВОЕ когда подключают токовый вход и выход (выставить 0)
-
-//данные для ADS1118 ----------------
-
-uint8_t ADC_data [2]; 
-uint8_t pBuffOut[2];
-uint16_t DAC_tmp_16;
 //-----------------------------------
 void peref_50HzCalc(TPeref *p)
 { 
-  
- //TODO переделать на нормальный PowerControl
-/*  if (g_Peref.VoltOn == 0) 
-  {
-    TIM1->CCR4 = 100;
-    hui = 0;
-  }
-  else {
-  
-    if (g_Peref.VoltOn && TirTimer) 
-      TirTimer--;
-    if (TirTimer == 0 && TIM1->CCR4 > 0 ) 
-      TIM1->CCR4--;
-      else 
-        if (TirTimer == 0 && TIM1->CCR4 == 0) 
-          TIM1->CCR4 = 0;  
-    if (hui >= 500) 
-        TIM1->CCR4 = 100;
-        else 
-          hui++;
-   }*/
-  
-  // TU------------------------------------------------------------------------
-  //  MCP23S17_update(p);
-    
+    //ADC 4-20 мА ---------------------------------------------------------------
+     ADS1118_update(&g_Peref);  // считали ацп
+    //--АДЦ в проценты--------------------------------------------------------------
       
+   p->ADCToProcfltr.Input = (float)p->ADC_Out_data;    // отдали в фильтр Uns в float
+   peref_ApFilter1Calc(&p->ADCToProcfltr);             // пофильтровали
+   p->ADCtoProc.input = (Uns)p->ADCToProcfltr.Output;  // отдали в интерполяцию float в Uns
+    peref_ADCDACtoPRCObserverUpdate(&g_Peref.ADCtoProc); //посчитали интерполяцию
+  
+   g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
+      
+    //-- проценты в ЦАП--------------------------------------------------------------
+    peref_ADCDACtoPRCObserverUpdate(&g_Peref.ProctoDAC);      
    // DAC----------------------------------------------------------------------
-        
+    p->ProctoDAC.output = p->DAC_data;
+      
     DAC_tmp[0] = DAC_on_off; // когда все гуд 0, чтобы выключить и было 1мА надо установить значение 0х02
     DAC_tmp[1] = ((p->DAC_data)>>8);  
     DAC_tmp[2] = (p->DAC_data);  
@@ -299,16 +363,13 @@ void peref_50HzCalc(TPeref *p)
     HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_SET);
       
     DAC_tmp_16 = (DAC_tmp[2] & 0xFF) | ((DAC_tmp[1] & 0xFF) << 8);
+   // TU------------------------------------------------------------------------
+  //  MCP23S17_update(p);
      
-       //ADC 4-20 мА ---------------------------------------------------------------
-     
-        
-      ADS1118_update(&g_Peref); 
-    
- 
+
+
 }
 
-uint8_t murovei = 0, gavno = 0;
 void peref_10HzCalc(TPeref *p)//
 {
  
@@ -652,6 +713,50 @@ void ADS_init (void)
           HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_RESET);
             HAL_SPI_Transmit(&hspi6, (uint8_t*)pBuff, 2, 100);
               HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_SET);
+}
+
+void peref_ADCDACtoPRCObserverUpdate(TLineObserver *p)
+{
+	static Int i=0;
+
+        if (p->input <= p->dots[0].adc) 
+        {
+              p->output = p->dots[0].proc; 
+              return;
+        } 
+          
+
+        if (p->input >= p->dots[DOTS-1].adc)
+        {
+             p->output = p->dots[DOTS-1].proc;
+             return;
+        } 
+          
+         
+        
+	// Определяем, между какими значениями dots находится R_входное
+	//while (! ((p->inputR >= p->dots[i].resist)&&(p->inputR < p->dots[i+1].resist)) )	// Для сопротивления (прямая зависимость)
+	while (! ((p->input >= p->dots[i].adc)&&(p->input <= p->dots[i+1].adc)) )	// Для АЦП (обратная зависимость)
+	{
+		if (p->input > p->dots[i].adc)
+		{
+			i++;	// Движемся по характеристике вверх и вниз
+			//if(i > 7) i = 7;
+		}
+		else
+		{
+			i--;
+		//	if(i < -1) i = -1;
+		}							// пока не окажемся между двумя точками
+	}
+	
+	if (i > DOTS) i = DOTS;
+	else if (i < 0) i = 0;
+
+	if (p->input == p->dots[i].adc)			// Если четко попали на точку
+		p->output = p->dots[i].proc;		// берем значение температуры этой точки
+	else// Линейная интерполяция			   в противном случае интерполируем
+		p->output = LinearInterpolation(p->dots[i].adc, p->dots[i].proc ,p->dots[i+1].adc ,p->dots[i+1].proc, p->input);
 }
 
       

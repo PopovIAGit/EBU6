@@ -25,8 +25,7 @@
 					(y1 +  ( (y2 - y1)*(x - x1) )/(x2 - x1) ) 
 
 #define DOTS 33
-#define ADC_CHANNELS_NUM_1                                         6  // 0 UL1_ADC   1 UL3_ADC   2 I_brake_A   3 UL2_ADC  4 TMP_DV_A  5 TempModule_A
-#define ADC_CHANNELS_NUM_2                                         4  // 0 VDC_A     1 IU_ADC    2 IV_ADC    3 IW_ADC
+
 //--------Структура "точка"--------------------------------------------
 typedef struct {
 	Uns				proc;		// выходное значение
@@ -40,6 +39,18 @@ typedef struct {
 	Uns						output;	                // Выход: интерполированная величина
 	Bool						fault;		        // Флаг сбоя 
 } TLineObserver;
+
+
+
+
+
+//--------------------------------------------------------------------------------------
+
+
+
+#define ADC_CHANNELS_NUM_1                                         6  // 0 UL1_ADC   1 UL3_ADC   2 I_brake_A   3 UL2_ADC  4 TMP_DV_A  5 TempModule_A
+#define ADC_CHANNELS_NUM_2                                         4  // 0 VDC_A     1 IU_ADC    2 IV_ADC    3 IW_ADC
+
 
 // Структура для работы с драйвером
 typedef struct ADT7301 {
@@ -191,10 +202,12 @@ typedef struct {
         //  AD5061BRJ DAC------------------------------------------------------
         uint16_t                DAC_data;  
         //-----------------------------------------------------------------
+         APFILTER1 		ADCToProcfltr;			// Фильтр угола фи
+          
          TLineObserver          ADCtoProc;
-         TDot                   dotsADCtoProc[DOTS];
+         //TDot                   dotsADCtoProc[DOTS];
          TLineObserver          ProctoDAC;
-         TDot                   dotsProctoDAC[DOTS];
+         //TDot                   dotsProctoDAC[DOTS];
         // переменные-----------------------------------------------------------------------------------------
         Bool                    RamUpdFlag;
         Uns                     VoltOn;         // in:   
@@ -237,6 +250,8 @@ void ADS_init (void);
 
 void peref_ADCtoPRCObserverInit(TPeref *);
 void peref_ProctoDACObserverInit(TPeref *);
+
+void peref_ADCDACtoPRCObserverUpdate(TLineObserver *);
 
 // Работа с Eeprom
 

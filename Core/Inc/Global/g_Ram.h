@@ -140,45 +140,110 @@ typedef struct _TFactoryParam
 	Uns		RmsTf;			// C29. 119 ПОСТ.ВРЕМЕНИ ФИЛЬТРОВ RMS
         Uns		OnTen;		        // С30. 120 Выключение тэна
 	Uns		Ref15;		        // С31. 121 выбор мощности 3квт или 1.5 квт
- 	Uns		MCU220380;		// С32. 122 выбор типа питания 220 380
- 	Uns		reserv123;		// С33. 123 Резерв
+ 	Uns		MCU220380;		// С32. 122 выбор типа питания 220 380    
+        Uns		reserv123;		// С33. 123 Резерв
  	Uns		reserv124;		// С34. 124 Резерв
  	Uns		reserv125;		// С35. 125 Резерв
         Uns		reserv126;		// С36. 126 Резерв
         Uns		reserv127;		// С37. 127 Резерв
         Uns		reserv128;		// С38. 128 Резерв
         Uns		reserv129;		// С39. 129 Резерв
-        Uns		reserv130;		// С40. 130 Резерв
-        Uns		reserv131;		// С41. 131 Резерв
-        Uns		reserv132;		// С42. 132 Резерв
-        Uns		reserv133;		// С43. 133 Резерв
-        Uns		reserv134;		// С44. 134 Резерв
-        Uns		reserv135;		// С45. 135 Резерв
-        Uns		reserv136;		// С46. 136 Резерв
-	Uns		reserv137;		// С47. 137 Резерв
- 	Uns		reserv138;		// С48. 138 Резерв
- 	Uns		reserv139;		// С49. 139 Резерв
- 	Uns		reserv140;		// С50. 140 Резерв
- 	Uns		reserv141;		// С51. 141 Резерв
-        Uns		reserv142;		// С52. 142 Резерв
-        Uns		reserv143;		// С53. 143 Резерв
-        Uns		reserv144;		// С54. 144 Резерв
-        Uns		reserv145;		// С55. 145 Резерв
-        Uns		reserv146;		// С56. 146 Резерв
-        Uns		reserv147;		// С57. 147 Резерв
-        Uns		reserv148;		// С58. 148 Резерв
-        Uns		reserv149;		// С59. 149 Резерв
-        Uns		reserv150;		// С60. 150 Резерв
-        Uns		reserv151;		// С61. 151 Резерв
-        Uns		reserv152;		// С62. 152 Резерв
-        Uns		reserv153;		// С63. 153 Резерв
-        Uns		reserv154;		// С64. 154 Резерв
-        Uns		reserv155;		// С65. 155 Резерв
-        Uns		reserv156;		// С66. 156 Резерв
-        Uns		reserv157;		// С67. 157 Резерв
-        Uns		reserv158;		// С68. 158 Резерв
-        Uns		reserv159;		// С69. 159 Резерв
-
+        Uns             ADCdots[33];            // C40-C72 130-162 точки для преобразования АЦП в 4-20
+        Uns             DACdots[33];            // C73-105 163-195 точки для преобразования ЦАП в 4-20
+        Uns		reserv196;		// С106. 196 Резерв
+        Uns		reserv197;		// С107. 197 Резерв
+        Uns		reserv198;		// С108. 198 Резерв
+        Uns		reserv199;		// С109. 199 Резерв
+        Uns		reserv200;		// С110. 200 Резерв
+        Uns		reserv201;		// С111. 201 Резерв
+        Uns		reserv202;		// С112. 202 Резерв
+        Uns		reserv203;		// С113. 203 Резерв
+        Uns		reserv204;		// С114. 204 Резерв
+        Uns		reserv205;		// С115. 205 Резерв
+        Uns		reserv206;		// С116. 206 Резерв
+        Uns		reserv207;		// С117. 207 Резерв
+        Uns		reserv208;		// С118. 208 Резерв
+        Uns		reserv209;		// С119. 209 Резерв
+        Uns		reserv210;		// С120. 210 Резерв
+        Uns		reserv211;		// С121. 211 Резерв
+        Uns		reserv212;		// С122. 212 Резерв
+        Uns		reserv213;		// С123. 213 Резерв
+        Uns		reserv214;		// С124. 214 Резерв
+        Uns		reserv215;		// С125. 215 Резерв
+        Uns		reserv216;		// С126. 216 Резерв
+        Uns		reserv217;		// С127. 217 Резерв
+        Uns		reserv218;		// С128. 218 Резерв
+        Uns		reserv219;		// С129. 219 Резерв
+        Uns		reserv220;		// С130. 220 Резерв
+        Uns		reserv221;		// С131. 221 Резерв
+        Uns		reserv222;		// С132. 222 Резерв
+        Uns		reserv223;		// С133. 223 Резерв
+        Uns		reserv224;		// С134. 224 Резерв
+        Uns		reserv225;		// С135. 225 Резерв
+        Uns		reserv226;		// С136. 226 Резерв
+        Uns		reserv227;		// С137. 227 Резерв
+        Uns		reserv228;		// С138. 228 Резерв
+        Uns		reserv229;		// С139. 229 Резерв
+        Uns		reserv230;		// С140. 230 Резерв
+        Uns		reserv231;		// С141. 231 Резерв
+        Uns		reserv232;		// С142. 232 Резерв
+        Uns		reserv233;		// С143. 233 Резерв
+        Uns		reserv234;		// С144. 234 Резерв
+        Uns		reserv235;		// С145. 235 Резерв
+        Uns		reserv236;		// С146. 236 Резерв
+        Uns		reserv237;		// С147. 237 Резерв
+        Uns		reserv238;		// С148. 238 Резерв
+        Uns		reserv239;		// С149. 239 Резерв
+        Uns		reserv240;		// С150. 240 Резерв
+        Uns		reserv241;		// С151. 241 Резерв
+        Uns		reserv242;		// С152. 242 Резерв
+        Uns		reserv243;		// С153. 243 Резерв
+        Uns		reserv244;		// С154. 244 Резерв
+        Uns		reserv245;		// С155. 245 Резерв
+        Uns		reserv246;		// С156. 246 Резерв
+        Uns		reserv247;		// С157. 247 Резерв
+        Uns		reserv248;		// С158. 248 Резерв
+        Uns		reserv249;		// С159. 249 Резерв
+        Uns		reserv250;		// С160. 250 Резерв
+        Uns		reserv251;		// С161. 251 Резерв
+        Uns		reserv252;		// С162. 252 Резерв
+        Uns		reserv253;		// С163. 253 Резерв
+        Uns		reserv254;		// С164. 254 Резерв
+        Uns		reserv255;		// С165. 255 Резерв
+        Uns		reserv256;		// С166. 256 Резерв
+        Uns		reserv257;		// С167. 257 Резерв
+        Uns		reserv258;		// С168. 258 Резерв
+        Uns		reserv259;		// С169. 259 Резерв
+        Uns		reserv260;		// С170. 260 Резерв
+        Uns		reserv261;		// С171. 261 Резерв
+        Uns		reserv262;		// С172. 262 Резерв
+        Uns		reserv263;		// С173. 263 Резерв
+        Uns		reserv264;		// С174. 264 Резерв
+        Uns		reserv265;		// С175. 265 Резерв
+        Uns		reserv266;		// С176. 266 Резерв
+        Uns		reserv267;		// С177. 267 Резерв
+        Uns		reserv268;		// С178. 268 Резерв
+        Uns		reserv269;		// С179. 269 Резерв
+        Uns		reserv270;		// С180. 270 Резерв
+        Uns		reserv271;		// С181. 271 Резерв
+        Uns		reserv272;		// C182. 272 Резерв
+        Uns		reserv273;		// С183. 273 Резерв
+        Uns		reserv274;		// С184. 274 Резерв
+        Uns		reserv275;		// С185. 275 Резерв
+        Uns		reserv276;		// С186. 276 Резерв
+        Uns		reserv277;		// С187. 277 Резерв
+        Uns		reserv278;		// С188. 278 Резерв
+        Uns		reserv279;		// С189. 279 Резерв
+        Uns		reserv280;		// С190. 280 Резерв
+        Uns		reserv281;		// С191. 281 Резерв
+        Uns		reserv282;		// С192. 282 Резерв
+        Uns		reserv283;		// С193. 283 Резерв
+        Uns		reserv284;		// С194. 284 Резерв
+        Uns		reserv285;		// С195. 285 Резерв
+        Uns		reserv286;		// С196. 286 Резерв
+        Uns		reserv287;		// С197. 287 Резерв
+        Uns		reserv288;		// С198. 288 Резерв
+        Uns		reserv289;		// С199. 289 Резерв
 	
 }TFactoryParam;
 
@@ -192,7 +257,7 @@ typedef struct _TComands
 	Uns             CalibReset;             // D5. 265 Сброс калибровки
 	TValveCmd       ControlWord;            // D6. 266 Команда управления
 	Uns	       	PrtReset;      	        // D7. 267 Сброс защит
-	Uns             SetDefaults;            // D8. 268 Задание параметров по умолчанию
+	Uns             SetDefaults;          // D8. 268 Задание параметров по умолчанию
 	Uns 	        Rsvd1;			// D9. 269 отчистка журнала событий
 	Uns             CycleReset;		// D10. 270 Сброс счетчика циклов
 	Uns	        RsReset;		// D11. 271 Сброс связи
