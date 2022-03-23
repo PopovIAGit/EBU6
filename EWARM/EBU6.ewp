@@ -82,7 +82,7 @@
                 </option>
                 <option>
                     <name>GEndianModeBE</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OGBufferedTerminalOutput</name>
@@ -99,7 +99,7 @@
                 <option>
                     <name>GBECoreSlave</name>
                     <version>30</version>
-                    <state>38</state>
+                    <state>41</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -180,7 +180,7 @@
                 </option>
                 <option>
                     <name>DSPExtension</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>TrustZone</name>
@@ -189,7 +189,7 @@
                 <option>
                     <name>TrustZoneModes</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OGAarch64Abi</name>
@@ -754,7 +754,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$\CONFIG\generic_cortex.icf</state>
+                    <state>$TOOLKIT_DIR$\config\linker\ST\stm32h743xI.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1076,6 +1076,9 @@
                 <group>
                     <name>Core</name>
                     <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Core\core_InverterControl.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\Core\Src\Core\core_Menu.c</name>
                     </file>
                     <file>
@@ -1147,6 +1150,9 @@
                 </group>
                 <group>
                     <name>Core</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_InverterControl.h</name>
+                    </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Core\core_Menu.h</name>
                     </file>

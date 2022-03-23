@@ -123,7 +123,7 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_ADC3_Init();
-//  MX_RTC_Init();
+  MX_RTC_Init();
   MX_SPI1_Init();
   MX_SPI6_Init();
   MX_TIM1_Init();
@@ -483,7 +483,7 @@ static void MX_HRTIM_Init(void)
   {
     Error_Handler();
   }
-  pTimeBaseCfg.Period = 0xC350;
+  pTimeBaseCfg.Period = 0x2B67;
   pTimeBaseCfg.RepetitionCounter = 0x00;
   pTimeBaseCfg.PrescalerRatio = HRTIM_PRESCALERRATIO_DIV1;
   pTimeBaseCfg.Mode = HRTIM_MODE_CONTINUOUS;
@@ -516,12 +516,12 @@ static void MX_HRTIM_Init(void)
   {
     Error_Handler();
   }
-  pCompareCfg.CompareValue = 0xB3CA;
+  pCompareCfg.CompareValue = 0x15B3;
   if (HAL_HRTIM_WaveformCompareConfig(&hhrtim, HRTIM_TIMERINDEX_TIMER_D, HRTIM_COMPAREUNIT_1, &pCompareCfg) != HAL_OK)
   {
     Error_Handler();
   }
-  pOutputCfg.Polarity = HRTIM_OUTPUTPOLARITY_LOW;
+  pOutputCfg.Polarity = HRTIM_OUTPUTPOLARITY_HIGH;
   pOutputCfg.SetSource = HRTIM_OUTPUTSET_TIMCMP1;
   pOutputCfg.ResetSource = HRTIM_OUTPUTRESET_TIMPER;
   pOutputCfg.IdleMode = HRTIM_OUTPUTIDLEMODE_NONE;

@@ -3,8 +3,8 @@ D:\WorkOther\EBU6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\main.pbi: \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Stat\stat_fm25v10.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\csl_memory.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\main.h \
+  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Core\core_InverterControl.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Core\g_Core.h \
-  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Core\peref_ApFilter3.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Core\core_TorqueObserver.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Core\core_MenuGlobal.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Core\core_Menu.h \

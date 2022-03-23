@@ -175,7 +175,11 @@ typedef struct {
 	APFILTER3  			IV3fltr;
 	APFILTER3  			IW3fltr;
         TSensObserver			sensObserver;		// Масштабирование сигналов с датчиков
-	TSinObserver			sinObserver;		// Вычисление RMS
+	TSinObserver			sinObserver;		// Вычисление RMS напряжений
+        
+        ILEG_FQ                         Ia;
+        ILEG_FQ                         Ib;
+        ILEG_FQ                         Ic;
 	
         APFILTER1 			Phifltr;			// Фильтр угола фи
 	APFILTER1 			Umfltr;				// Фильтр среднего напряжения
@@ -254,5 +258,6 @@ void peref_ProctoDACObserverInit(TPeref *);
 void peref_ADCDACtoPRCObserverUpdate(TLineObserver *);
 
 // Работа с Eeprom
+void memTest(void);
 
 #endif

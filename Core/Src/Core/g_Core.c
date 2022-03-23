@@ -6,7 +6,7 @@
 TFM25V10 Eeprom1;
 TCore	g_Core;
 
-float   PwmFreq;				// частота ШИМ
+float   PwmFreq;			// частота ШИМ
 float   PwmDeltat;			// шаг дискретизации токов
 Uns     PWMPreScale = 2;
 float corr = 1.0; // 5000 = 50гц
@@ -62,10 +62,7 @@ Uns IDC = 0;
 Uns ModFault = 1; // 1 norm, 0 - fault
 void core18kHZupdate(void)
 {
- //  ADC__1                                         0 UL1_ADC   1 UL3_ADC   2 I_brake_A   3 UL2_ADC  4 TMP_DV_A  5 TempModule_A
- //  ADC__3                                         0 VDC_A     1 IU_ADC    2 IV_ADC    3 IW_ADC
-    
-      
+     
     ModuleTemper = g_Peref.adcData1[5]; // all in 
     IDC  = g_Peref.adcData3[0];
     // SHC Protect Test--------------------------------------------------

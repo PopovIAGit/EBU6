@@ -1438,6 +1438,9 @@
                 <group>
                     <name>Core</name>
                     <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Core\core_InverterControl.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\Core\Src\Core\core_Menu.c</name>
                     </file>
                     <file>
@@ -1509,6 +1512,9 @@
                 </group>
                 <group>
                     <name>Core</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_InverterControl.h</name>
+                    </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Core\core_Menu.h</name>
                     </file>

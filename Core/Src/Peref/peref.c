@@ -8,14 +8,13 @@
 
 TPeref g_Peref;
 
-// ram test
+//----------------------------------ram test
 uint16_t memtemp = 0;
 uint16_t addr = 0;
 uint16_t addrstatus = 0;
 uint16_t count = 0;
-
+//-----------------------------------
 Uns Data = 1;
-
 Uns BtnTout   = (Uns)BTN_TIME;
 Uns BtnLevel  = BTN_LEVEL;
 Bool RtcStart = False;
@@ -23,15 +22,12 @@ Uns RtcUpdateFlag = 0;
 
 Uns TimerTC = 0;
 Uns TmpTC = 0;
-
 Uns tempertmp = 0;
  Uns btnOpen, btnClose, btnStop1,btnStop2,btnProg1, btnProg2;
 extern float SpeedRef;
 
 uint8_t pBuff_ADC [2];
 uint8_t pADS1118_ConfRegData[2];
-
-
 
 Uns TirTimer = 2*PRD_50HZ;
 uint32_t hui = 0;
@@ -209,6 +205,43 @@ void peref_Init(void)
     
     // конфигурируем ТУ 
     MCP23S17_init();
+      
+    g_Peref.Ia.Input =  0;  
+    g_Peref.Ia.Signal = 0;
+    g_Peref.Ia.Output = 0;
+ //   g_Peref.Ia.Ramp = &g_Core.Dmc.Status.RampOut;
+    g_Peref.Ia.RampPrev = 0;
+    g_Peref.Ia.Mash1 = &g_Core.Mash1;
+    g_Peref.Ia.Mash2 = 0;
+    g_Peref.Ia.Mash3 = &g_Core.Mash3;
+    g_Peref.Ia.Sum = 0;
+    g_Peref.Ia.Sum1 = 0;
+    g_Peref.Ia.Counter = 0;
+      
+    g_Peref.Ib.Input =  0;  
+    g_Peref.Ib.Signal = 0;
+    g_Peref.Ib.Output = 0;
+ //   g_Peref.Ib.Ramp = &g_Core.Dmc.Status.RampOut;
+    g_Peref.Ib.RampPrev = 0;
+    g_Peref.Ib.Mash1 = &g_Core.Mash1;
+    g_Peref.Ib.Mash2 = 0;
+    g_Peref.Ib.Mash3 = &g_Core.Mash3;
+    g_Peref.Ib.Sum = 0;
+    g_Peref.Ib.Sum1 = 0;
+    g_Peref.Ib.Counter = 0;
+         
+    g_Peref.Ic.Input =  0;  
+    g_Peref.Ic.Signal = 0;
+    g_Peref.Ic.Output = 0;
+//    g_Peref.Ic.Ramp = &g_Core.Dmc.Status.RampOut;
+    g_Peref.Ic.RampPrev = 0;
+    g_Peref.Ic.Mash1 = &g_Core.Mash1;
+    g_Peref.Ic.Mash2 = 0;
+    g_Peref.Ic.Mash3 = &g_Core.Mash3;
+    g_Peref.Ic.Sum = 0;
+    g_Peref.Ic.Sum1 = 0;
+    g_Peref.Ic.Counter = 0;
+   
      
     peref_ApFilter1Init(&g_Peref.URfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
     peref_ApFilter1Init(&g_Peref.USfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
@@ -239,24 +272,24 @@ void peref_Init(void)
 
 void peref_ADCtoPRCObserverInit(TPeref *p)
 {
-                int i = 0;
-
-		 for (i = 0; i<DOTS; i++)
-		 {
-			p->ADCtoProc.dots[i] = dotsADC[i];
-                        p->ADCtoProc.dots[i].adc = g_Ram.FactoryParam.ADCdots[i];
-		 }              
+  int i = 0;
+    
+      for (i = 0; i<DOTS; i++)
+      {
+        p->ADCtoProc.dots[i] = dotsADC[i];
+          p->ADCtoProc.dots[i].adc = g_Ram.FactoryParam.ADCdots[i];
+      }              
 }
 
 void peref_ProctoDACObserverInit(TPeref *p)
 {
-                int i = 0;
-
-		 for (i = 0; i<DOTS; i++)
-		 {
-			p->ProctoDAC.dots[i] = dotsDAC[i];
-                        p->ProctoDAC.dots[i].proc = g_Ram.FactoryParam.DACdots[i];
-		 }
+  int i = 0;
+    
+      for (i = 0; i<DOTS; i++)
+      {
+        p->ProctoDAC.dots[i] = dotsDAC[i];
+          p->ProctoDAC.dots[i].proc = g_Ram.FactoryParam.DACdots[i];
+      }
 }
 
 void peref_18KHzCalc(TPeref *p)//
@@ -296,7 +329,6 @@ void peref_18KHzCalc(TPeref *p)//
     
 }
 
-
 void peref_2KHzCalc(TPeref *p)
 {
  
@@ -305,34 +337,7 @@ void peref_2KHzCalc(TPeref *p)
 
 void peref_200HzCalc(TPeref *p)
 {
-// тест памяти, в основной работе не используеться
-         switch (memtemp)
-        {
-          case 0:  break;
-          case 1: 
-          {     
-            if (IsMemParReady())
-            { 
-                addr = GetAdr(FactoryParam.ProductYear);
-                count = 1;
-               ReadWriteEeprom(&Eeprom1,F_WRITE,addr,&g_Ram.FactoryParam.ProductYear,1);
-                  memtemp = 0;
-            }
-          }
-          break;   
-          case 2: 
-          {     
-            if (IsMemParReady())
-            { 
-                addr = GetAdr(FactoryParam.ProductYear);
-                count = 1;
-                ReadWriteEeprom(&Eeprom1,F_READ,addr,&g_Ram.FactoryParam.ProductYear,1);
-                  memtemp = 0;
-
-            }
-          }
-          break; 
-        }
+    memTest();
 }
 
 //-----------------------------------
@@ -493,11 +498,10 @@ void ADT7301_Update(ADT7301 *p)
            {
            *p->Temper = (data16/32); //Conversion formula if positive temperature.
            }  */
-           data16 = data16>>5;
-           if (data16 & 0x0100) data16 |= 0xFE00;  
-          if (abs(data16) < 100) {*p->Temper = data16; p->ErrTimer = 0;}
-          else if (++p->ErrTimer >= p->ErrCount) {p->Error = TRUE; p->ErrTimer = 0;}
-
+             data16 = data16>>5;
+             if (data16 & 0x0100) data16 |= 0xFE00;  
+             if (abs(data16) < 100) {*p->Temper = data16; p->ErrTimer = 0;}
+             else if (++p->ErrTimer >= p->ErrCount) {p->Error = TRUE; p->ErrTimer = 0;}           
 }
 
 void LogInputCalc(LOG_INPUT *p)
@@ -759,5 +763,35 @@ void peref_ADCDACtoPRCObserverUpdate(TLineObserver *p)
 		p->output = LinearInterpolation(p->dots[i].adc, p->dots[i].proc ,p->dots[i+1].adc ,p->dots[i+1].proc, p->input);
 }
 
-      
+void memTest(void)
+{
+// тест памяти, в основной работе не используеться
+         switch (memtemp)
+        {
+          case 0:  break;
+          case 1: 
+          {     
+            if (IsMemParReady())
+            { 
+                addr = GetAdr(FactoryParam.ProductYear);
+                count = 1;
+               ReadWriteEeprom(&Eeprom1,F_WRITE,addr,&g_Ram.FactoryParam.ProductYear,1);
+                  memtemp = 0;
+            }
+          }
+          break;   
+          case 2: 
+          {     
+            if (IsMemParReady())
+            { 
+                addr = GetAdr(FactoryParam.ProductYear);
+                count = 1;
+                ReadWriteEeprom(&Eeprom1,F_READ,addr,&g_Ram.FactoryParam.ProductYear,1);
+                  memtemp = 0;
+            }
+          }
+          break; 
+        }
+}
+
 
