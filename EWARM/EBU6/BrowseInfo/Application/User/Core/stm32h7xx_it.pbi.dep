@@ -59,18 +59,23 @@ D:\WorkOther\EBU6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\stm32h7xx_it.
   D:\Distr\IAR\ Embedded\ Workbench\ for\ ARM\ v9.10.2\ x64\arm\inc\c\DLib_Product_string.h \
   D:\Distr\IAR\ Embedded\ Workbench\ for\ ARM\ v9.10.2\ x64\arm\inc\c\float.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\delay.h \
+  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Comm\comm.h \
+  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\std.h \
+  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModbusRtu.h \
+  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModBusTimers.h \
+  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Global\g_Structs.h \
+  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Comm\comm_SerialComm.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Peref\peref.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter1.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter3.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Peref\peref_SensObserver.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Peref\peref_SinObserver.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Peref\peref_Clock.h \
+  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Peref\peref_Calibs.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Peref\peref_display.h \
-  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\std.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Peref\peref_displhal.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Global\g_Ram.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Core\core_VlvDrvCtrl.h \
-  D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Global\g_Structs.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Core\core_Menu.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Core\core_MenuGlobal.h \
   D:\WorkOther\EBU6\EBU6\EWARM\..\Core\Inc\Core\core_TorqueObserver.h \

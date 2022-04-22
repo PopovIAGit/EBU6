@@ -147,7 +147,7 @@ const struct MENU_PARAM params[] = {
                 "я30.нрйк рщм    ", "    ",    10,     60,     41, M_FACT|M_RMAX(2),					        //120
 		"я31.бшанп лным  ", "    ", 	0,      1,  	1, M_FACT|M_SADR(124),						//121
 		"я32.лнд охрюмхъ ", "    ", 	0,      1,  	1, M_FACT|M_SADR(257),						//122
-		"   я33.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//123
+		"C33.рхо дюрв онк", "    ",     0,     16,      0, M_FACT|M_RMAX(1),						//123
 		"   я34.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//124
 		"   я35.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//125
 		"   я36.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//126
@@ -459,7 +459,7 @@ const struct MENU_PARAM params[] = {
 		" ANGL   SF 3_5  ", "ANGL",      0,    180,      0, M_HIDE|M_RMAX(2),						//88 398
 		"COMANDS TU      ", "    ",      0,  65530,      0, M_HIDE|M_RMAX(4),						//89 399
 		"AVER VOLT       ", "V   ",      0,    500,      0, M_HIDE|M_RMAX(2),						//90 400
-		"TEMPER TMP      ", "ANG ",  -100U,    100,      0, M_HIDE|M_RMAX(2),						//91 401
+		"131. гнмю ялеыем", "    ",      0,  65530,      0, MT_DEC|M_RMAX(4),						//91 401
 		"AVER CURR %     ", "    ",      0,  65530,      0, M_HIDE|M_RMAX(4),						//92 402
 		"  CURRENT  U %  ", "  % ",      0,   8000,      0, M_HIDE|M_RMAX(3)|M_PREC(1),				//93 403
 		"  CURRENT  V %  ", "  % ",      0,   8000,      0, M_HIDE|M_RMAX(3)|M_PREC(1),				//94 404

@@ -7,6 +7,7 @@
 #include "peref_SensObserver.h" 	// PIA 07.04.14
 #include "peref_SinObserver.h"		// PIA 08.04.14
 #include "peref_Clock.h"
+#include "peref_Calibs.h"
 
 #include "peref_display.h"
 #include "peref_displhal.h"
@@ -212,6 +213,8 @@ typedef struct {
          //TDot                   dotsADCtoProc[DOTS];
          TLineObserver          ProctoDAC;
          //TDot                   dotsProctoDAC[DOTS];
+         TPerefPosition 	Position;			// Калибровка датчика положения и расчет скорости  
+             
         // переменные-----------------------------------------------------------------------------------------
         Bool                    RamUpdFlag;
         Uns                     VoltOn;         // in:   

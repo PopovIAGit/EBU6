@@ -18,3 +18,12 @@ __inline void PWM_Form(TInvControl *v);
 __inline void SpeedEstemation(TInvControl *v);
 __inline void GenerateSignals(TInvControl *v);
 
+void InvHiControl(TInvControl *v)
+{
+
+}
+
+void InvLoControl(TInvControl *v)
+{
+
+}

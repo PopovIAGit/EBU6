@@ -60,7 +60,7 @@ typedef struct _TUserParam
 	Uns		BreakOpenTorque;  	// B4. 44 Момент уплотнения на открытие
 	Uns		StartOpenTorque;  	// B5. 45 Момент трогания на открытие
 	Uns		reserv46;		// B6. 46 Резерв
-	Uns             BreakMode;		// B7. 47 Тип уплотнения
+	TBreakMode             BreakMode;		// B7. 47 Тип уплотнения
 	Uns             RodType;        	// B8. 48 Тип штока
 	Uns		CloseZone;		// B9. 49 Зона закрыто
 	Uns		OpenZone;		// B10. 50 Зона открыто
@@ -70,8 +70,8 @@ typedef struct _TUserParam
 	TDateVar 	DevDate;		// B14. 54 Дата
 	Uns		reserv55;		// B15. 55 Корректеровка времени
 	Uns		reserv56;		// B16. 56 Резерв
-	Uns  	        MuDuSetup;              // B17. 57 Настройка режима МУ/ДУ
-	Uns	        DuSource;		// B18. 58 Источник команд ДУ
+	TMuDuSetup  	        MuDuSetup;              // B17. 57 Настройка режима МУ/ДУ
+	TDuSource	        DuSource;		// B18. 58 Источник команд ДУ
 	Uns         	TuLockSeal;             // B19. 59 Блокировка залипани
 	Uns         	TuTime;                 // B20. 60 Время команды
 	TInputType 	InputType;		// B21. 61 Тип входного сигнала 24/220
@@ -141,7 +141,7 @@ typedef struct _TFactoryParam
         Uns		OnTen;		        // С30. 120 Выключение тэна
 	Uns		Ref15;		        // С31. 121 выбор мощности 3квт или 1.5 квт
  	Uns		MCU220380;		// С32. 122 выбор типа питания 220 380    
-        Uns		reserv123;		// С33. 123 Резерв
+        Uns		PosSensPow;		// С33. 123  Тип датчика положения
  	Uns		reserv124;		// С34. 124 Резерв
  	Uns		reserv125;		// С35. 125 Резерв
         Uns		reserv126;		// С36. 126 Резерв
@@ -320,7 +320,7 @@ typedef struct _THideParam
 	TCubArray	TqAngSf;		// H57-88. 367-386 Углы СИФУ
 	Uns             TuState;                // H78. 388 Команды ТУ (открыть закрыть стопО СтопЗ)
 	Uns             Umid;             	// H82. 392 Среднее напряжение
-	Uns             BKP_Temper;             // H85. 395 Температура БКП
+	Uns		PositionAccTemp;        // H85. 395 Временная переменная для Зоны смещения. Добавлена для того, чтобы зона смещения обнулялась во время движения электропривода
 	Uns		Imidpr;			// H86 396 Резерв
 	Uns             IuPr;                   // H88. 398 Ток фазы U
 	Uns             IvPr;                   // H89. 399 Ток фазы V
@@ -493,6 +493,11 @@ typedef struct _TTestRam
 #define REG_DRIVE_TYPE			GetAdr(UserParam.DriveType)
 
 #define REG_RS_BAUD_RATE	        GetAdr(UserParam.RsBaudRate)
+
+#define REG_PASSW1_NEW			GetAdr(HideParam.Password1)
+#define REG_PASSW2_NEW			GetAdr(HideParam.Password2)
+
+#define REG_CONTROL				GetAdr(Comands.ControlWord)
 
 #define REG_TASK_DATE			GetAdr(UserParam.DevDate)
 #define REG_TASK_TIME			GetAdr(UserParam.DevTime)

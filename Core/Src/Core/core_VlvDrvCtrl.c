@@ -23,26 +23,26 @@ Bool Flag = False;
 
 void Core_ValveDriveInit(TCoreVlvDrvCtrl *p)
 {
-/*	p->Status 			= ToPtr(&g_Core.Status);
-	p->ControlWord 			= &g_Ram.ramGroupD.ControlWord;
-	p->MuDuSetup			= &g_Ram.ramGroupB.MuDuSetup;
-	p->DuSource				= &g_Ram.ramGroupB.DuSource;
-	p->ReverseType			= &g_Ram.ramGroupH.ReverseType;
+	p->Status 			= ToPtr(&g_Core.Status);
+	p->ControlWord 			= &g_Ram.Comands.ControlWord;
+	p->MuDuSetup			= &g_Ram.UserParam.MuDuSetup;
+	p->DuSource			= &g_Ram.UserParam.DuSource;
+	p->ReverseType			= &g_Ram.HideParam.ReverseType;
 	p->Mpu.Enable			= true;
-	p->Mpu.BtnKey			= &g_Ram.ramGroupH.CmdButton;
+	p->Mpu.BtnKey			= &g_Ram.HideParam.CmdButton;
 	p->Mpu.CancelFlag		= false;
 	p->Tu.Enable			= true;
 	p->Tu.LocalFlag			= false;
-	p->Tu.State			= &g_Ram.ramGroupH.TuState;
+	p->Tu.State			= &g_Ram.HideParam.TuState;
 	p->Tu.Ready			= true;
-	p->Tu.LockSeal			= &g_Ram.ramGroupB.TuLockSeal;
+	p->Tu.LockSeal			= &g_Ram.UserParam.TuLockSeal;
 	p->Valve.PosRegEnable 	        = true;
 	p->Valve.BreakFlag		= false;
 	p->Valve.Position		= POS_UNDEF;
 	p->Valve.BreakDelta		= 0;
-	p->Valve.BreakMode 		= &g_Ram.ramGroupB.BreakMode;
-	p->Valve.CalibStates	        = &g_Ram.ramGroupA.CalibState;
-	p->Valve.CalibFullStep          = &g_Ram.ramGroupH.FullStep;
+	p->Valve.BreakMode 		= &g_Ram.UserParam.BreakMode;
+	p->Valve.CalibStates	        = &g_Ram.Status.CalibState;
+	p->Valve.CalibFullStep          = &g_Ram.HideParam.FullStep;
 	p->EvLog.Source			= 0;
 	p->EvLog.Value			= 0;
 	p->Command			= vcwNone;
@@ -52,7 +52,7 @@ void Core_ValveDriveInit(TCoreVlvDrvCtrl *p)
 	p->IgnorComFlag			= 0;
 	p->StartControl			= &StartPowerControl;
 	p->StopControl			= &StopPowerControl;
-*/
+
 }
 
 void Core_ValveDriveStop(TCoreVlvDrvCtrl *p)
@@ -70,7 +70,7 @@ void Core_ValveDriveStop(TCoreVlvDrvCtrl *p)
 
 void Core_ValveDriveUpdate(TCoreVlvDrvCtrl *p)
 {
-	GetActiveControls(p);	// Получение данных по активированному типу управления (местное/дистанция)
+	GetActiveControls(p);	        // Получение данных по активированному типу управления (местное/дистанция)
 	TeleControl(p);			// Подача команд дистанционного управления
 	MpuControl(p);			// Подача команд местного управления
 	UnitControl(p);			// Дейстаия в зависимости от команды (открыть/закрыть/стоп)
