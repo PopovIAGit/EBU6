@@ -150,6 +150,8 @@ void core200HZupdate(void);
 void core50HZupdate(void);
 void core10HZupdate(void);
 
+void Core_CalibControl(TCore *);			// Управление калибровкой
+void Core_CalibStop(TCore *);				// стоп по калибровке
 void StopPowerControl(void);					// действия при стопе
 void StartPowerControl(TValveCmd ControlWord);                  // Действия при старте
 

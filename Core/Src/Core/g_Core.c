@@ -55,6 +55,76 @@ void Core_Init(TCore *p)
    g_Core.svgen3ph.Scalar = true;
    
    g_Core.Pwm.Period = _IQdiv((200000000), PwmFreq) - 1;
+   
+   Core_ValveDriveInit(&p->VlvDrvCtrl);	// Управление задвижкой
+}
+
+
+
+// Остановка по калибровке
+void Core_CalibStop (TCore *p)
+{
+	Bool StopFlag = False; // внутенний флаг остановки
+	LgInt Position = p->VlvDrvCtrl.Valve.Position;
+	
+	/*	if(p->VlvDrvCtrl.Valve.Position == POS_UNDEF) //Если целевое положение не определено то уходим
+		{
+			p->MotorControl.TargetPos = POS_UNDEF;
+			return;
+		}
+		p->MotorControl.TargetPos = (g_Peref.Position.LinePos - Position);
+
+		if(p->Status.bit.Stop) return;
+
+		if((p->MotorControl.RequestDir < 0) && (p->MotorControl.TargetPos <= g_Ram.ramGroupC.BreakZone)) StopFlag = True;
+		if((p->MotorControl.RequestDir > 0) && (p->MotorControl.TargetPos >= -g_Ram.ramGroupC.BreakZone)) StopFlag = True;
+
+		if (StopFlag)	// Если пора останавливаться
+		{
+			if(p->VlvDrvCtrl.Valve.BreakFlag) p->MotorControl.OverWayFlag = 1;	//
+			else	// Если
+				{
+					p->MotorControl.CalibStop = 1;
+					Core_ValveDriveStop(&p->VlvDrvCtrl);
+					p->VlvDrvCtrl.EvLog.Value = CMD_STOP;
+					p->VlvDrvCtrl.EvLog.Source = CMD_SRC_BLOCK;
+				}
+		}
+	*/
+}
+
+// Управление калибровкой
+void Core_CalibControl(TCore *p)
+{
+	g_Peref.Position.ResetFlag = !p->Status.bit.Stop;
+
+	if(g_Peref.Position.CancelFlag)
+	{
+		p->VlvDrvCtrl.Mpu.CancelFlag = true;
+		g_Peref.Position.CancelFlag = false;
+	}
+
+	// Зона смещения передается только когда привод в стопе. В движении зона смещения равна нулю
+	g_Ram.HideParam.PositionAccTemp = p->Status.bit.Stop ? g_Ram.UserParam.PositionAcc : 0;
+
+	
+	p->Status.bit.Closed =/*  p->Status.bit.Stop && */ ((g_Peref.Position.Zone & CLB_CLOSE) != 0); //ToDo !!! ПИА 13.02.2020 пока не съехали с концевика физически не снимаем сигнал.
+	p->Status.bit.Opened =/*  p->Status.bit.Stop &&  */((g_Peref.Position.Zone & CLB_OPEN)  != 0);
+	
+	if(g_Ram.Comands.CalibReset != 0)
+	{
+		if (!p->Status.bit.Stop )
+		{
+			p->VlvDrvCtrl.Mpu.CancelFlag = true;
+		}
+		else
+		{
+			g_Ram.Comands.TaskClose = trReset;
+			g_Ram.Comands.TaskOpen  = trReset;
+			p->VlvDrvCtrl.EvLog.Value = CMD_RES_CLB;
+		}
+		g_Ram.Comands.CalibReset = 0;
+	}
 }
 
 Uns ModuleTemper = 0;
