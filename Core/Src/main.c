@@ -62,6 +62,8 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 extern float SpeedRef;
+Uns PauseModbus = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -136,9 +138,7 @@ int main(void)
   MX_HRTIM_Init();
   /* USER CODE BEGIN 2 */
  //запустили тамер и АЦП
-  
- //  HAL_ADC_Start(&hadc1); // включили АЦП
- //  HAL_ADC_Start(&hadc3); // 
+
    g_Ram.HideParam.StartIndic = 8;
    
    //---------------------------------------------------------
@@ -149,7 +149,7 @@ int main(void)
      // �?нициализация модулей
      memset(&g_Core, 	0, sizeof(TCore));
      memset(&g_Ram, 	0, sizeof(TRam));
-   //  memset(&g_Comm, 	0, sizeof(TComm));
+     memset(&g_Comm, 	0, sizeof(TComm));
      memset(&g_Peref,	0, sizeof(TPeref));
      memset(&g_Stat,	0, sizeof(TStat));
      
@@ -158,22 +158,12 @@ int main(void)
            
       Core_Init(&g_Core);
       g_Ram_Init(&g_Ram);
-      //Comm_Init(&g_Comm);
+      Comm_Init(&g_Comm);
       peref_Init();
       Stat_Init(&g_Stat);
-        
-//      HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_D, HRTIM_OUTPUT_TD1);
-
-        
-       
-  //    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-  //    HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);  
-  //    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-  //    HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);  
-     
+   
       HAL_TIM_Base_Start(&htim1);
- //     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-  //    HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);  
+
      
       HAL_TIM_Base_Start_IT (&htim2); // запустили ртос
       
@@ -181,13 +171,14 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+     
   while (1)
   {
- 
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  //     ADT7301_Update(&g_Peref.Temper);// 
+  //     ADT7301_Update(&g_Peref.Temper);// ToDo 
   }
   /* USER CODE END 3 */
 }
@@ -494,7 +485,7 @@ static void MX_HRTIM_Init(void)
   {
     Error_Handler();
   }
-  pTimeBaseCfg.Period = 0xC350;
+  pTimeBaseCfg.Period = 0x2B67;
   pTimeBaseCfg.RepetitionCounter = 0x00;
   pTimeBaseCfg.PrescalerRatio = HRTIM_PRESCALERRATIO_DIV1;
   pTimeBaseCfg.Mode = HRTIM_MODE_CONTINUOUS;
@@ -527,12 +518,12 @@ static void MX_HRTIM_Init(void)
   {
     Error_Handler();
   }
-  pCompareCfg.CompareValue = 0xB3CA;
+  pCompareCfg.CompareValue = 0x15B3;
   if (HAL_HRTIM_WaveformCompareConfig(&hhrtim, HRTIM_TIMERINDEX_TIMER_D, HRTIM_COMPAREUNIT_1, &pCompareCfg) != HAL_OK)
   {
     Error_Handler();
   }
-  pOutputCfg.Polarity = HRTIM_OUTPUTPOLARITY_LOW;
+  pOutputCfg.Polarity = HRTIM_OUTPUTPOLARITY_HIGH;
   pOutputCfg.SetSource = HRTIM_OUTPUTSET_TIMCMP1;
   pOutputCfg.ResetSource = HRTIM_OUTPUTRESET_TIMPER;
   pOutputCfg.IdleMode = HRTIM_OUTPUTIDLEMODE_NONE;
@@ -655,7 +646,7 @@ static void MX_SPI6_Init(void)
   hspi6.Init.Direction = SPI_DIRECTION_2LINES;
   hspi6.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi6.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi6.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi6.Init.CLKPhase = SPI_PHASE_2EDGE;
   hspi6.Init.NSS = SPI_NSS_SOFT;
   hspi6.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
   hspi6.Init.FirstBit = SPI_FIRSTBIT_MSB;

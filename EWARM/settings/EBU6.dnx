@@ -13,22 +13,22 @@
     </Stack>
     <PlDriver>
         <FirstRun>0</FirstRun>
-        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ST\STM32H743II.ddf</MemConfigValue>
+        <MemConfigValue>D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\arm\CONFIG\debugger\ST\STM32H743II.ddf</MemConfigValue>
     </PlDriver>
     <StLinkDriver>
         <stlinkserialNo>066BFF535550755187043319</stlinkserialNo>
         <stlinkfoundProbes />
-        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
-        <CStepIntDis>_ 0</CStepIntDis>
         <stlinkResetStyle>0</stlinkResetStyle>
         <stlinkResetStrategy>2</stlinkResetStrategy>
+        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
+        <CStepIntDis>_ 0</CStepIntDis>
     </StLinkDriver>
     <ArmDriver>
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
         <EnableCache>0</EnableCache>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>2312614386</Checksum>
+        <Checksum>1671682321</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -151,6 +151,13 @@
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
+<<<<<<< HEAD
+=======
+    <SfrWindow>
+        <Show>1 1</Show>
+        <Sort>4 0</Sort>
+    </SfrWindow>
+>>>>>>> origin/master
     <DisassembleMode>
         <mode>0</mode>
     </DisassembleMode>

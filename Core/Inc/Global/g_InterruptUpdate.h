@@ -45,6 +45,8 @@ TPeriodicalFunction Task18kHz[] =
 TPeriodicalFunction Task2kHz[] =          //Ќе более 8-х задач
 {
   PrdElemInit(FM25V10_Update,		      &Eeprom1),
+  PrdElemInit(SerialCommTimings,	      &g_Comm.mbAsu),	//РЅР° 2 Рєв€љС†
+  PrdElemInit(SerialCommTimings,	      &g_Comm.mbEncoder),	//РЅР° 2 Рєв€љС†
   PrdElemInit(peref_2KHzCalc,                 &g_Peref)
 };
 // ================================ 200 vц ==================================
@@ -71,7 +73,11 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
     PrdElemInit(LogInputCalc,			&g_Peref.BtnOpen),	//	6
     PrdElemInit(LogInputCalc,			&g_Peref.BtnProg1),	//	5
     PrdElemInit(LogInputCalc,			&g_Peref.BtnProg2),	//	6
+    PrdElemInit(Core_CalibControl, 				&g_Core),
+    PrdElemInit(Core_CalibStop, 				&g_Core),
     PrdElemInit(core50HZupdate,			NULL),	//	20
+    PrdElemInit(Comm_50HzCalc,					&g_Comm),
+    PrdElemInit(Comm_CommandUpdate,				&g_Comm),
     PrdElemInit(peref_50HzCalc,                 &g_Peref)
 };
 

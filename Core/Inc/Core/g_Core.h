@@ -9,6 +9,7 @@ Outputs
 
 
 #include "main.h"
+#include "core_InverterControl.h"
 #include "core_Menu.h"
 #include "csl_memory.h"
 #include "core_VlvDrvCtrl.h"
@@ -89,16 +90,16 @@ typedef struct {
 } RAMPGEN;
 
 typedef struct {
-	Bool 	Scalar;		// Вход:  Скалярная система управления
+	Bool  Scalar;		// Вход:  Скалярная система управления
 	Float PredmodAmp;	// Вход:  Амплитуда 3-ей гармоники предмодуляции
 	Float RampGenOut;	// Вход:  "Пила" основной гармоники
-	Float RampGenOut3;// Параметр: "Пила" 3-ей гармоники для предмодуляции
-	Float Ta;			// Выход: Продолжительность включения ключа в фазе А (о.е.)
-	Float Tb;			// Выход: Продолжительность включения ключа в фазе B (о.е.)
-	Float Tc;			// Выход: Продолжительность включения ключа в фазе C (о.е.)
-	Float dVa;			// Вход:  Величина корректирующего воздействия в фазе А (о.е.)
-	Float dVb;			// Вход:  Величина корректирующего воздействия в фазе B (о.е.)
-	Float dVc;			// Вход:  Величина корректирующего воздействия в фазе C (о.е.)
+	Float RampGenOut3;      // Параметр: "Пила" 3-ей гармоники для предмодуляции
+	Float Ta;		// Выход: Продолжительность включения ключа в фазе А (о.е.)
+	Float Tb;		// Выход: Продолжительность включения ключа в фазе B (о.е.)
+	Float Tc;		// Выход: Продолжительность включения ключа в фазе C (о.е.)
+	Float dVa;		// Вход:  Величина корректирующего воздействия в фазе А (о.е.)
+	Float dVb;		// Вход:  Величина корректирующего воздействия в фазе B (о.е.)
+	Float dVc;		// Вход:  Величина корректирующего воздействия в фазе C (о.е.)
 	Float VaRef;		// Вход/Параметр: Требуемое напряжение в фазе A
 	Float VbRef;		// Вход/Параметр: Требуемое напряжение в фазе B
 	Float VcRef;		// Вход/Параметр: Требуемое напряжение в фазе C
@@ -116,14 +117,25 @@ typedef struct {
     TCoreVlvDrvCtrl		VlvDrvCtrl;		// Управление задвижкой
     // ---
     TTorqObs			TorqObs;		// Расчет момента
-    
+    //--Работа инвертора---------------------------------------------
+ //   TInvControl                 Dmc; 
+        
+          
+            
     RAMPGEN                     rg1;  
     INTERP2D                    vhz;
     IPARK                       ipark;  
     PARK                        park;
     SVGENDQ_3PH                 svgen3ph;
     PWM                         Pwm;  
+      
         
+          
+      
+    Float Mash1;			// Масштабный коэффициент для перевода в о.е. (GLOBAL_Q)
+    Float Mash2;			// Масштабный коэффициент по времени расчета (GLOBAL_Q)
+    Float Mash3;			// Масштабный коэффициент по текущей частоте (Q21)    
+            
     Uns				NoErrFlag;
     Uns                         DisplayTimer;
     Uns                         DisplayRestartTimer;
@@ -137,6 +149,11 @@ void core18kHZupdate(void);
 void core200HZupdate(void);
 void core50HZupdate(void);
 void core10HZupdate(void);
+
+void Core_CalibControl(TCore *);			// Управление калибровкой
+void Core_CalibStop(TCore *);				// стоп по калибровке
+void StopPowerControl(void);					// действия при стопе
+void StartPowerControl(TValveCmd ControlWord);                  // Действия при старте
 
 void coreTS(TCore *);
 void coreTLocalControl(TCore *);

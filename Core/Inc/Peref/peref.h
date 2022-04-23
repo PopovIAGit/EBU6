@@ -7,6 +7,7 @@
 #include "peref_SensObserver.h" 	// PIA 07.04.14
 #include "peref_SinObserver.h"		// PIA 08.04.14
 #include "peref_Clock.h"
+#include "peref_Calibs.h"
 
 #include "peref_display.h"
 #include "peref_displhal.h"
@@ -25,8 +26,7 @@
 					(y1 +  ( (y2 - y1)*(x - x1) )/(x2 - x1) ) 
 
 #define DOTS 33
-#define ADC_CHANNELS_NUM_1                                         6  // 0 UL1_ADC   1 UL3_ADC   2 I_brake_A   3 UL2_ADC  4 TMP_DV_A  5 TempModule_A
-#define ADC_CHANNELS_NUM_2                                         4  // 0 VDC_A     1 IU_ADC    2 IV_ADC    3 IW_ADC
+
 //--------Структура "точка"--------------------------------------------
 typedef struct {
 	Uns				proc;		// выходное значение
@@ -39,7 +39,19 @@ typedef struct {
 	Uns					        input;		        // Вход: АЦП 
 	Uns						output;	                // Выход: интерполированная величина
 	Bool						fault;		        // Флаг сбоя 
-} TTempObserver;
+} TLineObserver;
+
+
+
+
+
+//--------------------------------------------------------------------------------------
+
+
+
+#define ADC_CHANNELS_NUM_1                                         6  // 0 UL1_ADC   1 UL3_ADC   2 I_brake_A   3 UL2_ADC  4 TMP_DV_A  5 TempModule_A
+#define ADC_CHANNELS_NUM_2                                         4  // 0 VDC_A     1 IU_ADC    2 IV_ADC    3 IW_ADC
+
 
 // Структура для работы с драйвером
 typedef struct ADT7301 {
@@ -90,10 +102,12 @@ typedef struct ADT7301 {
 
 //-------
 // Состояние дискретных выходов ТС
+//--------------------------------------------------------------------
+// Конфигурация ADS1118------------------------------------------
 typedef union _TADS1118 {
 	Uns all;
 	struct {
-		Uns Reserved:1;		// 0	
+		Uns OS:1;		// 0	
 		Uns NOP:2;		// 1-2	
 		Uns PULL_UP_EN:1;	// 3	
 		Uns TS_MODE:1;		// 4	
@@ -101,10 +115,11 @@ typedef union _TADS1118 {
 		Uns MODE:1;		// 8	
 		Uns PGA:3;		// 9-11	
 		Uns MUX:3;		// 12-14	
-		Uns SS:1;		// 15	
+		Uns CNV_RDY_FL:1;		// 15	
 		
 	} bit;
 } TADS1118;
+//-------------------------------------------------------------------
 
 // Типы логик обработки
 typedef enum {
@@ -161,7 +176,11 @@ typedef struct {
 	APFILTER3  			IV3fltr;
 	APFILTER3  			IW3fltr;
         TSensObserver			sensObserver;		// Масштабирование сигналов с датчиков
-	TSinObserver			sinObserver;		// Вычисление RMS
+	TSinObserver			sinObserver;		// Вычисление RMS напряжений
+        
+        ILEG_FQ                         Ia;
+        ILEG_FQ                         Ib;
+        ILEG_FQ                         Ic;
 	
         APFILTER1 			Phifltr;			// Фильтр угола фи
 	APFILTER1 			Umfltr;				// Фильтр среднего напряжения
@@ -187,6 +206,15 @@ typedef struct {
         GPIO_PinState           TS_Enable; 
         //  AD5061BRJ DAC------------------------------------------------------
         uint16_t                DAC_data;  
+        //-----------------------------------------------------------------
+         APFILTER1 		ADCToProcfltr;			// Фильтр угола фи
+          
+         TLineObserver          ADCtoProc;
+         //TDot                   dotsADCtoProc[DOTS];
+         TLineObserver          ProctoDAC;
+         //TDot                   dotsProctoDAC[DOTS];
+         TPerefPosition 	Position;			// Калибровка датчика положения и расчет скорости  
+             
         // переменные-----------------------------------------------------------------------------------------
         Bool                    RamUpdFlag;
         Uns                     VoltOn;         // in:   
@@ -223,8 +251,16 @@ uint8_t MCP23S17_read(uint8_t addr);
 void MCP23S17_init(void);
 void MCP23S17_update(TPeref *);
 
-void ADS1118_init(TPeref *);
+void ADS1118_init(TPeref *p);
+void ADS1118_update(TPeref *p);
+void ADS_init (void);
+
+void peref_ADCtoPRCObserverInit(TPeref *);
+void peref_ProctoDACObserverInit(TPeref *);
+
+void peref_ADCDACtoPRCObserverUpdate(TLineObserver *);
 
 // Работа с Eeprom
+void memTest(void);
 
 #endif

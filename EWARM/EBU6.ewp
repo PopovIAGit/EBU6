@@ -82,7 +82,7 @@
                 </option>
                 <option>
                     <name>GEndianModeBE</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OGBufferedTerminalOutput</name>
@@ -99,7 +99,7 @@
                 <option>
                     <name>GBECoreSlave</name>
                     <version>30</version>
-                    <state>38</state>
+                    <state>41</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -180,7 +180,7 @@
                 </option>
                 <option>
                     <name>DSPExtension</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>TrustZone</name>
@@ -189,7 +189,7 @@
                 <option>
                     <name>TrustZoneModes</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OGAarch64Abi</name>
@@ -754,7 +754,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$\CONFIG\generic_cortex.icf</state>
+                    <state>$TOOLKIT_DIR$\config\linker\ST\stm32h743xI.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1072,9 +1072,21 @@
                 <name>Core</name>
                 <group>
                     <name>Comm</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Comm\comm.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Comm\comm_ModbusRtu.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Comm\comm_SerialComm.c</name>
+                    </file>
                 </group>
                 <group>
                     <name>Core</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Core\core_InverterControl.c</name>
+                    </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Src\Core\core_Menu.c</name>
                     </file>
@@ -1104,6 +1116,9 @@
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Src\Peref\peref_ApFilter3.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Peref\peref_Calibs.c</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Src\Peref\peref_Clock.c</name>
@@ -1144,9 +1159,39 @@
                 <name>Inc</name>
                 <group>
                     <name>Comm</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusConfig.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusCrc.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusEvent.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusFrame.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusInterrupts.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusRtu.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModBusTimers.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_SerialComm.h</name>
+                    </file>
                 </group>
                 <group>
                     <name>Core</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_InverterControl.h</name>
+                    </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Core\core_Menu.h</name>
                     </file>
@@ -1191,6 +1236,9 @@
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_ApFilter3.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_Calibs.h</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Peref\peref_Clock.h</name>

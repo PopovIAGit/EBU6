@@ -8,14 +8,13 @@
 
 TPeref g_Peref;
 
-// ram test
+//----------------------------------ram test
 uint16_t memtemp = 0;
 uint16_t addr = 0;
 uint16_t addrstatus = 0;
 uint16_t count = 0;
-
+//-----------------------------------
 Uns Data = 1;
-
 Uns BtnTout   = (Uns)BTN_TIME;
 Uns BtnLevel  = BTN_LEVEL;
 Bool RtcStart = False;
@@ -23,11 +22,97 @@ Uns RtcUpdateFlag = 0;
 
 Uns TimerTC = 0;
 Uns TmpTC = 0;
-
 Uns tempertmp = 0;
  Uns btnOpen, btnClose, btnStop1,btnStop2,btnProg1, btnProg2;
 extern float SpeedRef;
 
+uint8_t pBuff_ADC [2];
+uint8_t pADS1118_ConfRegData[2];
+
+Uns TirTimer = 2*PRD_50HZ;
+uint32_t hui = 0;
+
+uint8_t DAC_tmp[3];
+uint8_t DAC_on_off = 0x02; // по умолчанию токовый выход выключен, его нужно включить в меню при выборе управления АНАЛОГОВОЕ когда подключают токовый вход и выход (выставить 0)
+
+//данные для ADS1118 ----------------
+
+uint8_t ADC_data[2]; 
+uint8_t pBuffOut[2];
+uint16_t DAC_tmp_16;
+
+// входное АЦП в проценты
+//----------------------------------------------------------
+// Точки 		     проценты.  АЦП.             4-20.    №
+TDot dotsADC[DOTS] = {	        0,      744,		//  4		0
+                                31,     842,            //  4.5
+                                62,     940,		//  5		1
+                                93,     1040,           //  5.5
+                                125,    1136,		//  6		2
+                                156,    1232,           //  6.5
+                                187,    1330,		//  7		3
+                                218,    1425,           //  7.5
+                                250,    1520,		//  8	        4
+                                281,    1614,           //  8.5
+                                312,    1710,		//  9	        5
+                                343,    1803,           //  9.5
+                                375,    1898,		//  10	        6
+                                406,    1993,           //  10.5
+                                437,    2085,		//  11          7
+                                468,    2183,           //  11.5
+                                500,    2276,		//  12          8
+                                531,    2373,           //  12.5
+                                562,    2465,		//  13  9
+                                593,    2560,           //  13.5
+                                625,    2655,		//  14  10
+                                656,    2751,           //  14.5
+                                687,    2845,		//  15  11
+                                718,    2939,           //  15.5
+                                750,    3033,		//  16  12
+                                781,    3128,           //  16.5
+                                812,    3221,		//  17  13
+                                843,    3317,           //  17.5
+                                875,    3409,		//  18  14
+                                906,    3506,           //  18.5
+                                937,    3598,		//  19  15
+                                968,    3695,           //  19.5
+                                1000,   3785};		//  20  16		
+//--------------------------------------------------------
+// Точки 		  	ЦАП.  Проценты.            4-20.    №
+TDot dotsDAC[DOTS] = {	        484,      0,		//  4		0
+                                548,      31,
+                                611,      62,		//  5		1
+                                672,      93,
+                                733,      125,		//  6		2
+                                794,      156,
+                                853,      187,		//  7		3
+                                912,      218,
+                                972,      250,		//  8	        4
+                                1032,     281,
+                                1093,     312,		//  9	        5
+                                1157,     343,
+                                1224,     375,		//  10	        6
+                                1290,     406,
+                                1357,     437,		//  11          7
+                                1424,     468,
+                                1489,     500,		//  12          8
+                                1552,     531,
+                                1616,     562,		//  13  9
+                                1680,     593,
+                                1743,     625,		//  14  10
+                                1806,     656,
+                                1870,     687,		//  15  11
+                                1932,     718,
+                                1996,     750,		//  16  12
+                                2059,     781,
+                                2123,     812,		//  17  13
+                                2186,     843,
+                                2248,     875,		//  18  14
+                                2310,     906,
+                                2373,     937,		//  19  15
+                                2436,     968,
+                                2498,     1000};	//  20  16		
+//--------------------------------------------------------
 
 char Icons[NUM_ICONS][7] =	{
 					0x1F,0x11,0x1F,0x04,0x06,0x04,0x07,
@@ -46,7 +131,7 @@ void peref_Init(void)
     g_Peref.BtnOpen.LogType = ltAnMin;
     g_Peref.BtnOpen.Enable = TRUE;
     g_Peref.BtnOpen.Input = Null;
- //   g_Peref.BtnOpen.Output = &g_Peref.BtnStatus;
+   g_Peref.BtnOpen.Output = &g_Peref.BtnStatus;
     g_Peref.BtnOpen.Level = &BtnLevel;
     g_Peref.BtnOpen.Timeout = &BtnTout;
     g_Peref.BtnOpen.BitMask = 1<<0;
@@ -58,7 +143,7 @@ void peref_Init(void)
     g_Peref.BtnClose.LogType = ltAnMin;
     g_Peref.BtnClose.Enable = TRUE;
     g_Peref.BtnClose.Input = Null;
- //   g_Peref.BtnClose.Output = &g_Peref.BtnStatus;
+   g_Peref.BtnClose.Output = &g_Peref.BtnStatus;
     g_Peref.BtnClose.Level = &BtnLevel;
     g_Peref.BtnClose.Timeout = &BtnTout;
     g_Peref.BtnClose.BitMask = 1<<1;
@@ -70,7 +155,7 @@ void peref_Init(void)
     g_Peref.BtnStop1.LogType = ltAnMin;
     g_Peref.BtnStop1.Enable = TRUE;
     g_Peref.BtnStop1.Input = Null;
-  //  g_Peref.BtnStop1.Output = &g_Peref.BtnStatus;
+    g_Peref.BtnStop1.Output = &g_Peref.BtnStatus;
     g_Peref.BtnStop1.Level = &BtnLevel;
     g_Peref.BtnStop1.Timeout = &BtnTout;
     g_Peref.BtnStop1.BitMask = 1<<2;
@@ -82,7 +167,7 @@ void peref_Init(void)
     g_Peref.BtnStop2.LogType = ltAnMin;
     g_Peref.BtnStop2.Enable = TRUE;
     g_Peref.BtnStop2.Input = Null;
- //   g_Peref.BtnStop2.Output = &g_Peref.BtnStatus;
+    g_Peref.BtnStop2.Output = &g_Peref.BtnStatus;
     g_Peref.BtnStop2.Level = &BtnLevel;
     g_Peref.BtnStop2.Timeout = &BtnTout;
     g_Peref.BtnStop2.BitMask = 1<<3;
@@ -94,7 +179,7 @@ void peref_Init(void)
     g_Peref.BtnProg1.LogType = ltAnMin;
     g_Peref.BtnProg1.Enable = TRUE;
     g_Peref.BtnProg1.Input = Null;
- //   g_Peref.BtnProg1.Output = &g_Peref.BtnStatus;
+    g_Peref.BtnProg1.Output = &g_Peref.BtnStatus;
     g_Peref.BtnProg1.Level = &BtnLevel;
     g_Peref.BtnProg1.Timeout = &BtnTout;
     g_Peref.BtnProg1.BitMask = 1<<4;
@@ -106,7 +191,7 @@ void peref_Init(void)
     g_Peref.BtnProg2.LogType = ltAnMin;
     g_Peref.BtnProg2.Enable = TRUE;
     g_Peref.BtnProg2.Input = Null;
- //   g_Peref.BtnProg2.Output = &g_Peref.BtnStatus;
+    g_Peref.BtnProg2.Output = &g_Peref.BtnStatus;
     g_Peref.BtnProg2.Level = &BtnLevel;
     g_Peref.BtnProg2.Timeout = &BtnTout;
     g_Peref.BtnProg2.BitMask = 1<<5;
@@ -116,10 +201,47 @@ void peref_Init(void)
     g_Peref.BtnProg2.Flag = false;              
   
     // включение ТС
-    g_Peref.TS_Enable = GPIO_PIN_RESET;  //ToDo менять если надо 0 enable
+  //  g_Peref.TS_Enable = GPIO_PIN_SET;  //ToDo менять если надо 0 enable
     
     // конфигурируем ТУ 
     MCP23S17_init();
+      
+    g_Peref.Ia.Input =  0;  
+    g_Peref.Ia.Signal = 0;
+    g_Peref.Ia.Output = 0;
+ //   g_Peref.Ia.Ramp = &g_Core.Dmc.Status.RampOut;
+    g_Peref.Ia.RampPrev = 0;
+    g_Peref.Ia.Mash1 = &g_Core.Mash1;
+    g_Peref.Ia.Mash2 = 0;
+    g_Peref.Ia.Mash3 = &g_Core.Mash3;
+    g_Peref.Ia.Sum = 0;
+    g_Peref.Ia.Sum1 = 0;
+    g_Peref.Ia.Counter = 0;
+      
+    g_Peref.Ib.Input =  0;  
+    g_Peref.Ib.Signal = 0;
+    g_Peref.Ib.Output = 0;
+ //   g_Peref.Ib.Ramp = &g_Core.Dmc.Status.RampOut;
+    g_Peref.Ib.RampPrev = 0;
+    g_Peref.Ib.Mash1 = &g_Core.Mash1;
+    g_Peref.Ib.Mash2 = 0;
+    g_Peref.Ib.Mash3 = &g_Core.Mash3;
+    g_Peref.Ib.Sum = 0;
+    g_Peref.Ib.Sum1 = 0;
+    g_Peref.Ib.Counter = 0;
+         
+    g_Peref.Ic.Input =  0;  
+    g_Peref.Ic.Signal = 0;
+    g_Peref.Ic.Output = 0;
+//    g_Peref.Ic.Ramp = &g_Core.Dmc.Status.RampOut;
+    g_Peref.Ic.RampPrev = 0;
+    g_Peref.Ic.Mash1 = &g_Core.Mash1;
+    g_Peref.Ic.Mash2 = 0;
+    g_Peref.Ic.Mash3 = &g_Core.Mash3;
+    g_Peref.Ic.Sum = 0;
+    g_Peref.Ic.Sum1 = 0;
+    g_Peref.Ic.Counter = 0;
+   
      
     peref_ApFilter1Init(&g_Peref.URfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
     peref_ApFilter1Init(&g_Peref.USfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
@@ -137,6 +259,37 @@ void peref_Init(void)
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.UR, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.US, PRD_18KHZ);
     Peref_SinObserverInitFloat(&g_Peref.sinObserver.UT, PRD_18KHZ);
+      
+        
+    // конфигурируем ADS1118 для токового входа   
+      ADS1118_init(&g_Peref);
+   //-------------------------------------------------------
+      peref_ApFilter1Init(&g_Peref.ADCToProcfltr, PRD_50HZ, g_Ram.FactoryParam.RmsTf);
+      peref_ADCtoPRCObserverInit(&g_Peref);
+      peref_ProctoDACObserverInit(&g_Peref);
+          
+}
+
+void peref_ADCtoPRCObserverInit(TPeref *p)
+{
+  int i = 0;
+    
+      for (i = 0; i<DOTS; i++)
+      {
+        p->ADCtoProc.dots[i] = dotsADC[i];
+          p->ADCtoProc.dots[i].adc = g_Ram.FactoryParam.ADCdots[i];
+      }              
+}
+
+void peref_ProctoDACObserverInit(TPeref *p)
+{
+  int i = 0;
+    
+      for (i = 0; i<DOTS; i++)
+      {
+        p->ProctoDAC.dots[i] = dotsDAC[i];
+          p->ProctoDAC.dots[i].proc = g_Ram.FactoryParam.DACdots[i];
+      }
 }
 
 void peref_18KHzCalc(TPeref *p)//
@@ -176,7 +329,6 @@ void peref_18KHzCalc(TPeref *p)//
     
 }
 
-
 void peref_2KHzCalc(TPeref *p)
 {
  
@@ -185,78 +337,44 @@ void peref_2KHzCalc(TPeref *p)
 
 void peref_200HzCalc(TPeref *p)
 {
-        
-        
-        
-         switch (memtemp)
-        {
-          case 0:  break;
-          case 1: 
-          {     
-            if (IsMemParReady())
-            { 
-                addr = GetAdr(FactoryParam.ProductYear);
-                count = 1;
-               ReadWriteEeprom(&Eeprom1,F_WRITE,addr,&g_Ram.FactoryParam.ProductYear,1);
-                  memtemp = 0;
-            }
-          }
-          break;   
-          case 2: 
-          {     
-            if (IsMemParReady())
-            { 
-                addr = GetAdr(FactoryParam.ProductYear);
-                count = 1;
-                ReadWriteEeprom(&Eeprom1,F_READ,addr,&g_Ram.FactoryParam.ProductYear,1);
-                  memtemp = 0;
-
-            }
-          }
-          break; 
-        }
+    memTest();
 }
 
-Uns TirTimer = 2*PRD_50HZ;
-uint32_t hui = 0;
+//-----------------------------------
 void peref_50HzCalc(TPeref *p)
 { 
-  uint8_t DAC_tmp[2];
- //TODO переделать на нормальный PowerControl
-/*  if (g_Peref.VoltOn == 0) 
-  {
-    TIM1->CCR4 = 100;
-    hui = 0;
-  }
-  else {
+    //ADC 4-20 мА ---------------------------------------------------------------
+     ADS1118_update(&g_Peref);  // считали ацп
+    //--АДЦ в проценты--------------------------------------------------------------
+      
+   p->ADCToProcfltr.Input = (float)p->ADC_Out_data;    // отдали в фильтр Uns в float
+   peref_ApFilter1Calc(&p->ADCToProcfltr);             // пофильтровали
+   p->ADCtoProc.input = (Uns)p->ADCToProcfltr.Output;  // отдали в интерполяцию float в Uns
+    peref_ADCDACtoPRCObserverUpdate(&g_Peref.ADCtoProc); //посчитали интерполяцию
   
-    if (g_Peref.VoltOn && TirTimer) 
-      TirTimer--;
-    if (TirTimer == 0 && TIM1->CCR4 > 0 ) 
-      TIM1->CCR4--;
-      else 
-        if (TirTimer == 0 && TIM1->CCR4 == 0) 
-          TIM1->CCR4 = 0;  
-    if (hui >= 500) 
-        TIM1->CCR4 = 100;
-        else 
-          hui++;
-   }*/
-  
-  // TU------------------------------------------------------------------------
-//  MCP23S17_update(p);
+   g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
+      
+    //-- проценты в ЦАП--------------------------------------------------------------
+    peref_ADCDACtoPRCObserverUpdate(&g_Peref.ProctoDAC);      
    // DAC----------------------------------------------------------------------
-/*  HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_RESET);    
-  HAL_SPI_Receive(&hspi6,(uint8_t*)DAC_tmp, 2, 100);    
-  HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_SET);
-  
-  p->DAC_data = DAC_tmp[0];
-  p->DAC_data |= DAC_tmp[1]<<8;*/
-    
- 
+    p->ProctoDAC.output = p->DAC_data;
+      
+    DAC_tmp[0] = DAC_on_off; // когда все гуд 0, чтобы выключить и было 1мА надо установить значение 0х02
+    DAC_tmp[1] = ((p->DAC_data)>>8);  
+    DAC_tmp[2] = (p->DAC_data);  
+   
+    HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_RESET);    
+    HAL_SPI_Transmit(&hspi6,(uint8_t*)DAC_tmp, 3, 100);     
+    HAL_GPIO_WritePin(CS_Iout_GPIO_Port, CS_Iout_Pin, GPIO_PIN_SET);
+      
+    DAC_tmp_16 = (DAC_tmp[2] & 0xFF) | ((DAC_tmp[1] & 0xFF) << 8);
+   // TU------------------------------------------------------------------------
+  //  MCP23S17_update(p);
+     
+
+
 }
 
-uint8_t murovei = 0, gavno = 0;
 void peref_10HzCalc(TPeref *p)//
 {
  
@@ -321,7 +439,7 @@ void peref_10HzCalc(TPeref *p)//
         p->TenControl = 0; // включаем тэн
      }
 
-  //   HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, p->TenControl);
+     HAL_GPIO_WritePin(TEN_OFF_GPIO_Port, TEN_OFF_Pin, p->TenControl);
        
      // volt on control
      p->VoltOn = HAL_GPIO_ReadPin(VOLT_ON_GPIO_Port, VOLT_ON_Pin);
@@ -354,8 +472,6 @@ void peref_10HzCalc(TPeref *p)//
   }
   
   g_Ram.Status.VDC = (Uns)p->VDCfltr.Output;
-  
-
      
 }
 
@@ -364,15 +480,11 @@ void ADT7301_Update(ADT7301 *p)
 	uint8_t Data[2];
         Uns data16;
           
-            Uns TempVal,ADC_Temp_Code_dec;
+        Uns TempVal,ADC_Temp_Code_dec;
 	
 	HAL_GPIO_WritePin(CS_TEMP_GPIO_Port, CS_TEMP_Pin, GPIO_PIN_RESET); 
 	
 	HAL_SPI_Receive(&hspi1, Data, 2, 10); 
-          
-      /*  asm("NOP");
-        asm("NOP");
-        asm("NOP");*/
         HAL_GPIO_WritePin(CS_TEMP_GPIO_Port, CS_TEMP_Pin, GPIO_PIN_SET); 
 	
         data16 = Data[0]<<8;
@@ -386,11 +498,10 @@ void ADT7301_Update(ADT7301 *p)
            {
            *p->Temper = (data16/32); //Conversion formula if positive temperature.
            }  */
-           data16 = data16>>5;
-           if (data16 & 0x0100) data16 |= 0xFE00;  
-          if (abs(data16) < 100) {*p->Temper = data16; p->ErrTimer = 0;}
-          else if (++p->ErrTimer >= p->ErrCount) {p->Error = TRUE; p->ErrTimer = 0;}
-
+             data16 = data16>>5;
+             if (data16 & 0x0100) data16 |= 0xFE00;  
+             if (abs(data16) < 100) {*p->Temper = data16; p->ErrTimer = 0;}
+             else if (++p->ErrTimer >= p->ErrCount) {p->Error = TRUE; p->ErrTimer = 0;}           
 }
 
 void LogInputCalc(LOG_INPUT *p)
@@ -494,16 +605,23 @@ void RtcControl(void)
     // 74HC595D Драйвер ТС----------------------------------------------------
 void peref_74HC595D(TPeref *p)
 {
+    static Uns TuEnbReleTimer;
+ 
+    if (g_Ram.HideParam.HideStateTs.all != g_Ram.Status.StateTs.all)
+    {
+        HAL_GPIO_WritePin(ENB_TC_GPIO_Port, ENB_TC_Pin, GPIO_PIN_RESET);
+          
+        g_Ram.Status.StateTs.all = g_Ram.HideParam.HideStateTs.all;
+        p->TS_outData = g_Ram.HideParam.HideStateTs.all;
+        HAL_GPIO_WritePin(CS_TC_GPIO_Port, CS_TC_Pin, GPIO_PIN_RESET);
+        HAL_SPI_Transmit(&hspi6, &p->TS_outData, 1, 10);
+        HAL_GPIO_WritePin(CS_TC_GPIO_Port, CS_TC_Pin, GPIO_PIN_SET);  
+          
+        //    TuEnbReleTimer = (0.3 * PRD_10HZ);
+    }
+    	//if(TuEnbReleTimer > 0) TuEnbReleTimer--;
+	//else if(TuEnbReleTimer == 0 && (HAL_GPIO_ReadPin(ENB_TC_GPIO_Port, ENB_TC_Pin) == 0)) HAL_GPIO_WritePin(ENB_TC_GPIO_Port, ENB_TC_Pin, GPIO_PIN_SET);
 
-    HAL_GPIO_WritePin(ENB_TC_GPIO_Port, ENB_TC_Pin, p->TS_Enable);
-  
-    p->TS_outData = g_Ram.Status.StateTs.all & 0xFF;
-
-    HAL_SPI_Transmit_IT(&hspi6, &p->TS_outData, 1);
-    HAL_GPIO_WritePin(CS_TC_GPIO_Port, CS_TC_Pin, GPIO_PIN_SET); 
-    HAL_GPIO_WritePin(CS_TC_GPIO_Port, CS_TC_Pin, GPIO_PIN_RESET);  
-    
-    
 }
  //MCP23S17 драйвер ТУ --------------------------------------------------------
 void MCP23S17_write(uint8_t addr, uint8_t data)
@@ -550,8 +668,130 @@ void MCP23S17_update(TPeref *p)
     p->TU_data24  = MCP23S17_read(MCPS17_GPIOB);
 }
 
-
 void ADS1118_init(TPeref *p)
 {
-    p->ADC_Out_Config.bit.MODE = 0;
+    
+      
+  p->ADC_Out_Config.bit.OS = 0;
+    p->ADC_Out_Config.bit.MUX =4;
+      p->ADC_Out_Config.bit.PGA = 2;
+        p->ADC_Out_Config.bit.MODE = 0;
+          p->ADC_Out_Config.bit.DR = 7; //111
+          p->ADC_Out_Config.bit.TS_MODE = 0;
+            p->ADC_Out_Config.bit.PULL_UP_EN = 0;
+              p->ADC_Out_Config.bit.NOP = 0x1;
+                p->ADC_Out_Config.bit.CNV_RDY_FL = 0;
+                  
+ pADS1118_ConfRegData[1] = g_Peref.ADC_Out_Config.all & 0xFF;
+ pADS1118_ConfRegData[0] = (g_Peref.ADC_Out_Config.all>>8) & 0xFF;
+ 
+  HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_RESET);
+  HAL_SPI_Transmit(&hspi6, (uint8_t*)pADS1118_ConfRegData,  2, 100);
+  HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_SET);
+                      
 }
+
+
+void ADS1118_update(TPeref *p)
+{
+   uint8_t pBuffIn[2]; 
+   uint8_t pBuffOut[2]; 
+   pBuffOut[1] = g_Peref.ADC_Out_Config.all & 0xFF;
+   pBuffOut[0] = (g_Peref.ADC_Out_Config.all>>8) & 0xFF;
+     
+   HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_RESET);
+   HAL_SPI_TransmitReceive(&hspi6, (uint8_t*)pBuffOut, (uint8_t*)pBuffIn, 2, 100);
+   HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_SET);
+  
+   g_Peref.ADC_Out_data = (pBuffIn[1] & 0xFF) | ((pBuffIn[0] & 0xFF) << 8);
+}
+
+
+// Чисто моя функция инита--------------------------------
+void ADS_init (void)
+{
+  uint8_t pBuff[2];
+    pBuff[1]=0xE2;
+      pBuff[0]=0x42;
+        
+          HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_RESET);
+            HAL_SPI_Transmit(&hspi6, (uint8_t*)pBuff, 2, 100);
+              HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_SET);
+}
+
+void peref_ADCDACtoPRCObserverUpdate(TLineObserver *p)
+{
+	static Int i=0;
+
+        if (p->input <= p->dots[0].adc) 
+        {
+              p->output = p->dots[0].proc; 
+              return;
+        } 
+          
+
+        if (p->input >= p->dots[DOTS-1].adc)
+        {
+             p->output = p->dots[DOTS-1].proc;
+             return;
+        } 
+          
+         
+        
+	// Определяем, между какими значениями dots находится R_входное
+	//while (! ((p->inputR >= p->dots[i].resist)&&(p->inputR < p->dots[i+1].resist)) )	// Для сопротивления (прямая зависимость)
+	while (! ((p->input >= p->dots[i].adc)&&(p->input <= p->dots[i+1].adc)) )	// Для АЦП (обратная зависимость)
+	{
+		if (p->input > p->dots[i].adc)
+		{
+			i++;	// Движемся по характеристике вверх и вниз
+			//if(i > 7) i = 7;
+		}
+		else
+		{
+			i--;
+		//	if(i < -1) i = -1;
+		}							// пока не окажемся между двумя точками
+	}
+	
+	if (i > DOTS) i = DOTS;
+	else if (i < 0) i = 0;
+
+	if (p->input == p->dots[i].adc)			// Если четко попали на точку
+		p->output = p->dots[i].proc;		// берем значение температуры этой точки
+	else// Линейная интерполяция			   в противном случае интерполируем
+		p->output = LinearInterpolation(p->dots[i].adc, p->dots[i].proc ,p->dots[i+1].adc ,p->dots[i+1].proc, p->input);
+}
+
+void memTest(void)
+{
+// тест памяти, в основной работе не используеться
+         switch (memtemp)
+        {
+          case 0:  break;
+          case 1: 
+          {     
+            if (IsMemParReady())
+            { 
+                addr = GetAdr(FactoryParam.ProductYear);
+                count = 1;
+               ReadWriteEeprom(&Eeprom1,F_WRITE,addr,&g_Ram.FactoryParam.ProductYear,1);
+                  memtemp = 0;
+            }
+          }
+          break;   
+          case 2: 
+          {     
+            if (IsMemParReady())
+            { 
+                addr = GetAdr(FactoryParam.ProductYear);
+                count = 1;
+                ReadWriteEeprom(&Eeprom1,F_READ,addr,&g_Ram.FactoryParam.ProductYear,1);
+                  memtemp = 0;
+            }
+          }
+          break; 
+        }
+}
+
+

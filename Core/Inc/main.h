@@ -34,10 +34,10 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "std.h"
 #include "delay.h"
+#include "comm.h"
 #include "peref.h"
 #include "g_Ram.h"
 #include "g_Core.h"
-
 #include "stat.h"
 /* USER CODE END Includes */
 
@@ -48,6 +48,13 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
+
+#define DEVICE_ID		6001	// Идентификатор 
+#define DEVICE_YEAR		2022
+
+// Выбор физики для передачи данных
+#define UART_TYPE			0
+
 #define DEF_USER_PASS		1111	// 
 #define DEF_FACT_PASS		22222	// 
 
@@ -234,6 +241,8 @@ extern RTC_HandleTypeDef hrtc;
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern HRTIM_HandleTypeDef hhrtim;
+
+extern Uns PauseModbus;
 
 
 /* USER CODE END Private defines */
