@@ -14,7 +14,7 @@ void Comm_Init(TComm *p)
 
 	InitChanelAsuModbus(&g_Comm.mbAsu);
 
-	InitChanelShnModbus(&g_Comm.mbEncoder);
+	//InitChanelShnModbus(&g_Comm.mbEncoder);
 
 
 	SerialCommInit(&g_Comm.mbAsu);

@@ -110,6 +110,40 @@ typedef struct {
 	Float	VPredMod;	// Параметр: Напряжение предмодуляции
 } SVGENDQ_3PH;
 
+// Режимы работы при цифровом управлении приводом
+typedef enum {
+	wmStop           = 1,					// Режим стоп
+	wmMove     	 = 2,					// Режим движения
+	wmPlugBreak	 = 3,					// Режим торможения
+	wmStart		 = 4,
+	wmSpeedTest	 = 5
+
+} TWorkMode;
+
+
+// Структура для цифрового управления приводом
+typedef struct _TDmControl {
+	TWorkMode	WorkMode;				// Режим работы
+	Int		 RequestDir;				// Заданное направление вращения
+	LgInt	 	TargetPos;				// Целевое положение
+	Uns		 	TorqueSet;				// Задание момента
+	Uns		 	TorqueSetPr;			// Задание момента в %
+	Uns 		BreakFlag;				// Флаг определяющий возможность уплотнения
+	Uns 		OverWayFlag;			// Флаг показывающий что уплотнение не достигнуто
+	Uns 		MufTimer;				// Таймер срабатывания муфты в движении
+	Uns 		CalibStop;				// Остановка по калибровке
+	Uns 		PlugBreakTimer;			// Таймер используемый для торможения противовключением (пауза перед и само противовключение)
+	Uns 		PlugBreakStep;			// Шаги противовключения (Пауза, торможение, выключение)
+	Uns 		DinBreakTimer;			// Таймер используемый для динамического торможения
+	Uns 		ShnControlStepStart;	// Шаги для работы упп
+	Uns			ShnControlStepStop;
+	Uns 		ShnControlErrTimer;		// Таймер остановки если упп не отработает
+	Uns 		ShnControlErr;			// ошибка отработки упп
+	Uns			accelTimer;				// Таймер разгона. Пока он считает, муфта не работает
+	Uns 		MufTimerStart;			// 20.02.2020 PIA добавил таймер муфты по старту
+} TDmControl;
+
+
 typedef struct {
 	
     TStatusReg 			Status;			// Статус работы   
@@ -118,10 +152,8 @@ typedef struct {
     // ---
     TTorqObs			TorqObs;		// Расчет момента
     //--Работа инвертора---------------------------------------------
- //   TInvControl                 Dmc; 
-        
-          
-            
+    TDmControl                 MotorControl; 
+      
     RAMPGEN                     rg1;  
     INTERP2D                    vhz;
     IPARK                       ipark;  
@@ -152,8 +184,11 @@ void core10HZupdate(void);
 
 void Core_CalibControl(TCore *);			// Управление калибровкой
 void Core_CalibStop(TCore *);				// стоп по калибровке
+
+void Core_ControlMode(TCore *);				// Стэйт машина
 void StopPowerControl(void);					// действия при стопе
 void StartPowerControl(TValveCmd ControlWord);                  // Действия при старте
+
 
 void coreTS(TCore *);
 void coreTLocalControl(TCore *);

@@ -22,12 +22,20 @@ Uns StartTimer = 1 * PRD_10HZ;          // thyr pause
 
 Uns ShC_Level = 32767;                  // shc level
 
+Uns ModuleTemper = 0;
+Uns IDC = 0;
+Uns ModFault = 1; // 1 norm, 0 - fault
+
 float speedstart = 0;   // speed start
 float SpeedMax = 0;     // to speed
 Uns SpeedTime = 0;      // speed time
 Uns  SpeedEnable = 0;   // enable
 Uns TimerInterp = 0;
 float AngleInterp(float StartValue, float EndValue, Uns Time);
+
+static void MoveMode (void);
+static void StopMode(void);
+static void StartMode(void);
 
 void Core_Init(TCore *p)
 {	
@@ -57,9 +65,8 @@ void Core_Init(TCore *p)
    g_Core.Pwm.Period = _IQdiv((200000000), PwmFreq) - 1;
    
    Core_ValveDriveInit(&p->VlvDrvCtrl);	// Управление задвижкой
+
 }
-
-
 
 // Остановка по калибровке
 void Core_CalibStop (TCore *p)
@@ -67,7 +74,7 @@ void Core_CalibStop (TCore *p)
 	Bool StopFlag = False; // внутенний флаг остановки
 	LgInt Position = p->VlvDrvCtrl.Valve.Position;
 	
-	/*	if(p->VlvDrvCtrl.Valve.Position == POS_UNDEF) //Если целевое положение не определено то уходим
+		if(p->VlvDrvCtrl.Valve.Position == POS_UNDEF) //Если целевое положение не определено то уходим
 		{
 			p->MotorControl.TargetPos = POS_UNDEF;
 			return;
@@ -76,8 +83,8 @@ void Core_CalibStop (TCore *p)
 
 		if(p->Status.bit.Stop) return;
 
-		if((p->MotorControl.RequestDir < 0) && (p->MotorControl.TargetPos <= g_Ram.ramGroupC.BreakZone)) StopFlag = True;
-		if((p->MotorControl.RequestDir > 0) && (p->MotorControl.TargetPos >= -g_Ram.ramGroupC.BreakZone)) StopFlag = True;
+		if((p->MotorControl.RequestDir < 0) && (p->MotorControl.TargetPos <= g_Ram.FactoryParam.BreakZone)) StopFlag = True;
+		if((p->MotorControl.RequestDir > 0) && (p->MotorControl.TargetPos >= -g_Ram.FactoryParam.BreakZone)) StopFlag = True;
 
 		if (StopFlag)	// Если пора останавливаться
 		{
@@ -90,7 +97,6 @@ void Core_CalibStop (TCore *p)
 					p->VlvDrvCtrl.EvLog.Source = CMD_SRC_BLOCK;
 				}
 		}
-	*/
 }
 
 // Управление калибровкой
@@ -127,9 +133,7 @@ void Core_CalibControl(TCore *p)
 	}
 }
 
-Uns ModuleTemper = 0;
-Uns IDC = 0;
-Uns ModFault = 1; // 1 norm, 0 - fault
+
 void core18kHZupdate(void)
 {
      
@@ -190,6 +194,82 @@ void core18kHZupdate(void)
      }
                 
 }
+
+// Действия выполняемые при стопе
+void StopPowerControl(void)
+{
+	SpeedEnable = 2;
+}
+
+// Действия при пуске
+void StartPowerControl(TValveCmd ControlWord)
+{
+	switch (ControlWord)
+	{
+		case vcwClose:
+			g_Core.MotorControl.RequestDir = -1;
+			g_Core.MotorControl.WorkMode = wmStart;
+                        SpeedEnable = 1;
+			break;
+		case vcwOpen:
+			g_Core.MotorControl.RequestDir = 1;
+			g_Core.MotorControl.WorkMode = wmStart;
+                        SpeedEnable = 1;
+			break;
+	}
+}
+
+// Стэйт машина
+void Core_ControlMode(TCore *p) // 50 Гц
+{
+
+    switch(p->MotorControl.WorkMode)
+    {
+        case wmStop:		StopMode(); break;
+	case wmStart:		StartMode();break;	
+	case wmMove:		MoveMode(); break;
+    }
+}
+
+
+static void StopMode(void)
+{
+	// что то делаем в стопе
+}
+
+static void StartMode(void)
+{
+      // что то делаем при старте
+}
+
+static void MoveMode(void)
+{
+    // что то делаем пока едем
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 void svgendq3ph_calc(SVGENDQ_3PH *v)

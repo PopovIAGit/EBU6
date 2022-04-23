@@ -14,6 +14,9 @@ extern "C" {
 #endif
   
   
+#define INIT_CRC    0xFFFF
+#define GOOD_CRC    0x0000
+#define GENER_CRC   0xA001
   
   // Выбор портов для связи с ПК и ПДУ
 #define SCIA	0
@@ -86,7 +89,76 @@ extern "C" {
 #define MB_RET_SLAVE_BUSY    0x0011   // Чтение счетчика занятости устройства
 #define MB_RET_BUS_OVERRUN   0x0012   // Чтение счетчика наложения данных
 #define MB_CLEAR_OVERRUN     0x0014   // Очистка счетчика наложения и флага ошибки
+  
+  
+typedef struct _TTimerList {Uns Counter, Timeout;} TTimerList;
 
+#define StopTimer(Timer)	(Timer)->Counter = 0
+#define StartTimer(Timer)	(Timer)->Counter = (Timer)->Timeout
+
+#define RestartCommConfirmation(hPort)		DiagnosticConfirmation(hPort, 0)
+
+//-------------------------------------------------------------------------------
+#define RetDiagnRegRequest(hPort)				DiagnosticRequest(hPort, MB_RET_DIAGN_REG, FALSE)
+#define RetDiagnRegIndication(hPort)			DiagnosticIndication(hPort, hPort->Stat.DiagnReg)
+#define RetDiagnRegConfirmation(hPort)		DiagnosticConfirmation(hPort, 1)
+
+//-------------------------------------------------------------------------------
+#define ForceListenModeRequest(hPort)			DiagnosticRequest(hPort, MB_FORCE_LISTEN, FALSE)
+
+#define ForceListenModeConfirmation(hPort)	DiagnosticConfirmation(hPort, 0)
+
+//-------------------------------------------------------------------------------
+#define ClearDiagnRegRequest(hPort)			DiagnosticRequest(hPort, MB_CLEAR_DIAGN_REG, FALSE) 
+  
+  
+#define ClearDiagnRegConfirmation(hPort)		DiagnosticConfirmation(hPort, 0)
+
+//-------------------------------------------------------------------------------
+#define RetBusMsgRequest(hPort)					DiagnosticRequest(hPort, MB_RET_BUS_MSG, FALSE)
+#define RetBusMsgIndication(hPort)				DiagnosticIndication(hPort, hPort->Stat.BusMsgCount)
+#define RetBusMsgConfirmation(hPort)			DiagnosticConfirmation(hPort, 1)
+
+//-------------------------------------------------------------------------------
+#define RetBusErrRequest(hPort)					DiagnosticRequest(hPort, MB_RET_BUS_ERR, FALSE)
+#define RetBusErrIndication(hPort)				DiagnosticIndication(hPort, hPort->Stat.BusErrCount)
+#define RetBusErrConfirmation(hPort)			DiagnosticConfirmation(hPort, 1)
+
+//-------------------------------------------------------------------------------
+#define RetBusExcRequest(hPort)					DiagnosticRequest(hPort, MB_RET_BUS_EXCEPT, FALSE)
+#define RetBusExcIndication(hPort)				DiagnosticIndication(hPort, hPort->Stat.BusExcCount)
+#define RetBusExcConfirmation(hPort)			DiagnosticConfirmation(hPort, 1)
+
+//-------------------------------------------------------------------------------
+#define RetSlaveMsgRequest(hPort)				DiagnosticRequest(hPort, MB_RET_SLAVE_MSG, FALSE)
+#define RetSlaveMsgIndication(hPort)			DiagnosticIndication(hPort, hPort->Stat.SlaveMsgCount)
+#define RetSlaveMsgConfirmation(hPort)		DiagnosticConfirmation(hPort, 1)
+
+//-------------------------------------------------------------------------------
+#define RetSlaveNoRespRequest(hPort)			DiagnosticRequest(hPort, MB_RET_SLAVE_NO_RESP, FALSE)
+#define RetSlaveNoRespIndication(hPort)		DiagnosticIndication(hPort, hPort->Stat.SlaveNoRespCount)
+#define RetSlaveNoRespConfirmation(hPort)	DiagnosticConfirmation(hPort, 1)
+
+//-------------------------------------------------------------------------------
+#define RetSlaveNakRequest(hPort)				DiagnosticRequest(hPort, MB_RET_SLAVE_NAK, FALSE)
+#define RetSlaveNakIndication(hPort)			DiagnosticIndication(hPort, hPort->Stat.SlaveNakCount)
+#define RetSlaveNakConfirmation(hPort)		DiagnosticConfirmation(hPort, 1)
+
+//-------------------------------------------------------------------------------
+#define RetSlaveBusyRequest(hPort)				DiagnosticRequest(hPort, MB_RET_SLAVE_BUSY, FALSE)
+#define RetSlaveBusyIndication(hPort)			DiagnosticIndication(hPort, hPort->Stat.SlaveBusyCount)
+#define RetSlaveBusyConfirmation(hPort)		        DiagnosticConfirmation(hPort, 1)
+
+//-------------------------------------------------------------------------------
+#define RetBusOverrunRequest(hPort)			DiagnosticRequest(hPort, MB_RET_BUS_OVERRUN, FALSE)
+#define RetBusOverrunIndication(hPort)		        DiagnosticIndication(hPort, hPort->Stat.BusOverrunErrCount)
+#define RetBusOverrunConfirmation(hPort)		DiagnosticConfirmation(hPort, 1)
+
+//-------------------------------------------------------------------------------
+#define ClearOverrunFlagRequest(hPort)		DiagnosticRequest(hPort, MB_CLEAR_OVERRUN, FALSE)
+
+#define ClearOverrunFlagConfirmation(hPort)	DiagnosticConfirmation(hPort, 0)
+  
 // Структура параметров драйвера
 typedef void (*TMbTrFunc)(Byte);
 
@@ -219,7 +291,8 @@ void ModBusRxIsr(TMbHandle);
 void ModBusTxIsr(TMbHandle);
 void SendMasterResponse(TMbPort *);
 void SendFrame(TMbPort *);
-
+void GenerateCrcTable(void);
+ Uns CalcFrameCrc(Byte *Buf, Uns Count);
 
 // Прототипы функций
 void SerialCommInit(TMbHandle);
@@ -228,6 +301,40 @@ void SerialCommTimings(TMbHandle);
 void InitChanelAsuModbus(TMbHandle);
 void InitChanelEncoderModbus(TMbHandle);
 void ModBusUpdate(TMbHandle);
+
+ void ResetCommumication(TMbPort *, Bool);
+  void BreakFrameEvent(TMbPort *hPort);
+  void NewFrameEvent(TMbPort *hPort);
+   void PreambleEvent(TMbPort *hPort);
+    void PostambleEvent(TMbPort *hPort);
+     void ConnTimeoutEvent(TMbPort *hPort);
+      void AcknoledgeEvent(TMbPort *hPort);
+  Uns WordUnPack(Byte *Buf);
+   void DiagnosticIndication(TMbPort *hPort, Uns Data);
+    void ReadRegsRequest(TMbPort *hPort);
+    void ReadRegsIndication(TMbPort *hPort);
+    void ReadRegsResponse(TMbPort *hPort);
+     void ReadRegsConfirmation(TMbPort *hPort);
+     void WriteRegRequest(TMbPort *hPort);
+     void WriteRegIndication(TMbPort *hPort);
+     void WriteRegResponse(TMbPort *hPort);
+     void WriteRegConfirmation(TMbPort *hPort);
+     void ReturnQueryDataIndication(TMbPort *hPort);
+     void RestartCommIndication(TMbPort *hPort);
+      void ForceListenModeIndication(TMbPort *hPort);
+       void ClearDiagnRegIndication(TMbPort *hPort);
+       void ClearOverrunFlagIndication(TMbPort *hPort);
+       void WriteRegsRequest(TMbPort *hPort);
+       void WriteRegsIndication(TMbPort *hPort);
+       void WriteRegsResponse(TMbPort *hPort);
+       void WriteRegsConfirmation(TMbPort *hPort);
+       void ReportSlaveIdIndication(TMbPort *hPort);
+        void ReportSlaveIdResponse(TMbPort *hPort);
+        void ReportSlaveIdConfirmation(TMbPort *hPort);
+                                    
+ void SetTimeout(TTimerList *Timer, Uns Timeout);
+ void InitTimer(TTimerList *Timer, Uns Timeout);
+ Bool TimerPending(TTimerList *Timer);
 
 #ifdef __cplusplus
 }
