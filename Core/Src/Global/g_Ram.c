@@ -65,14 +65,19 @@ void ReWriteParams(void)
 void RefreshParams(Uns addr)
 {
 
-	/*TPerefPosition *pPosition 		= &g_Peref.Position;
+	TPerefPosition *pPosition 		= &g_Peref.Position;
 
-	if (addr == REG_GEAR_RATIO)	{
+	if (addr >= REG_ADC_DOTS && addr <= REG_DAC_DOTS)	{
 
-		pPosition->GearRatio = g_Ram.ramGroupC.GearRatio;
-		pPosition->GearInv = CalcClbGearInv(&g_Peref.Position);
+		      peref_ADCtoPRCObserverInit(&g_Peref);
+                    //  peref_ProctoDACObserverInit(&g_Peref);
 
-	}else if (addr == REG_OVERWAY_ZONE) { g_Core.VlvDrvCtrl.Valve.BreakDelta = (((LgUns)pPosition->GearRatio * (LgUns)g_Ram.ramGroupB.OverwayZone) << *pPosition->PosSensPow)/10; //CalcClbAbsRev(&Calib, g_Ram.ramGroupB.OverwayZone);
+	}else if (addr >= REG_DAC_DOTS && addr <= REG_RSVD196){
+                      peref_ProctoDACObserverInit(&g_Peref);
+        }
+          
+
+/*else if (addr == REG_OVERWAY_ZONE) { g_Core.VlvDrvCtrl.Valve.BreakDelta = (((LgUns)pPosition->GearRatio * (LgUns)g_Ram.ramGroupB.OverwayZone) << *pPosition->PosSensPow)/10; //CalcClbAbsRev(&Calib, g_Ram.ramGroupB.OverwayZone);
 
 	} else if (addr == REG_DRIVE_TYPE) {
 

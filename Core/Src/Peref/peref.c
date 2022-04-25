@@ -267,7 +267,9 @@ void peref_Init(void)
       peref_ApFilter1Init(&g_Peref.ADCToProcfltr, PRD_50HZ, g_Ram.FactoryParam.RmsTf);
       peref_ADCtoPRCObserverInit(&g_Peref);
       peref_ProctoDACObserverInit(&g_Peref);
-          
+        
+      Peref_CalibInit(&g_Peref.Position);
+    //   g_Ram.HideParam.Position - СЮДА НАДО ПОЛОЖИТЬ ЗНАЧЕНИЕ ЭНКОДЕРА  
 }
 
 void peref_ADCtoPRCObserverInit(TPeref *p)

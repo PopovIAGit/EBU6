@@ -492,6 +492,11 @@ typedef struct _TTestRam
 #define REG_GEAR_RATIO			GetAdr(FactoryParam.GearRatio)
 #define REG_DRIVE_TYPE			GetAdr(UserParam.DriveType)
 
+#define REG_ADC_DOTS                    GetAdr(FactoryParam.ADCdots[0])
+#define REG_DAC_DOTS                    GetAdr(FactoryParam.DACdots[0])
+#define REG_RSVD196                     GetAdr(FactoryParam.reserv196)
+
+
 #define REG_RS_BAUD_RATE	        GetAdr(UserParam.RsBaudRate)
 
 #define REG_PASSW1_NEW			GetAdr(HideParam.Password1)
