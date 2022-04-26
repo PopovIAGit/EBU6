@@ -490,6 +490,8 @@ void coreTLocalControl(TCore *p)
         
        if (menu.State == 0) g_Core.Status.bit.Program = 0;
        else g_Core.Status.bit.Program = 1;
+       
+       g_Core.VlvDrvCtrl.Mpu.Enable != g_Core.Status.bit.Program;
   
         if (g_Core.Status.bit.Program)
          {    
@@ -526,7 +528,7 @@ void coreTLocalControl(TCore *p)
          {
              switch(g_Peref.BtnStatus & (~BTN_STOP))
               {
-                    case BTN_OPEN: 
+                  case BTN_OPEN: 
                   g_Ram.HideParam.CmdButton  =   KEY_OPEN;           
                     // Mcu.Mpu.BtnKey = KEY_OPEN;
                    /*   if (SpeedRef == 0){

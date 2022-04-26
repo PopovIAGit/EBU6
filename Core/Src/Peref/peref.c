@@ -30,7 +30,6 @@ uint8_t pBuff_ADC [2];
 uint8_t pADS1118_ConfRegData[2];
 
 Uns TirTimer = 2*PRD_50HZ;
-uint32_t hui = 0;
 
 uint8_t DAC_tmp[3];
 uint8_t DAC_on_off = 0x02; // по умолчанию токовый выход выключен, его нужно включить в меню при выборе управления АНАЛОГОВОЕ когда подключают токовый вход и выход (выставить 0)
