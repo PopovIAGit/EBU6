@@ -49,7 +49,7 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 
-#define DEVICE_ID		6001	// Идентификатор 
+#define DEVICE_ID		6001	// �?дентификатор 
 #define DEVICE_YEAR		2022
 
 // Выбор физики для передачи данных
@@ -67,7 +67,7 @@ extern "C" {
 #define PRD_50HZ				50			// ????????????? ?????? 50 ??
 
 #define VERSION                                 1
-#define SUBVERSION                              21
+#define SUBVERSION                              22
 
 #define CONCAT2(First, Second) (First ## Second)
 #define CONCAT(First, Second) CONCAT2(First, Second)
