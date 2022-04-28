@@ -268,10 +268,6 @@ static void MoveMode(void)
 //-------------------------------------------------------------------------------
 
 
-
-
-
-
 void svgendq3ph_calc(SVGENDQ_3PH *v)
 {
 	register Float Sine, Cosine;
@@ -491,7 +487,7 @@ void coreTLocalControl(TCore *p)
        if (menu.State == 0) g_Core.Status.bit.Program = 0;
        else g_Core.Status.bit.Program = 1;
        
-       g_Core.VlvDrvCtrl.Mpu.Enable != g_Core.Status.bit.Program;
+       g_Core.VlvDrvCtrl.Mpu.Enable = !g_Core.Status.bit.Program;
   
         if (g_Core.Status.bit.Program)
          {    
@@ -526,7 +522,7 @@ void coreTLocalControl(TCore *p)
          }
          else 
          {
-             switch(g_Peref.BtnStatus & (~BTN_STOP))
+          switch(g_Peref.BtnStatus & (~BTN_STOP))
               {
                   case BTN_OPEN: 
                   g_Ram.HideParam.CmdButton  =   KEY_OPEN;           
@@ -564,7 +560,7 @@ void coreTLocalControl(TCore *p)
                       }       
                        break; 
               }
-              switch(g_Peref.BtnStatus & BTN_STOP)
+         switch(g_Peref.BtnStatus & BTN_STOP)
               {
                 case BTN_STOP1:
                  /* if (SpeedRef != 0){

@@ -27,7 +27,7 @@
         <stlinkResetStrategy>2</stlinkResetStrategy>
     </StLinkDriver>
     <DebugChecksum>
-        <Checksum>528893957</Checksum>
+        <Checksum>2102658760</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -63,12 +63,18 @@
         <ITMlogFile>$PROJ_DIR$\ITM.log</ITMlogFile>
     </SWOTraceHWSettings>
     <struct_types>
-        <Fmt0>TUserParam-DuSource	3	0</Fmt0>
-        <Fmt1>TUserParam-InputType	3	0</Fmt1>
-        <Fmt2>TUserParam-MuDuSetup	3	0</Fmt2>
-        <Fmt3>TUserParam-RsBaudRate	3	0</Fmt3>
-        <Fmt4>TUserParam-RsMode	3	0</Fmt4>
+        <Fmt0>TMpuControl-BtnKey	3	0</Fmt0>
+        <Fmt1>TMpuControl-CancelFlag	3	0</Fmt1>
+        <Fmt2>TMpuControl-Enable	3	0</Fmt2>
+        <Fmt3>TUserParam-DuSource	3	0</Fmt3>
+        <Fmt4>TUserParam-InputType	3	0</Fmt4>
+        <Fmt5>TUserParam-MuDuSetup	3	0</Fmt5>
+        <Fmt6>TUserParam-RsBaudRate	3	0</Fmt6>
+        <Fmt7>TUserParam-RsMode	3	0</Fmt7>
     </struct_types>
+    <watch_formats>
+        <Fmt0>{W}42:g_Peref.BtnStatus	1	0</Fmt0>
+    </watch_formats>
     <Trace2>
         <Enabled>0</Enabled>
         <ShowSource>0</ShowSource>
@@ -114,6 +120,14 @@
         <ShowTimeSum>1</ShowTimeSum>
         <SumSortOrder>0</SumSortOrder>
     </EventLog>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Core\Src\Core\g_Core.c}.217.9" 0 0 1 "" 0 "" 0</Bp0>
+        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Core\Src\Core\g_Core.c}.201.2" 0 0 1 "" 0 "" 0</Bp1>
+        <Count>2</Count>
+    </Breakpoints2>
     <TermIOLog>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -123,6 +137,10 @@
         <LogFile>_ ""</LogFile>
         <Category>_ 0</Category>
     </LogFile>
+    <Aliases>
+        <Count>0</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
     <DriverProfiling>
         <Enabled>0</Enabled>
         <Mode>3</Mode>
@@ -136,14 +154,4 @@
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Count>0</Count>
-    </Breakpoints2>
-    <Aliases>
-        <Count>0</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
 </settings>

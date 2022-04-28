@@ -79,7 +79,7 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
     PrdElemInit(Comm_50HzCalc,					&g_Comm),
     PrdElemInit(Comm_CommandUpdate,				&g_Comm),
     PrdElemInit(Core_ControlMode, 				&g_Core),
-    
+    PrdElemInit(Core_ValveDriveUpdate, 			&g_Core.VlvDrvCtrl),
     
     PrdElemInit(peref_50HzCalc,                 &g_Peref)
 };

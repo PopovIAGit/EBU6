@@ -156,7 +156,7 @@ typedef struct {
          LOG_INPUT   BtnStop2;
          LOG_INPUT   BtnProg1;
          LOG_INPUT   BtnProg2;
-         Uns         BtnStatus;
+         Uns         BtnStatus; 
          // ADC Sensors ----------------------------------------------------------------------------
          uint16_t adcData1[ADC_CHANNELS_NUM_1];
          uint16_t adcData3[ADC_CHANNELS_NUM_2];

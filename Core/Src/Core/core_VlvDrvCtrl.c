@@ -9,14 +9,14 @@
 
 #include "g_Core.h"
 
-__inline void GetActiveControls(TCoreVlvDrvCtrl *);	// Получаем данные от куда обрабатываем команды
-__inline void MpuControl(TCoreVlvDrvCtrl *);		// Обрабатываем местны команы
-__inline void TeleControl(TCoreVlvDrvCtrl *);		// обрабатываем команды ТУ/Модбас
-__inline void UnitControl(TCoreVlvDrvCtrl *);		// Выбераем действие в зависимости от полученной корманлды
-__inline void DriveStop(TCoreVlvDrvCtrl *);			// Действия при команде стоп
-__inline void DriveClose(TCoreVlvDrvCtrl *);		// ... при закрыть
-__inline void DriveOpen(TCoreVlvDrvCtrl *);			// ... при открыть
-__inline void UpdateComm(TCoreVlvDrvCtrl *);		// Обработка внутренней команды при обработке реверса
+ void GetActiveControls(TCoreVlvDrvCtrl *);	// Получаем данные от куда обрабатываем команды
+ void MpuControl(TCoreVlvDrvCtrl *);		// Обрабатываем местны команы
+ void TeleControl(TCoreVlvDrvCtrl *);		// обрабатываем команды ТУ/Модбас
+ void UnitControl(TCoreVlvDrvCtrl *);		// Выбераем действие в зависимости от полученной корманлды
+ void DriveStop(TCoreVlvDrvCtrl *);			// Действия при команде стоп
+ void DriveClose(TCoreVlvDrvCtrl *);		// ... при закрыть
+ void DriveOpen(TCoreVlvDrvCtrl *);			// ... при открыть
+ void UpdateComm(TCoreVlvDrvCtrl *);		// Обработка внутренней команды при обработке реверса
 static   void ReverseDrive(TCoreVlvDrvCtrl *);		// Действия при реверсеы
 
 Bool Flag = False;
@@ -77,7 +77,7 @@ void Core_ValveDriveUpdate(TCoreVlvDrvCtrl *p)
 }
 
 //
-__inline void GetActiveControls(TCoreVlvDrvCtrl *p)
+ void GetActiveControls(TCoreVlvDrvCtrl *p)
 {
 		Uns  DigState = 0;
 
@@ -116,7 +116,7 @@ __inline void GetActiveControls(TCoreVlvDrvCtrl *p)
 }
 
 // обработка команд с МПУ
-__inline void MpuControl(TCoreVlvDrvCtrl *p)
+ void MpuControl(TCoreVlvDrvCtrl *p)
 {
 	Uns Key = 0;
 			Uns  Active = 0;
@@ -149,7 +149,7 @@ __inline void MpuControl(TCoreVlvDrvCtrl *p)
 		}
 }
 
-__inline void TeleControl(TCoreVlvDrvCtrl *p)
+ void TeleControl(TCoreVlvDrvCtrl *p)
 {
 	TValveCmd TuControl = vcwNone;
 	Bool Ready;
@@ -196,7 +196,7 @@ __inline void TeleControl(TCoreVlvDrvCtrl *p)
 	*p->Tu.State &= ~(TU_STOP_OPEN|TU_STOP_CLOSE|TU_CLOSE|TU_OPEN);
 }
 
-__inline void UnitControl(TCoreVlvDrvCtrl *p)
+ void UnitControl(TCoreVlvDrvCtrl *p)
 {
 		UpdateComm(p);
 
@@ -218,13 +218,13 @@ __inline void UnitControl(TCoreVlvDrvCtrl *p)
 		}
 }
 
-__inline void DriveStop(TCoreVlvDrvCtrl *p)
+ void DriveStop(TCoreVlvDrvCtrl *p)
 {
 	Core_ValveDriveStop(p);
 	p->EvLog.Value = CMD_STOP;
 }
 
-__inline void DriveClose(TCoreVlvDrvCtrl *p)
+ void DriveClose(TCoreVlvDrvCtrl *p)
 {
 	Bool FreeRun;
 
@@ -253,7 +253,7 @@ __inline void DriveClose(TCoreVlvDrvCtrl *p)
 	p->StartControl(*p->ControlWord); // Подали команду управления для начала работы
 }
 
-__inline void DriveOpen(TCoreVlvDrvCtrl *p)
+ void DriveOpen(TCoreVlvDrvCtrl *p)
 {
 	Bool FreeRun;
 
@@ -282,7 +282,7 @@ __inline void DriveOpen(TCoreVlvDrvCtrl *p)
 	p->StartControl(*p->ControlWord);
 }
 
-__inline void UpdateComm(TCoreVlvDrvCtrl *p)		// Функция автоматической подачи команды при реверсе ()
+ void UpdateComm(TCoreVlvDrvCtrl *p)		// Функция автоматической подачи команды при реверсе ()
 {
 	if (p->Command != vcwNone)					// Если пришла внутренняя
 	{
