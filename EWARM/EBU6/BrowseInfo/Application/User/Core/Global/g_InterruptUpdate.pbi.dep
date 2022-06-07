@@ -37,6 +37,7 @@ C:\work\ebu6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Global\g_Interrupt
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_adc.h \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_adc.h \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_adc_ex.h \
+  C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_fdcan.h \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_flash.h \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_flash_ex.h \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_hrtim.h \
@@ -73,6 +74,7 @@ C:\work\ebu6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Global\g_Interrupt
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_SinObserver.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_Clock.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_Calibs.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\CMS58M.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_display.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_displhal.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Global\g_Ram.h \

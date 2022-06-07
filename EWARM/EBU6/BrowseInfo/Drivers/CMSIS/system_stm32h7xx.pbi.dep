@@ -35,6 +35,7 @@ C:\work\ebu6\EBU6\EWARM\EBU6\BrowseInfo\Drivers\CMSIS\system_stm32h7xx.pbi: \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_adc.h \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_ll_adc.h \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_adc_ex.h \
+  C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_fdcan.h \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_flash.h \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_flash_ex.h \
   C:\work\ebu6\EBU6\EWARM\..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_hrtim.h \

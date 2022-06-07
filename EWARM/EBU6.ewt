@@ -1471,6 +1471,9 @@
                 <group>
                     <name>Peref</name>
                     <file>
+                        <name>$PROJ_DIR$\..\..\..\ebu5\BREP\Src\Peref\CMS58M.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\Core\Src\Peref\peref.c</name>
                     </file>
                     <file>
@@ -1590,6 +1593,9 @@
                 </group>
                 <group>
                     <name>Peref</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\..\ebu5\BREP\Include\Peref\CMS58M.h</name>
+                    </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Peref\peref.h</name>
                     </file>

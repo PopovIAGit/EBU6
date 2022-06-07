@@ -49,7 +49,7 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 
-#define DEVICE_ID		6001	// Идентификатор 
+#define DEVICE_ID		6001	// �?дентификатор 
 #define DEVICE_YEAR		2022
 
 // Выбор физики для передачи данных
@@ -242,7 +242,7 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern HRTIM_HandleTypeDef hhrtim;
 extern UART_HandleTypeDef huart4;
-
+extern FDCAN_HandleTypeDef hfdcan1;
 extern Uns PauseModbus;
 
 
