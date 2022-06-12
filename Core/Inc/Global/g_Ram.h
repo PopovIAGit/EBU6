@@ -60,7 +60,7 @@ typedef struct _TUserParam
 	Uns		BreakOpenTorque;  	// B4. 44 Момент уплотнения на открытие
 	Uns		StartOpenTorque;  	// B5. 45 Момент трогания на открытие
 	Uns		reserv46;		// B6. 46 Резерв
-	TBreakMode             BreakMode;		// B7. 47 Тип уплотнения
+	TBreakMode      BreakMode;		// B7. 47 Тип уплотнения
 	Uns             RodType;        	// B8. 48 Тип штока
 	Uns		CloseZone;		// B9. 49 Зона закрыто
 	Uns		OpenZone;		// B10. 50 Зона открыто
@@ -70,8 +70,8 @@ typedef struct _TUserParam
 	TDateVar 	DevDate;		// B14. 54 Дата
 	Uns		reserv55;		// B15. 55 Корректеровка времени
 	Uns		reserv56;		// B16. 56 Резерв
-	TMuDuSetup  	        MuDuSetup;              // B17. 57 Настройка режима МУ/ДУ
-	TDuSource	        DuSource;		// B18. 58 Источник команд ДУ
+	TMuDuSetup  	MuDuSetup;              // B17. 57 Настройка режима МУ/ДУ
+	TDuSource	DuSource;		// B18. 58 Источник команд ДУ
 	Uns         	TuLockSeal;             // B19. 59 Блокировка залипани
 	Uns         	TuTime;                 // B20. 60 Время команды
 	TInputType 	InputType;		// B21. 61 Тип входного сигнала 24/220
@@ -81,6 +81,7 @@ typedef struct _TUserParam
 	Uns             RsStation;              // B25. 65 Адрес станции
 	TParityMode	RsMode;			// B26. 66 Режим связи
 	Uns		MuffTimer;		// B27. 67
+        Uns		MuffTimer2;		// B27. 67
 	Uns		TimeSpeedStart;		// B28. 68 
 	Int		SpeedStart;		// B29. 69 
         Uns		TimeSpeedStop;		// B30. 70 
@@ -491,6 +492,11 @@ typedef struct _TTestRam
 #define REG_I_NOM			GetAdr(FactoryParam.Inom)
 #define REG_GEAR_RATIO			GetAdr(FactoryParam.GearRatio)
 #define REG_DRIVE_TYPE			GetAdr(UserParam.DriveType)
+
+#define REG_ADC_DOTS                    GetAdr(FactoryParam.ADCdots[0])
+#define REG_DAC_DOTS                    GetAdr(FactoryParam.DACdots[0])
+#define REG_RSVD196                     GetAdr(FactoryParam.reserv196)
+
 
 #define REG_RS_BAUD_RATE	        GetAdr(UserParam.RsBaudRate)
 

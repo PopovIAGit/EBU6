@@ -12,17 +12,13 @@ static char ReadRegs(TMbPort *Port, Uint16 *Data, Uint16 Addr, Uint16 Count);
 void Comm_Init(TComm *p)
 {
 
-	InitChanelAsuModbus(&g_Comm.mbAsu);
+	//InitChanelAsuModbus(&g_Comm.mbAsu);
 
 	//InitChanelShnModbus(&g_Comm.mbEncoder);
 
 
-	SerialCommInit(&g_Comm.mbAsu);
-	SerialCommInit(&g_Comm.mbEncoder);
-	g_Comm.mbEncoder.Frame.TimerPost.Timeout=10;
-	g_Comm.mbEncoder.Frame.TimerConn.Timeout=1000;
-	g_Comm.mbEncoder.Frame.TimerAck.Timeout=80;
-
+	//SerialCommInit(&g_Comm.mbAsu);
+	//SerialCommInit(&g_Comm.mbEncoder);
 }
 
 //---------------------------------------------------
@@ -30,8 +26,7 @@ void Comm_Update(TComm *p)
 {
 
         if(g_Ram.Comands.RsReset != 0 )
-        {
-                
+        {  
                 InitChanelAsuModbus(&g_Comm.mbAsu);
                 ModBusSlaveReset(&p->mbAsu);
                 p->mbAsu.Serial.RsReset = 0;

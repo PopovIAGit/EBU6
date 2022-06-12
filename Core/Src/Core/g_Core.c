@@ -198,25 +198,44 @@ void core18kHZupdate(void)
 // Действия выполняемые при стопе
 void StopPowerControl(void)
 {
-	SpeedEnable = 2;
+	SpeedEnable                     = 2;    //плавно остановились
+        TimerInterp                     = 0;                
+        SpeedMax                        = 0;
+        speedstart                      = SpeedRef;
+        g_Core.Status.bit.Stop          = 1;
+        g_Core.Status.bit.Opening 	= 0;
+	g_Core.Status.bit.Closing 	= 0;
+	g_Core.Status.bit.Test 		= 0;
+        
+        g_Core.MotorControl.WorkMode = wmStop;
 }
 
 // Действия при пуске
 void StartPowerControl(TValveCmd ControlWord)
 {
+  
+        g_Core.Status.bit.Stop = 0;
 	switch (ControlWord)
 	{
 		case vcwClose:
 			g_Core.MotorControl.RequestDir = -1;
 			g_Core.MotorControl.WorkMode = wmStart;
-                        SpeedEnable = 1;
+                        SpeedMax = (((float)g_Ram.UserParam.SpeedStart)/10)/50;
+                        
 			break;
 		case vcwOpen:
 			g_Core.MotorControl.RequestDir = 1;
 			g_Core.MotorControl.WorkMode = wmStart;
-                        SpeedEnable = 1;
+                        SpeedMax = ((((float)g_Ram.UserParam.SpeedStart)/10)*-1.0)/50;                       
 			break;
+                        
 	}
+   
+          SpeedEnable = 1;
+          speedstart = 0;
+          TimerInterp = 0;
+          
+          
 }
 
 // Стэйт машина
@@ -230,7 +249,6 @@ void Core_ControlMode(TCore *p) // 50 Гц
 	case wmMove:		MoveMode(); break;
     }
 }
-
 
 static void StopMode(void)
 {
@@ -247,29 +265,7 @@ static void MoveMode(void)
     // что то делаем пока едем
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//-------------------------------------------------------------------------------
 
 
 void svgendq3ph_calc(SVGENDQ_3PH *v)
@@ -490,10 +486,11 @@ void coreTLocalControl(TCore *p)
         
        if (menu.State == 0) g_Core.Status.bit.Program = 0;
        else g_Core.Status.bit.Program = 1;
+       
+       g_Core.VlvDrvCtrl.Mpu.Enable = !g_Core.Status.bit.Program;
   
         if (g_Core.Status.bit.Program)
-         {
-           
+         {    
            if (prevHalls != g_Peref.BtnStatus) readyForNewCmd = true;
            
             if (readyForNewCmd)
@@ -525,23 +522,26 @@ void coreTLocalControl(TCore *p)
          }
          else 
          {
-             switch(g_Peref.BtnStatus & (~BTN_STOP))
+          switch(g_Peref.BtnStatus & (~BTN_STOP))
               {
-                    case BTN_OPEN: 
-                                   // Mcu.Mpu.BtnKey = KEY_OPEN;
-                      if (SpeedRef == 0){
+                  case BTN_OPEN: 
+                  g_Ram.HideParam.CmdButton  =   KEY_OPEN;           
+                    // Mcu.Mpu.BtnKey = KEY_OPEN;
+                   /*   if (SpeedRef == 0){
                         TimerInterp = 0;
                                     speedstart = 0;
                                     SpeedMax = (((float)g_Ram.UserParam.SpeedStart)/10)/50;
-                                    SpeedEnable = 1;}
+                                    SpeedEnable = 1;}*/
                             break;
                     case BTN_CLOSE:
-                                   // Mcu.Mpu.BtnKey = KEY_CLOSE;
+                                  
+                    // Mcu.Mpu.BtnKey = KEY_CLOSE;
+                  /*  g_Ram.HideParam.CmdButton =KEY_CLOSE;
                                    if (SpeedRef == 0){
                                      TimerInterp = 0;
                                     speedstart = 0;
                                     SpeedMax = ((((float)g_Ram.UserParam.SpeedStart)/10)*-1.0)/50;
-                                    SpeedEnable = 1;}
+                                    SpeedEnable = 1;}*/
                             break;
                     case BTN_PROG1:
                       {
@@ -560,26 +560,28 @@ void coreTLocalControl(TCore *p)
                       }       
                        break; 
               }
-              switch(g_Peref.BtnStatus & BTN_STOP)
+         switch(g_Peref.BtnStatus & BTN_STOP)
               {
                 case BTN_STOP1:
-                  if (SpeedRef != 0){
+                 /* if (SpeedRef != 0){
                     TimerInterp = 0;
                           SpeedEnable = 2;
                           SpeedMax = 0;
                           speedstart = SpeedRef;}
-                          if (p->Status.bit.MuDu || g_Ram.UserParam.MuDuSetup == mdOff)
+                          if (p->Status.bit.MuDu || g_Ram.UserParam.MuDuSetup == mdOff)*/
                          // Mcu.Mpu.BtnKey = KEY_STOP;
+                          g_Ram.HideParam.CmdButton =KEY_STOP;
                 break;
                 
                 case BTN_STOP2:
-                          if (SpeedRef != 0){
+                        /*  if (SpeedRef != 0){
                             TimerInterp = 0;
                           SpeedEnable = 2;
                           SpeedMax = 0;
                           speedstart = SpeedRef;}
-                          if (p->Status.bit.MuDu || g_Ram.UserParam.MuDuSetup == mdOff)
+                          if (p->Status.bit.MuDu || g_Ram.UserParam.MuDuSetup == mdOff)*/
                          // Mcu.Mpu.BtnKey = KEY_STOP;
+                            g_Ram.HideParam.CmdButton =KEY_STOP;
                 break;
               }
 
