@@ -147,7 +147,7 @@
             <IarPane-34101>
                 <expressions>
                     <item>g_Ram</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>
