@@ -265,7 +265,9 @@ void peref_Init(void)
    //-------------------------------------------------------
       peref_ApFilter1Init(&g_Peref.ADCToProcfltr, PRD_50HZ, g_Ram.FactoryParam.RmsTf);
       peref_ADCtoPRCObserverInit(&g_Peref);
-      peref_ProctoDACObserverInit(&g_Peref);
+        peref_ProctoDACObserverInit(&g_Peref);
+    //энкодер
+          Cms58mInir(&g_Peref.cms58m_1);
         
       Peref_CalibInit(&g_Peref.Position);
     //   g_Ram.HideParam.Position - СЮДА НАДО ПОЛОЖИТЬ ЗНАЧЕНИЕ ЭНКОДЕРА  
@@ -339,6 +341,9 @@ void peref_2KHzCalc(TPeref *p)
 void peref_200HzCalc(TPeref *p)
 {
     memTest();
+      
+        Cms58mRxHandler(&p->cms58m_1);
+          
 }
 
 //-----------------------------------

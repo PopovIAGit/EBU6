@@ -8,6 +8,7 @@
 #include "peref_SinObserver.h"		// PIA 08.04.14
 #include "peref_Clock.h"
 #include "peref_Calibs.h"
+#include "CMS58M.h"
 
 #include "peref_display.h"
 #include "peref_displhal.h"
@@ -214,7 +215,8 @@ typedef struct {
          TLineObserver          ProctoDAC;
          //TDot                   dotsProctoDAC[DOTS];
          TPerefPosition 	Position;			// Калибровка датчика положения и расчет скорости  
-             
+         //энкодер
+         sCms58m                 cms58m_1;
         // переменные-----------------------------------------------------------------------------------------
         Bool                    RamUpdFlag;
         Uns                     VoltOn;         // in:   

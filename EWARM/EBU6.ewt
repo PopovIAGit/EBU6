@@ -1471,6 +1471,9 @@
                 <group>
                     <name>Peref</name>
                     <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Peref\CMS58M.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\Core\Src\Peref\peref.c</name>
                     </file>
                     <file>
@@ -1687,6 +1690,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_exti.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_fdcan.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_flash.c</name>
