@@ -70,7 +70,6 @@ void RefreshParams(Uns addr)
 	if (addr >= REG_ADC_DOTS && addr <= REG_DAC_DOTS)	{
 
 		      peref_ADCtoPRCObserverInit(&g_Peref);
-                    //  peref_ProctoDACObserverInit(&g_Peref);
 
 	}else if (addr >= REG_DAC_DOTS && addr <= REG_RSVD196){
                       peref_ProctoDACObserverInit(&g_Peref);
