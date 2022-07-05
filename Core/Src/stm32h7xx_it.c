@@ -253,11 +253,10 @@ void ADC_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
-    if (CPU_led_timer++ >= PRD_18KHZ)
+    if (CPU_led_timer++ >= 18e3)
     {
         CPU_led_timer = 0;
         HAL_GPIO_TogglePin(LED_CPU_GPIO_Port, LED_CPU_Pin);
-         
     } 
   // RTOS
      

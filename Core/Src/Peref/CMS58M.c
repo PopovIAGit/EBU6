@@ -13,7 +13,7 @@ FDCAN_TxHeaderTypeDef  TxHeader;
 FDCAN_RxHeaderTypeDef  RxHeader;
 uint8_t CAN1RxMsg[]; 
 uint8_t CAN1TxMsg[]; 
-
+extern FDCAN_HandleTypeDef hfdcan2;
 const sObject CyclicTimer = {0x6200, 0x00, UInt16, ReadWrite};
 const sObject PresetValue = {0x6003, 0x00, UInt32, ReadWrite};
 
@@ -24,6 +24,7 @@ void txReadSdo (sObject object, sCms58m* cms58m);
 
 void Cms58mInir (sCms58m* cms58m)
 {
+  HAL_FDCAN_Start(&hfdcan2);
   cms58m->nodeId = 1;
   cms58m->value = 0;
   cms58m->lastLinkTime = 0;
@@ -34,14 +35,15 @@ void Cms58mInir (sCms58m* cms58m)
 
 void Cms58mConfig (sCms58m* cms58m)
 {
+  uint32_t tt;
     txWriteNmt(StopNode, cms58m);            // останавливаю
-   //  Delay_ms(50);
+   for (tt = 0; tt < 59560000; tt++);
     txWriteNmt(ResetCommunication, cms58m);  // вгоняю в режим настройки
-  //   Delay_ms(50);
+ for (tt = 0; tt < 59560000; tt++);
     
     uint8_t data[4]={0x05,0x00,0x00,0x00};
     txWriteSdo(CyclicTimer,data, cms58m);    // в циклический таймер значение периода посылки PDO1
-  //   Delay_ms(50);
+  for (tt = 0; tt < 59560000; tt++);
 }
 
 void Cms58mStart (sCms58m* cms58m)
@@ -71,20 +73,20 @@ void Cms58mSetValue (uint32_t value, sCms58m* cms58m)
 void Cms58mRxHandler (sCms58m   *cms58m)
 {
                          
-   RxHeader.Identifier = 0x555;
-   RxHeader.IdType = FDCAN_STANDARD_ID;
-     RxHeader.RxFrameType = FDCAN_DATA_FRAME;
-       RxHeader.DataLength = FDCAN_DLC_BYTES_8;
-         RxHeader.ErrorStateIndicator =FDCAN_ESI_ACTIVE;
-           RxHeader.BitRateSwitch =  FDCAN_BRS_OFF;
-             RxHeader.FDFormat = FDCAN_CLASSIC_CAN;
-               RxHeader.RxTimestamp = 0x0;
-                 RxHeader.FilterIndex = 0x0;
-                  RxHeader.IsFilterMatchingFrame = 0x0;//??????
+ //  RxHeader.Identifier = 0x0;
+  // RxHeader.IdType = FDCAN_STANDARD_ID;
+    // RxHeader.RxFrameType = FDCAN_DATA_FRAME;
+      // RxHeader.DataLength = FDCAN_DLC_BYTES_8;
+        // RxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+          // RxHeader.BitRateSwitch =  FDCAN_BRS_OFF;
+            // RxHeader.FDFormat = FDCAN_CLASSIC_CAN;
+              // RxHeader.RxTimestamp = 0x0;
+                // RxHeader.FilterIndex = 0x0;
+                  //RxHeader.IsFilterMatchingFrame = 0x0;//??????
       
-        HAL_FDCAN_GetRxMessage(&hfdcan1,FDCAN_RX_FIFO0, &RxHeader, CAN1RxMsg);
+        HAL_FDCAN_GetRxMessage(&hfdcan2,FDCAN_RX_FIFO0, &RxHeader, CAN1RxMsg);
             
-    cms58m->value = 0x7FFFFF - (CAN1RxMsg[2] << 16 |
+    cms58m->value = /*0x7FFFFF */ (CAN1RxMsg[2] << 16 |
                     CAN1RxMsg[1] << 8  |
                     CAN1RxMsg[0]);
     
@@ -109,7 +111,7 @@ void txWriteNmt (eNmtService nmtService, sCms58m* cms58m)
     
     CAN_Transmit(CAN1, &CAN1TxMsg);*/
       
-     TxHeader.Identifier = 0x555;
+     TxHeader.Identifier = 0x0;
        
      TxHeader.IdType = FDCAN_STANDARD_ID; // 11-битный ID
 
@@ -130,13 +132,18 @@ void txWriteNmt (eNmtService nmtService, sCms58m* cms58m)
       CAN1TxMsg[0] = (uint8_t)nmtService;       // вот тут не понятно надо либо отправлять данные или формировать кадр can
       CAN1TxMsg[1] = cms58m->nodeId;
         
-            if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, CAN1TxMsg) != HAL_OK)
+            if (HAL_FDCAN_AddMessageToTxBuffer(&hfdcan2, &TxHeader, CAN1TxMsg, FDCAN_TX_BUFFER0) != HAL_OK)
 
             {
-
-                Error_Handler();
+    
+              //  Error_Handler();
 
             }
+            
+            
+
+              /* Send Tx buffer message */
+           HAL_FDCAN_EnableTxBufferRequest(&hfdcan2, FDCAN_TX_BUFFER0);
           
     return;
 }
@@ -169,7 +176,7 @@ void txWriteSdo (sObject object, uint8_t *data, sCms58m* cms58m)
     
      CAN_Transmit(CAN1, &CAN1TxMsg);*/
        
-     TxHeader.Identifier = 0x555;
+     TxHeader.Identifier = 0x0;
        
      TxHeader.IdType = FDCAN_STANDARD_ID; // 11-битный ID
 
@@ -197,11 +204,11 @@ void txWriteSdo (sObject object, uint8_t *data, sCms58m* cms58m)
     for (uint8_t i=object.Size;i<4;i++)
         CAN1TxMsg[i+4]=0;
         
-            if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, CAN1TxMsg) != HAL_OK)
+            if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &TxHeader, CAN1TxMsg) != HAL_OK)
 
             {
 
-                Error_Handler();
+              //  Error_Handler();
 
             }     
      
@@ -225,7 +232,7 @@ void txReadSdo (sObject object, sCms58m* cms58m)
     
     CAN_Transmit(CAN1, &CAN1TxMsg);*/
       
-     TxHeader.Identifier = 0x555;
+     TxHeader.Identifier = 0x0;
        
      TxHeader.IdType = FDCAN_STANDARD_ID; // 11-битный ID
 
@@ -250,7 +257,7 @@ void txReadSdo (sObject object, sCms58m* cms58m)
     for (uint8_t i=0;i<4;i++)
         CAN1TxMsg[i+4]=0;
             
-             if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, CAN1TxMsg) != HAL_OK)
+             if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &TxHeader, CAN1TxMsg) != HAL_OK)
 
             {
 

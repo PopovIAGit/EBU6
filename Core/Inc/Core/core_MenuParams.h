@@ -79,7 +79,7 @@ const struct MENU_PARAM params[] = {
 		"   B14.DATE     ", "    ", 	0,  65530,  	0, M_DATE|M_PWP1|M_PWP1,					//54
 		"   B15.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),					        //55
 		"   B16.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//56
-		"B17.MU/DU       ", "    ", 	0,      3,  	1, M_EDIT|M_RMAX(4),						//57
+		"B17.MU/DU       ", "    ", 	0,      3,  	1, M_LIST|M_SADR(135),						//57
 		"B18.DU SOURSE   ", "    ", 	0,      2,  	0, M_EDIT|M_RMAX(4),						//58
 		"B19.BLOK ZALIP  ", "    ", 	0,      1,  	0, M_EDIT|M_RMAX(4),						//59
 		"B20.COMMAND TIME", "S   ", 	1,    100,  	1, M_EDIT|M_RMAX(2)|M_PREC(1),				        //60
@@ -90,16 +90,16 @@ const struct MENU_PARAM params[] = {
 		"B25.ADRESS      ", "    ", 	1,     32,  	1, M_EDIT|M_RMAX(1),						//65
 		"B26.COMM TYPE   ", "    ", 	0,      2,  	0, M_LIST|M_SADR(224),						//66
 		"B27.MUFF TIME   ", "S   ", 	3,    100,     20, M_EDIT|M_RMAX(2)|M_PREC(1),				        //67
-		"B28.¬–≈Ã –¿«√ŒÕ¿", "    ", 	0,    100,    100, M_EDIT|M_RMAX(2)|M_PREC(1),							//68
-		"B29.— Œ– Ã¿ —   ", "√÷  ", 	0,    500,    500, M_EDIT|M_RMAX(2)|M_PREC(1),							//69
-		"B30.¬–≈Ã “Œ–ÃŒ∆ ", "    ", 	0,    100,    100, M_EDIT|M_RMAX(2)|M_PREC(1),							//70
+		"B28.¬–≈Ã –¿«√ŒÕ¿", "    ", 	0,    100,    100, M_EDIT|M_RMAX(2)|M_PREC(1),					//68
+		"B29.— Œ– Ã¿ —   ", "√÷  ", 	0,    500,    500, M_EDIT|M_RMAX(2)|M_PREC(1),					//69
+		"B30.¬–≈Ã “Œ–ÃŒ∆ ", "    ", 	0,    100,    100, M_EDIT|M_RMAX(2)|M_PREC(1),					//70
 		"   B31.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//71
 		"B32.NO MOVE TIME", "S   ", 	3,    100,     20, M_EDIT|M_RMAX(2)|M_PREC(1),				        //72
 		"B33.SEAL WAY    ", "OB  ", 	1,   1000,    100, M_EDIT|M_RMAX(3)|M_PREC(1),				        //73
-		"   B34.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//74
-		"   B35.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//75
-		"   B36.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//76
-		"   B37.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//77
+		"B34.“»œ “Œ–ÃŒ∆≈Õ", "    ", 	0,      2,  	0, M_SHOW|M_RMAX(4),						//74 0 ‚˚ÍÎ 1 ÔÓ Ì‡ÔˇÊ 2 ÔÓ ÚÓÍÛ
+		"B35.¬–≈Ãﬂ “Œ–Ã  ", "    ", 	0,    100,  	0, M_SHOW|M_RMAX(4)|M_PREC(1),					//75
+		"B36.«¿ƒ¿Õ œŒÀŒ∆ ", "%   ", 	0,   1000,      0, M_EDIT|M_RMAX(4),						//76
+		" B37. œ –≈√     ", "    ", 	0,  65535,  	30, M_EDIT|M_RMAX(4)|M_PREC(3),					//77
 		"   B38.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//78
 		"   B39.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//79
 		"   B40.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//80
@@ -743,7 +743,7 @@ const struct MENU_STRING values[] = {
 	"ƒ≈…—“¬ «Õ¿◊≈Õ»ﬂ ",	// 133
 	"œ–Œ÷≈Õ“€ Œ“ ÕŒÃ ",	// 134
 	//---------------------------------------------------------------------------
-	"    ¬€ Àﬁ◊≈Õ    ",	// 135
+	"    –≈∆»Ã ÷¿œ   ",	// 135
 	"  ¬€¡Œ– –≈∆»Ã¿  ",	// 136
 	"    –≈∆»Ã Ã”    ",	// 137
 	"    –≈∆»Ã ƒ”    ",	// 138

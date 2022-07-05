@@ -1,5 +1,5 @@
 
-#include "core_InverterControl.h"
+#include "g_Core.h"
 
 extern void CommandControl(TInvControl *);
 

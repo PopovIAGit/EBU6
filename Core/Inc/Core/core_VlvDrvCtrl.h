@@ -35,7 +35,7 @@
 #define CMD_SRC_BLUETOOTH	0x200   // источник команды Bluetooth интерфейс
 // Константы для работы с положением
 #define POS_UNDEF	0x7FFFFFFF
-#define POS_ERR		10
+#define POS_ERR		50
 
 // Состояния входов ТУ
 #define TU_OPEN			0x1
@@ -61,7 +61,7 @@ typedef enum {
 
 // Настройка режима МУ/ДУ
 typedef enum {
-  mdOff=0,			// Выключен
+  mdDac=0,			// Выключен
   mdSelect,			// Выбор режима МУ/ДУ
   mdMuOnly,			// Только режим МУ
   mdDuOnly			// Только режим ДУ
@@ -95,6 +95,14 @@ typedef struct {
 	Uns				 	*BtnKey;				// Команда с ручек
 	Bool				 CancelFlag;			// Флаг отмена команды
 } TMpuControl;
+
+
+// Структура для работы с DAC управлением
+typedef struct {
+	Bool				 Enable;			// Наличие местного управления
+	Uns				 PrecentData;			// Команда с ручек
+	Bool				 CancelFlag;			// Флаг отмена команды
+} TDacControl;
 
 // Структура для работы с телеуправлением
 typedef struct {
@@ -152,7 +160,8 @@ typedef struct {
 	TValveControl	 Valve;				// Управление задвижкой
 	TEvLogControl	 EvLog;				// Журнал событий
 	TValveCmd		 Command;			// Внутренняя команда
-	Uns				 MuDuInput;			// Состояние входа МУ/ДУ
+	TDacControl             DacControl;
+        Uns				 MuDuInput;			// Состояние входа МУ/ДУ
 	Uns				 ActiveControls;	// Состояние активности интерфейсов управления
 	Uns				 StartDelay;		// Пауза при обработке команды управления
 	Uns 			 IgnorComFlag;		// Флаг игнорирования команды управления если уже находимся в крайнем положении
@@ -166,7 +175,7 @@ typedef struct {
 void Core_ValveDriveInit(TCoreVlvDrvCtrl *);
 void Core_ValveDriveStop(TCoreVlvDrvCtrl *);
 void Core_ValveDriveUpdate(TCoreVlvDrvCtrl *);
-
+void Core_ValveDriveMove(TCoreVlvDrvCtrl *, Uns Percent);
 
 
 #endif

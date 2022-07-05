@@ -306,3 +306,7 @@
 4553	7225	6728253276561456	D:/WorkOther/EBU6/EWARM/EBU6/BrowseInfo/EBU6_part1.pbi	b48d4c4f0583b53c
 7229	8955	6728253293855866	D:/WorkOther/EBU6/EWARM/EBU6/BrowseInfo/EBU6.pbd	2d7801323f1a7f98
 8958	13177	6728253334879449	D:/WorkOther/EBU6/EWARM/EBU6/BrowseInfo/EBU6.pbw	d13bcb27a56acf4f
+8	109	6776556040000000	D:/WorkOther/EBU6/EWARM/EBU6/BrowseInfo/Drivers/STM32H7xx_HAL_Driver/stm32h7xx_hal_fdcan.xcl	61e3ec5073c99b06
+5	142	6776556040000000	D:/WorkOther/EBU6/EWARM/EBU6/BrowseInfo/Application/User/Core/Peref/CMS58M.xcl	e7f6a6ea994e057
+420	3430	6780923334993205	D:/WorkOther/EBU6/EWARM/EBU6/BrowseInfo/Application/User/Core/Comm/comm.pbi	5025730ade3e56c8
+277	3316	6786935723921912	D:/WorkOther/EBU6/EWARM/EBU6/BrowseInfo/Application/User/Core/Core/core_InverterControl.pbi	9f8d2ddfdcfb5b0a

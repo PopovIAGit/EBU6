@@ -165,10 +165,6 @@ void Error_Handler(void);
 #define Module_Foult_GPIO_Port GPIOG
 #define Module_OFF_Pin GPIO_PIN_7
 #define Module_OFF_GPIO_Port GPIOE
-#define BLT_ON_Pin GPIO_PIN_12
-#define BLT_ON_GPIO_Port GPIOB
-#define USART3_CTS_BLT_Pin GPIO_PIN_13
-#define USART3_CTS_BLT_GPIO_Port GPIOB
 #define USART3_RTS_BLT_Pin GPIO_PIN_14
 #define USART3_RTS_BLT_GPIO_Port GPIOB
 #define RES_BLT_Pin GPIO_PIN_15
@@ -242,7 +238,7 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern HRTIM_HandleTypeDef hhrtim;
 extern UART_HandleTypeDef huart4;
-extern FDCAN_HandleTypeDef hfdcan1;
+
 extern Uns PauseModbus;
 
 

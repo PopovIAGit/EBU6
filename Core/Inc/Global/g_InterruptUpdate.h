@@ -55,6 +55,7 @@ TPeriodicalFunction Task200Hz[] =       	//םו במכוו  20-עט חאהאק
 {
      PrdElemInit(DISPL_Update,                   &g_Peref.Display),
      PrdElemInit(core200HZupdate,			NULL),	//	20
+     PrdElemInit(Peref_CalibUpdate, 						&g_Peref.Position),
      PrdElemInit(peref_200HzCalc,                &g_Peref)
 };
 
@@ -85,7 +86,6 @@ TPeriodicalFunction Task50Hz[] =        //םו במכוו  80-עט חאהאק
 };
 
 // ================================ 10 vצ ==================================
-
 TPeriodicalFunction Task10Hz[] =        //םו במכוו  200-ע חאהאק
 {  
     PrdElemInit(peref_10HzCalc,                 &g_Peref),
@@ -95,6 +95,12 @@ TPeriodicalFunction Task10Hz[] =        //םו במכוו  200-ע חאהאק
     PrdElemInit(Core_MENU_Display,		&menu),			// 2
     PrdElemInit(DisplayStart,			NULL),	//	20
     PrdElemInit(core10HZupdate,			NULL),	//	20
+    PrdElemInit(Peref_Calibration,                 &g_Peref.Position),
+    PrdElemInit(CalcClbCycle, 				&g_Peref.Position),
+    PrdElemInit(Peref_SpeedCalc,			&g_Peref.Position),
+    
+    
+    
     PrdElemInit(RtcControl,				NULL)	
   
 };

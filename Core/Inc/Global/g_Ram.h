@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "std.h"
+#include "core_InverterControl.h"
 #include "core_VlvDrvCtrl.h"
 #include "core_TorqueObserver.h"
 #include "g_Structs.h"
@@ -88,10 +89,10 @@ typedef struct _TUserParam
 	Uns		reserv71;		// B31. 71 Резерв
 	Uns		NoMoveTime;		// B32. 72 Время отсутствия движения
 	Uns		OverwayZone;		// B33. 73 Максимальный путь уплотнения
-        Uns		reserv74;		// B34. 74 Резерв
-	Uns		reserv75;		// B35. 75 Резерв
- 	Uns		reserv76;		// B36. 76 Резерв
- 	Uns		reserv77;		// B37. 77 Резерв
+        Uns	        DcBrakeType;		// B34. 74 торможение постоянным током
+	Uns		DcBreakTime;		// B35. 75 Резерв
+ 	Uns		SetPosition;		// B36. 76 задание для приезда в точку 1000 - 100%
+ 	Uns		Kp;		        // B37. 77 пропорциональный кэф 
  	Uns		reserv78;		// B38. 78 Резерв
  	Uns		reserv79;		// B39. 79 Резерв
         Uns		reserv80;		// B40. 80 Резерв
@@ -250,8 +251,8 @@ typedef struct _TFactoryParam
 
 typedef struct _TComands
 {
-	TTaskReset      TaskClose;              // D0. 260 Задание закрыто
-	TTaskReset      TaskOpen;               // D1. 261 Задание открыто
+	Uns             TaskClose;              // D0. 260 Задание закрыто
+	Uns             TaskOpen;               // D1. 261 Задание открыто
 	Uns             RevOpen;                // D2. 262 Обороты на открытие
 	Uns             RevClose;               // D3. 263 Обороты на закрытие
 	Uns	        reserv264;		// D4  264 резерв
@@ -303,8 +304,8 @@ typedef struct _THideParam
 {
         TCalibState     CalibState;                     // H0. 310 Состояние калибровки
 	Uns             CalibRsvd;              // H1. 311 Резерв для калибровки
-	LgUns           ClosePosition;    	// H2-3. 312-313 Положение закрыто		???
-	LgUns           OpenPosition;     	// H4-5. 314-315 Положение открыто		???
+	Uns             ClosePosition[2];    	// H2-3. 312-313 Положение закрыто		???
+	Uns             OpenPosition[2];     	// H4-5. 314-315 Положение открыто		???
 	Uns             Password1;              // H6. 316 Основной пароль
 	Uns             Password2;              // H7. 317 Заводской пароль
 	Uns             ScFaults;               // H8. 318 Аварии КЗ
@@ -434,8 +435,8 @@ typedef struct _TTestRam
 #define RAM_SIZE			SIZE(TRam)					
 #define RAM_DATA_SIZE			(RAM_SIZE)	//(RAM_SIZE - SIZE(TLogEvBuffer))//(RAM_SIZE - sizeof(TLogEvBuffer))		
 
-#define REG_CYCLE_CNT			GetAdr(FactoryParam.CycleCnt)
-#define REG_CALIB_STATE			GetAdr(FactoryParam.CalibState) 
+//#define REG_CYCLE_CNT			GetAdr(FactoryParam.CycleCnt)
+//#define REG_CALIB_STATE			GetAdr(FactoryParam.CalibState) 
 
 
 
@@ -516,7 +517,7 @@ typedef struct _TTestRam
 #define REG_CALIB_STATE		        GetAdr(HideParam.CalibState)
 #define REG_CALIB_CLOSE		        GetAdr(HideParam.ClosePosition)
 #define REG_CALIB_OPEN		        REG_CALIB_CLOSE+2
-
+#define REG_CYCLE_CNT			GetAdr(HideParam.CycleCnt)
 #define CMD_DEFAULTS_USER		0x0010	// ???????????????? ????????? ?? ?????????
 #define CMD_RES_CLB			0x0020	// ????? ?????????? ??????? ?????????
 #define CMD_RES_FAULT			0x0040	// ????? ?????

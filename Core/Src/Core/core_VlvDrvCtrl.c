@@ -46,6 +46,9 @@ void Core_ValveDriveInit(TCoreVlvDrvCtrl *p)
 	p->EvLog.Source			= 0;
 	p->EvLog.Value			= 0;
 	p->Command			= vcwNone;
+        p->DacControl.Enable            = true;
+        p->DacControl.PrecentData       = 9999;
+        p->DacControl.CancelFlag        = false;
 	p->MuDuInput			= 0;
 	p->ActiveControls		= 0;
 	p->StartDelay			= 0;
@@ -70,10 +73,48 @@ void Core_ValveDriveStop(TCoreVlvDrvCtrl *p)
 
 void Core_ValveDriveUpdate(TCoreVlvDrvCtrl *p)
 {
-	GetActiveControls(p);	        // ѕолучение данных по активированному типу управлени€ (местное/дистанци€)
+	
+        GetActiveControls(p);	        // ѕолучение данных по активированному типу управлени€ (местное/дистанци€)
 	TeleControl(p);			// ѕодача команд дистанционного управлени€
 	MpuControl(p);			// ѕодача команд местного управлени€
-	UnitControl(p);			// ƒейстаи€ в зависимости от команды (открыть/закрыть/стоп)
+        if (p->ActiveControls & CMD_SRC_ANALOG)
+        Core_ValveDriveMove(&g_Core.VlvDrvCtrl, g_Ram.UserParam.SetPosition);
+        
+        UnitControl(p);			// ƒейстаи€ в зависимости от команды (открыть/закрыть/стоп)
+        
+}
+
+void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
+{
+    TValveCmd MoveControl = vcwNone;
+    LgInt Position;
+     LgInt Positiontmp;
+      LgInt Positiontmp2;
+      LgInt Positiontmp3;
+    
+    p->DacControl.Enable = p->Valve.PosRegEnable && g_Ram.Status.CalibState == csCalib && g_Ram.Status.Status.bit.Stop;
+      
+      if (!p->DacControl.Enable) return;
+    
+   // if (!p->Valve.PosRegEnable || g_Ram.Status.CalibState != csCalib || !g_Ram.Status.Status.bit.Stop ) return;
+    
+    Positiontmp =  g_Peref.Position.FullStep * (LgUns)Percent;
+    Positiontmp2 = Positiontmp >>17;
+    Positiontmp3 = Positiontmp2 * 131Ul;
+    Position = (LgInt)Positiontmp3;
+   // Position = (LgInt)((g_Peref.Position.FullStep * (LgUns)Percent * 131Ul)>>17);
+    
+    if (Position< (g_Peref.Position.LinePos - POS_ERR)) MoveControl = vcwClose;
+    if (Position> (g_Peref.Position.LinePos + POS_ERR)) MoveControl = vcwOpen;
+    
+    if (MoveControl != vcwNone)
+    {
+      p->Valve.BreakFlag = False;
+      p->Valve.Position = Position;
+      p->EvLog.Value = CMD_MOVE;
+      p->StartControl(MoveControl);
+        
+    }
 }
 
 //
@@ -85,7 +126,7 @@ void Core_ValveDriveUpdate(TCoreVlvDrvCtrl *p)
 
 		switch(*p->MuDuSetup)
 		{
-			case mdOff:    p->Status->bit.MuDu = 0; Flag = True; break;
+			case mdDac:    p->Status->bit.MuDu = 0; Flag = True; break;
 			case mdSelect:
 						{
 							p->Status->bit.MuDu = p->MuDuInput;
@@ -97,13 +138,13 @@ void Core_ValveDriveUpdate(TCoreVlvDrvCtrl *p)
 			default:       return;
 		}
 
-		if (Flag || p->Status->bit.MuDu)
+		if (!Flag || p->Status->bit.MuDu)
 		{
 			p->ActiveControls |= (CMD_SRC_PDU|CMD_SRC_MPU);
 			if (p->Tu.LocalFlag) p->ActiveControls |= CMD_SRC_DIGITAL;
 		}
 
-		if (Flag || !p->Status->bit.MuDu)
+		if (!Flag || !p->Status->bit.MuDu)
 		{
 			DigState = p->Tu.LocalFlag ? 0 : CMD_SRC_DIGITAL;
 			switch(*p->DuSource)
@@ -113,15 +154,19 @@ void Core_ValveDriveUpdate(TCoreVlvDrvCtrl *p)
 				case mdsSerial:  p->ActiveControls |= CMD_SRC_SERIAL; break;
 			}
 		}
+                if (Flag)
+                {
+                    p->ActiveControls |= CMD_SRC_ANALOG;
+                }
 }
 
 // обработка команд с ћѕ”
  void MpuControl(TCoreVlvDrvCtrl *p)
 {
-	Uns Key = 0;
+                        Uns Key = 0;
 			Uns  Active = 0;
 
-		p->Mpu.Enable = p->Status->bit.MuDu | Flag;
+		p->Mpu.Enable = p->Status->bit.MuDu ;
 
 		if(!p->Mpu.Enable) return;				// выключено выходим
 
@@ -153,16 +198,6 @@ void Core_ValveDriveUpdate(TCoreVlvDrvCtrl *p)
 {
 	TValveCmd TuControl = vcwNone;
 	Bool Ready;
-
-/*	if (g_Ram.ramGroupB.SwitcherMuDuMode == 1)
-	{
-	    p->Tu.Enable = !g_Ram.ramGroupA.Faults.Proc.bit.NoCalib && !g_Ram.ramGroupG.TestCamera;
-	}
-	else if (g_Ram.ramGroupB.SwitcherMuDuMode == 0)
-	{
-	    p->Tu.Enable = !p->Status->bit.MuDu & !g_Ram.ramGroupA.Faults.Proc.bit.NoCalib && !g_Ram.ramGroupG.TestCamera;
-	}*/
-
 
 	if (!p->Tu.Enable) return;
 

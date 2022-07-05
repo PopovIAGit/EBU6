@@ -8,7 +8,7 @@ TCore	g_Core;
 
 float   PwmFreq;			// частота ШИМ
 float   PwmDeltat;			// шаг дискретизации токов
-Uns     PWMPreScale = 2;
+Uns     PWMPreScale = 1; // 2
 float corr = 1.0; // 5000 = 50гц
 float timeFreq;
 float SpeedRef, OutVolt;
@@ -37,6 +37,7 @@ static void MoveMode (void);
 static void StopMode(void);
 static void StartMode(void);
 
+static void DynBreakMode(void);
 void Core_Init(TCore *p)
 {	
   p->DisplayTimer = 1 * PRD_10HZ;
@@ -65,6 +66,10 @@ void Core_Init(TCore *p)
    g_Core.Pwm.Period = _IQdiv((200000000), PwmFreq) - 1;
    
    Core_ValveDriveInit(&p->VlvDrvCtrl);	// Управление задвижкой
+   
+   g_Core.pidData.kp = 0.01;
+   g_Core.pidData.MAX_OUT = 1.0;
+   g_Core.pidData.MIN_OUT = 0.1;
 
 }
 
@@ -98,7 +103,8 @@ void Core_CalibStop (TCore *p)
 				}
 		}
 }
-
+Uns  addr1 = 0;
+Uns  count1 = 0;
 // Управление калибровкой
 void Core_CalibControl(TCore *p)
 {
@@ -131,6 +137,22 @@ void Core_CalibControl(TCore *p)
 		}
 		g_Ram.Comands.CalibReset = 0;
 	}
+        
+        if (IsMemParReady())																	// если есть готовность к записи параметров
+	{
+		if (g_Ram.HideParam.CycleCnt != p->PrevCycle)										// если счетчик циклов обновился
+		{
+			WriteToEeprom(REG_CYCLE_CNT, &g_Ram.HideParam.CycleCnt, 1);						// записали параметр счетчик циклов
+			p->PrevCycle = g_Ram.HideParam.CycleCnt;										// запомнили записанный параметр, для последующей проверки
+		}
+		else if (g_Ram.Status.CalibState != g_Ram.HideParam.CalibState)					// если состояние калибровки изменилось
+		{
+			addr1 = GetAdr(HideParam.CalibState);//REG_CALIB_STATE;
+                        count1 = sizeof(ClbIndication);
+                        WritePar(addr1, &g_Ram.HideParam.CalibState, count1);// запоминаем записанный параметр, для последующей проверки
+                        g_Ram.Status.CalibState = g_Ram.HideParam.CalibState;  
+		}
+	}
 }
 
 
@@ -143,7 +165,7 @@ void core18kHZupdate(void)
 
     if (( g_Peref.adcData3[1] > ShC_Level) ||  (g_Peref.adcData3[2] > ShC_Level)  || (g_Peref.adcData3[3] > ShC_Level))
     {
-      g_Core.Status.bit.Fault = 1;
+    //  g_Core.Status.bit.Fault = 1;
     }
       ModFault = HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
       if (!ModFault)  
@@ -207,35 +229,43 @@ void StopPowerControl(void)
 	g_Core.Status.bit.Closing 	= 0;
 	g_Core.Status.bit.Test 		= 0;
         
+      /*  if (g_Core.Status.bit.Fault)
+          g_Core.MotorControl.WorkMode = wmStop;
+        else if (g_Core.DynBreakEnable) 
+          g_Core.MotorControl.WorkMode = wmDynBreak;*/
+         
         g_Core.MotorControl.WorkMode = wmStop;
-}
+        
+}        
 
 // Действия при пуске
 void StartPowerControl(TValveCmd ControlWord)
 {
-  
         g_Core.Status.bit.Stop = 0;
 	switch (ControlWord)
 	{
 		case vcwClose:
 			g_Core.MotorControl.RequestDir = -1;
 			g_Core.MotorControl.WorkMode = wmStart;
+                        g_Core.MotorControl.RequestPos = 0;
                         SpeedMax = (((float)g_Ram.UserParam.SpeedStart)/10)/50;
                         
 			break;
 		case vcwOpen:
 			g_Core.MotorControl.RequestDir = 1;
 			g_Core.MotorControl.WorkMode = wmStart;
+                        g_Core.MotorControl.RequestPos = 1000;
                         SpeedMax = ((((float)g_Ram.UserParam.SpeedStart)/10)*-1.0)/50;                       
 			break;
                         
 	}
+        
+        if(g_Core.MotorControl.RequestDir > 0) g_Core.Status.bit.Opening = 1; 
+        if(g_Core.MotorControl.RequestDir < 0) g_Core.Status.bit.Closing = 1; 
    
           SpeedEnable = 1;
           speedstart = 0;
-          TimerInterp = 0;
-          
-          
+          TimerInterp = 0;      
 }
 
 // Стэйт машина
@@ -247,26 +277,119 @@ void Core_ControlMode(TCore *p) // 50 Гц
         case wmStop:		StopMode(); break;
 	case wmStart:		StartMode();break;	
 	case wmMove:		MoveMode(); break;
-    }
+        case wmDynBreak:        DynBreakMode(); break;
+    }    
 }
 
 static void StopMode(void)
 {
 	// что то делаем в стопе
+    /* if (g_Ram.UserParam.MuDuSetup != mdDac)
+      {
+          if (SpeedEnable == 2 && SpeedRef != 0)
+          { 
+            SpeedRef = AngleInterp(speedstart, SpeedMax, g_Ram.UserParam.TimeSpeedStop);
+          }
+          else if (SpeedEnable == 2 && SpeedRef == 0)
+          {
+            SpeedEnable = 0;
+            SpeedMax = 0;
+          }
+      }
+     else 
+     {*/
+           SpeedEnable = 0;
+           SpeedMax = 0;
+           SpeedRef = 0.0;
+  //   }
+     
+  
 }
 
 static void StartMode(void)
 {
       // что то делаем при старте
+    g_Core.MotorControl.WorkMode = wmMove;
+   /* if (g_Ram.UserParam.MuDuSetup != mdDac)
+    {
+          if (SpeedEnable == 1 && SpeedRef < fabs(SpeedMax))
+          {
+            SpeedRef = AngleInterp(speedstart, SpeedMax, g_Ram.UserParam.TimeSpeedStart);
+          }
+          else if (SpeedEnable == 1 && SpeedRef == fabs(SpeedMax))
+          {
+              g_Core.MotorControl.WorkMode = wmMove;
+          }
+    }
+    else 
+    {
+         g_Core.MotorControl.WorkMode = wmMove;
+    }*/
 }
 
+double tmpdata = 0;
+double tmpdata2 = 0;
 static void MoveMode(void)
 {
     // что то делаем пока едем
+   if (g_Ram.UserParam.MuDuSetup == mdDac)
+    {
+      tmpdata   = p_Controller(g_Ram.UserParam.SetPosition, g_Ram.Status.PositionPr);
+      tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
+      SpeedRef = tmpdata2 * tmpdata;
+      //Core_ValveDriveMove(&g_Core.VlvDrvCtrl, g_Ram.UserParam.SetPosition);
+    }
+   else 
+   {    
+      tmpdata   = p_Controller(g_Core.MotorControl.RequestPos, g_Ram.Status.PositionPr);
+      tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
+      SpeedRef = tmpdata2 * tmpdata;
+   }
+  
 }
 
+static void DynBreakMode(void)
+{
+    // что то делаем пока тормозим
+  
+    LgInt Level; 
+  
+    if (g_Ram.UserParam.DcBrakeType == dbtOff) 
+    {
+        g_Core.MotorControl.WorkMode = wmStop;
+        return;
+    }
+ 
+    
+    Level = _IQsat( g_Core.MotorControl.DcBrake.Level, 0.985, 0.000);
+    
+    switch (g_Core.MotorControl.DcBrake.Type)
+    {
+    case dbtVolt:
+              g_Core.ipark.Ds = Level;
+              g_Core.ipark.Qs = 0;
+      break;      
+    case dbtCurr:
+          // for vector control
+      break;
+    }
+    
+    if (++g_Core.MotorControl.DcBrake.Timer >= g_Core.MotorControl.DcBrake.SetTime)
+    {
+        g_Core.MotorControl.DcBrake.Timer = 0;
+        g_Core.MotorControl.DcBrake.Flag = true;
+    }
+    
+    
+    if (g_Core.MotorControl.DcBrake.Flag)
+    {
+        g_Core.MotorControl.WorkMode = wmStop;
+        g_Core.MotorControl.DcBrake.Flag = false;
+    }
+ 
+  
+}
 //-------------------------------------------------------------------------------
-
 
 void svgendq3ph_calc(SVGENDQ_3PH *v)
 {
@@ -424,6 +547,40 @@ void core50HZupdate(void)
 
 }
 
+double p_Controller(LgInt setPoint, LgInt processValue)
+{
+  LgInt error;
+  double out, p_term;
+  
+  g_Core.pidData.MAX_OUT = (((float)g_Ram.UserParam.SpeedStart)/10)/50;
+  g_Core.pidData.kp = (double)g_Ram.UserParam.Kp / 1000;
+  
+  if (setPoint > processValue)
+  {
+    error = setPoint - processValue;
+  }
+  else if (processValue > setPoint)
+  {
+    error = processValue - setPoint;
+  }
+  else if (processValue == setPoint) error = 0;
+ 
+
+	p_term = g_Core.pidData.kp * error;
+	out = p_term;
+        
+	if (out > g_Core.pidData.MAX_OUT) 
+        {
+		out = g_Core.pidData.MAX_OUT;
+	} 
+        else if (out < g_Core.pidData.MIN_OUT)
+        {
+		out = g_Core.pidData.MIN_OUT;
+	}
+
+  return out;
+}
+
 void core10HZupdate(void)
 {
     if (StartTimer > 0) StartTimer--;
@@ -431,28 +588,9 @@ void core10HZupdate(void)
     
       HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_D, HRTIM_OUTPUT_TD1);
     }
-           
-  /*  if (SpeedEnable)  SpeedRef = AngleInterp(speedstart, SpeedMax, SpeedTime);
-    else 
-    {
-      SpeedRef = 0;
-      TimerInterp = 0;
-    }*/
+        
     
-    if (SpeedEnable == 1 && SpeedRef < fabs(SpeedMax))
-    {
-      SpeedRef = AngleInterp(speedstart, SpeedMax, g_Ram.UserParam.TimeSpeedStart);
-    }
-    else if (SpeedEnable == 2 && SpeedRef != 0)
-    {
-      
-      SpeedRef = AngleInterp(speedstart, SpeedMax, g_Ram.UserParam.TimeSpeedStop);
-    }
-    else if (SpeedEnable == 2 && SpeedRef == 0)
-    {
-      SpeedEnable = 0;
-      SpeedMax = 0;
-    }
+
 }
 
 void coreTU(TCore *p)
@@ -487,7 +625,7 @@ void coreTLocalControl(TCore *p)
        if (menu.State == 0) g_Core.Status.bit.Program = 0;
        else g_Core.Status.bit.Program = 1;
        
-       g_Core.VlvDrvCtrl.Mpu.Enable = !g_Core.Status.bit.Program;
+       g_Core.VlvDrvCtrl.Mpu.Enable != g_Core.Status.bit.Program;
   
         if (g_Core.Status.bit.Program)
          {    
@@ -522,7 +660,7 @@ void coreTLocalControl(TCore *p)
          }
          else 
          {
-          switch(g_Peref.BtnStatus & (~BTN_STOP))
+             switch(g_Peref.BtnStatus & (~BTN_STOP))
               {
                   case BTN_OPEN: 
                   g_Ram.HideParam.CmdButton  =   KEY_OPEN;           
@@ -536,8 +674,8 @@ void coreTLocalControl(TCore *p)
                     case BTN_CLOSE:
                                   
                     // Mcu.Mpu.BtnKey = KEY_CLOSE;
-                  /*  g_Ram.HideParam.CmdButton =KEY_CLOSE;
-                                   if (SpeedRef == 0){
+                   g_Ram.HideParam.CmdButton =KEY_CLOSE;
+                  /*                 if (SpeedRef == 0){
                                      TimerInterp = 0;
                                     speedstart = 0;
                                     SpeedMax = ((((float)g_Ram.UserParam.SpeedStart)/10)*-1.0)/50;
@@ -560,7 +698,7 @@ void coreTLocalControl(TCore *p)
                       }       
                        break; 
               }
-         switch(g_Peref.BtnStatus & BTN_STOP)
+              switch(g_Peref.BtnStatus & BTN_STOP)
               {
                 case BTN_STOP1:
                  /* if (SpeedRef != 0){
@@ -612,7 +750,7 @@ float AngleInterp(float StartValue, float EndValue, Uns Time)
         else 
         {
           data1 = (EndValue - StartValue); 
-          data2 = Time * 1;
+          data2 = Time * 5;
           OutputQ15 = OutputQ15 + data1/data2;
         } 
 
@@ -632,7 +770,7 @@ float AngleInterp(float StartValue, float EndValue, Uns Time)
         else 
         {
           data1 = (EndValue + StartValue); 
-          data2 = Time * 1;
+          data2 = Time * 5;
           OutputQ15 = OutputQ15 + data1/data2;
         } 
 
@@ -652,7 +790,7 @@ float AngleInterp(float StartValue, float EndValue, Uns Time)
         else 
         {
           data1 = (EndValue + StartValue); 
-          data2 = Time * 1;
+          data2 = Time * 5;
           OutputQ15 = OutputQ15 - data1/data2;
         } 
 
@@ -672,7 +810,7 @@ float AngleInterp(float StartValue, float EndValue, Uns Time)
         else 
         {
           data1 = (EndValue + StartValue); 
-          data2 = Time * 1;
+          data2 = Time * 5;
           OutputQ15 = OutputQ15 - data1/data2;
         } 
 
@@ -686,4 +824,8 @@ float AngleInterp(float StartValue, float EndValue, Uns Time)
                    return OutputQ15;
    }
 } 
+
+
+
+
 

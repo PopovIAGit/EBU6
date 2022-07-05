@@ -13,6 +13,8 @@
 #include "peref_display.h"
 #include "peref_displhal.h"
 
+
+
 // Макросы
 #define BTN_TIME			(0.200 * PRD_50HZ)		// Время удержании ручки в положении
 #define BTN_LEVEL			1

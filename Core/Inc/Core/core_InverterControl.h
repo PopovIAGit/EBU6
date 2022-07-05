@@ -173,21 +173,21 @@ typedef struct {
 	Uns				Move_flag;			// Флаг начала движения привода
 	Uns				Move_Init_flag; 	// Флаг присвоения начального значения тока при разгоне
 	Uns				Stop_flag;			// Флаг останова
-	TMechBrakeSet	MechBrakeSet;
-	LgInt			MechBrakeSetFreq;
+	TMechBrakeSet	                MechBrakeSet;
+	LgInt			        MechBrakeSetFreq;
 	Uns				LiftObject;			// Режим управления лифтом
-	LgInt			EstLoadReset;		// Переменная для сброса нагрузки
+	LgInt			        EstLoadReset;		// Переменная для сброса нагрузки
 	Uns				LiftRampDn;			// Статус замедления в лифтовом режиме
-	LgInt			LiftPreDefLoad;		// Предварительная нагрузка определённая при движении кабины	
-	LgInt			LiftDefLoad;		// Нагрузка определённая при движении кабины	
+	LgInt			        LiftPreDefLoad;		// Предварительная нагрузка определённая при движении кабины	
+	LgInt			        LiftDefLoad;		// Нагрузка определённая при движении кабины	
 	Uns				LiftRampDnFlag;		// Флаг расчёта нагрузки
-	LgInt			LiftRampLoadGain;	// Коррекция U/f при останове
-	LgInt			LiftRampFreqGain;	// Коррекция дельта-f при дотягивании
-	LgInt			LiftFreqAdd;		// Добавка по частоте
+	LgInt			        LiftRampLoadGain;	// Коррекция U/f при останове
+	LgInt			        LiftRampFreqGain;	// Коррекция дельта-f при дотягивании
+	LgInt			        LiftFreqAdd;		// Добавка по частоте
 	Uns				LiftModeTimer;		// Таймер работы в лифтовом режиме
-	LgInt			LiftVoltAdd0;		// Добавка 1 по U/f
-	LgInt			LiftVoltAdd1;		// Добавка 2 по U/f
-	LgInt			LiftVoltAdd2;		// Добавка 3 по U/f
+	LgInt			        LiftVoltAdd0;		// Добавка 1 по U/f
+	LgInt			        LiftVoltAdd1;		// Добавка 2 по U/f
+	LgInt			        LiftVoltAdd2;		// Добавка 3 по U/f
 	Uns				ChangeVoltFlag;		// Флаг возвращения к исходным параметрам U/f
 	Uns				OneFloorFlag;		// Флаг поэтажного разъезда
 } TInvCtrl;
@@ -202,14 +202,14 @@ typedef struct {
 	LgInt				VoltOut;			// Выходное напряжение в о.е.
 	LgInt				RefOut;			// Выход задатчика интенсивности
 	LgInt				RampOut;			// Выход пилы ориентации вектора напряжения
-	TInvLedsState	LedForw;			// Управление светодиодом "Вперед"
-	TInvLedsState	LedRev;			// Управление светодиодом "Назад"
+	TInvLedsState	                LedForw;			// Управление светодиодом "Вперед"
+	TInvLedsState	                LedRev;			// Управление светодиодом "Назад"
 	Uns				WishRotCmd;    // Желаемое направление вращения при местном управлении
 	Uns				CmdPrev;			// Предыдущая команда на движение
 	Uns				RefSign;			// Знак задания
 	LgInt				RefSpeed;		// Задание для частоты вращения ротора
 	LgInt				EstSpeed;		// Восстановленное значение частоты вращения ротора
-	LgInt          LoadTorque;		// Момент нагрузки на валу ЭД
+	LgInt                           LoadTorque;		// Момент нагрузки на валу ЭД
 	Uns				PreMagTimer;	// Таймер для начального намагничивания
 	Uns				SpdScTimer;		// Таймер для расчёта контура скорости
 	Uns				PsiScTimer;		// Таймер для расчёта контура потокосцепления
@@ -281,9 +281,9 @@ typedef struct {
 	Uns		CountOpenKey_Counter;		// Счетчик колличества управляющих импульсов (тестов)
 	Uns		IntervalOpenKey_Counter;	// Счётчик интервала открытия ключей
 	Uns		Type;
-	LgUns 	Q_ref_integralProtect;
-	LgUns 	K_U;
-	LgUns 	Dt;
+	LgUns 	        Q_ref_integralProtect;
+	LgUns 	        K_U;
+	LgUns 	        Dt;
 	Uns		PhazeProtect;
 	Uns 		TestProtect_FAZA;
 	Uns		CurrTest;

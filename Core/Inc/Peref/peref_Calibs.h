@@ -23,7 +23,7 @@ extern "C" {
 #define	CLB_OPEN    0x02  // Задано Открыто/находимся в зоне Открыто
 #define	CLB_FLAG    0x03  // Калибровка выполнена
 
-#define REV_MAX		0x7FFF
+#define REV_MAX		0x7FFFFF
 #define MUFF_CLB_TIME	(3.000 * PRD_50HZ)	// Время удержания муфты для калибровок
 #define SP_POS_LIMIT 400
 
@@ -43,8 +43,8 @@ typedef struct {
 typedef struct {
 	Uns    Status;          // Статус калибровки
 	Uns    Reserved;        // Резерв
-	LgUns  ClosePos;        // Положение Закрыто
-	LgUns  OpenPos;         // Положение Открыто
+	Uns    ClosePos[2];        // Положение Закрыто
+	Uns    OpenPos[2];         // Положение Открыто
 } ClbIndication;
 
 // Структура для работы с датчиком положения
@@ -73,7 +73,8 @@ typedef struct TPerefPosition {
 	Uns   *FullWay;         	// Указатель на полный ход выходного звена
 	Int   *CurWay;          	// Указатель на текущий ход выходного звена
 	Uns   *CycleCnt;        	// Указатель на количество расчитанных циклов
-	ClbCommand    *Command;    	// Указатель на структуру управления калибровками
+	Uns    *TaskClose;    	// Указатель на структуру управления калибровками
+        Uns    *TaskOpen;
 	ClbIndication *Indication; 	// Указатель на структуру индикации
 } TPerefPosition;
 

@@ -208,7 +208,7 @@ void peref_Init(void)
     g_Peref.Ia.Input =  0;  
     g_Peref.Ia.Signal = 0;
     g_Peref.Ia.Output = 0;
- //   g_Peref.Ia.Ramp = &g_Core.Dmc.Status.RampOut;
+    g_Peref.Ia.Ramp = &g_Core.rg1.Out;
     g_Peref.Ia.RampPrev = 0;
     g_Peref.Ia.Mash1 = &g_Core.Mash1;
     g_Peref.Ia.Mash2 = 0;
@@ -220,7 +220,7 @@ void peref_Init(void)
     g_Peref.Ib.Input =  0;  
     g_Peref.Ib.Signal = 0;
     g_Peref.Ib.Output = 0;
- //   g_Peref.Ib.Ramp = &g_Core.Dmc.Status.RampOut;
+    g_Peref.Ib.Ramp = &g_Core.rg1.Out;
     g_Peref.Ib.RampPrev = 0;
     g_Peref.Ib.Mash1 = &g_Core.Mash1;
     g_Peref.Ib.Mash2 = 0;
@@ -232,7 +232,7 @@ void peref_Init(void)
     g_Peref.Ic.Input =  0;  
     g_Peref.Ic.Signal = 0;
     g_Peref.Ic.Output = 0;
-//    g_Peref.Ic.Ramp = &g_Core.Dmc.Status.RampOut;
+    g_Peref.Ic.Ramp = &g_Core.rg1.Out;
     g_Peref.Ic.RampPrev = 0;
     g_Peref.Ic.Mash1 = &g_Core.Mash1;
     g_Peref.Ic.Mash2 = 0;
@@ -270,7 +270,7 @@ void peref_Init(void)
           Cms58mInir(&g_Peref.cms58m_1);
         
       Peref_CalibInit(&g_Peref.Position);
-    //   g_Ram.HideParam.Position - СЮДА НАДО ПОЛОЖИТЬ ЗНАЧЕНИЕ ЭНКОДЕРА  
+    ///  g_Ram.HideParam.Position ///= &g_Peref.cms58m_1.value;
 }
 
 void peref_ADCtoPRCObserverInit(TPeref *p)
@@ -329,6 +329,15 @@ void peref_18KHzCalc(TPeref *p)//
     Peref_SinObserverUpdateFloat(&p->sinObserver.UR);
     Peref_SinObserverUpdateFloat(&p->sinObserver.US);
     Peref_SinObserverUpdateFloat(&p->sinObserver.UT);
+      
+    p->Ia.Input =  p->IUfltr.Output;   
+    p->Ib.Input =  p->IVfltr.Output;  
+    p->Ic.Input =  p->IWfltr.Output; 
+      
+        ileg_fq_calc(&p->Ia);
+        ileg_fq_calc(&p->Ib);
+        ileg_fq_calc(&p->Ic);
+    
     
 }
 
@@ -343,7 +352,8 @@ void peref_200HzCalc(TPeref *p)
     memTest();
       
         Cms58mRxHandler(&p->cms58m_1);
-          
+        g_Ram.HideParam.Position = p->cms58m_1.value;
+    //    PrdElemInit(Peref_CalibUpdate, &g_Peref.Position);
 }
 
 //-----------------------------------
@@ -478,7 +488,12 @@ void peref_10HzCalc(TPeref *p)//
   }
   
   g_Ram.Status.VDC = (Uns)p->VDCfltr.Output;
+    
+      MCP23S17_update(&g_Peref);
      
+ // PrdElemInit(Peref_Calibration, &g_Peref.Position);
+ // PrdElemInit(CalcClbCycle, &g_Peref.Position);
+ // PrdElemInit(Peref_SpeedCalc, &g_Peref.Position);
 }
 
 void ADT7301_Update(ADT7301 *p)
@@ -640,7 +655,7 @@ void MCP23S17_write(uint8_t addr, uint8_t data)
       
     HAL_GPIO_WritePin(CS_TU_GPIO_Port, CS_TU_Pin, GPIO_PIN_RESET);
     
-    HAL_SPI_Transmit(&hspi6, (uint8_t*)pBuff, 3, 100);
+    HAL_SPI_Transmit(&hspi6, (uint8_t*)pBuff, 3, 10);
         
     HAL_GPIO_WritePin(CS_TU_GPIO_Port, CS_TU_Pin, GPIO_PIN_SET);
 }
@@ -654,8 +669,8 @@ uint8_t MCP23S17_read(uint8_t addr)
       
     HAL_GPIO_WritePin(CS_TU_GPIO_Port, CS_TU_Pin, GPIO_PIN_RESET);
     
-    HAL_SPI_Transmit(&hspi6, (uint8_t*)pBuff, 2, 100);
-    HAL_SPI_Receive(&hspi6, (uint8_t*)data, 1, 100);
+    HAL_SPI_Transmit(&hspi6, (uint8_t*)pBuff, 2, 10);
+    HAL_SPI_Receive(&hspi6, (uint8_t*)data, 1, 10);
         
     HAL_GPIO_WritePin(CS_TU_GPIO_Port, CS_TU_Pin, GPIO_PIN_SET);
       
@@ -676,8 +691,7 @@ void MCP23S17_update(TPeref *p)
 
 void ADS1118_init(TPeref *p)
 {
-    
-      
+  
   p->ADC_Out_Config.bit.OS = 0;
     p->ADC_Out_Config.bit.MUX =4;
       p->ADC_Out_Config.bit.PGA = 2;

@@ -7,8 +7,12 @@
 
 #include "peref.h"
 
-#define MpyDivK(V1,V2,K,Prec)	(int16)((int32)((float32)(V1) * (V2) / (K))  >> (Prec))
-#define DivKQ1(V1,V2,K,Prec) 	(int16)((int32)((float32)(V1) * (K)  / (V2)) >> (Prec))
+//#define MpyDivK(V1,V2,K,Prec)	(int16)((int32)((float32)(V1) * (V2) / (K))  >> (Prec))
+//#define DivKQ1(V1,V2,K,Prec) 	(int16)((int32)((float32)(V1) * (K)  / (V2)) >> (Prec))
+
+
+#define  MpyDivK(V1,V2,K,Prec) ((((LgInt)(V1) * (LgInt)(V2)) / (LgInt)K) >> (Prec))           
+#define  DivKQ1(V1,V2,K,Prec) (Int)((((LgInt)(V1) * (LgInt)(K)) / (LgInt)V2) >> (Prec))   
 
 LgUns TmpRevolution = 0;
 LgUns DataTmp;
@@ -17,7 +21,7 @@ void Peref_CalibInit(TPerefPosition *p)
 {
 	p->ResetFlag 	= false;
 	p->CancelFlag 	= false;
-	p->GearRatio 	= g_Ram.FactoryParam.GearRatio;
+	p->GearRatio 	= 100;//g_Ram.FactoryParam.GearRatio;
 	p->Zone 		= 0;
 	p->RevMax 		= REV_MAX;
 	p->LinePos		= 0;
@@ -37,7 +41,8 @@ void Peref_CalibInit(TPerefPosition *p)
 	p->FullWay		= &g_Ram.Status.FullWay;
 	p->CurWay		= &g_Ram.Status.CurWay;
 	p->CycleCnt		= &g_Ram.HideParam.CycleCnt;
-	p->Command		= ToPtr(&g_Ram.Comands.TaskClose);
+	p->TaskClose		= &g_Ram.Comands.TaskClose;
+        p->TaskOpen		= &g_Ram.Comands.TaskOpen;
 	p->Indication	= ToPtr(&g_Ram.HideParam.CalibState);
 
 }
@@ -73,84 +78,56 @@ void Peref_Calibration(TPerefPosition *p)
 {
 	LgUns Data;
 		// Задание/сброс Закрыто
-		if(p->Command->TaskClose != 0)
+		if(g_Ram.Comands.TaskClose)
 		{
 
-                          switch(p->Command->TaskClose)
+                          switch(g_Ram.Comands.TaskClose)
                           {
 
                                   case 1: // Выставляем
                                           if(!CheckStatus(p, CLB_CLOSE)) break;
-                                          p->Indication->ClosePos = *p->AbsPosition;
+                                           p->Indication->ClosePos[0] = *p->AbsPosition & 0xFFFF;
+                                            p->Indication->ClosePos[1] = (*p->AbsPosition >> 16)& 0xFFFF;
                                           p->Indication->Status |= CLB_CLOSE;
                                           break;
                                   case 2: // Снимаем
                                           if (!CheckStatus(p, 0)) break;
-                                          p->Indication->ClosePos = 0;
+                                         				p->Indication->ClosePos[0] = 0;
+                                p->Indication->ClosePos[1] = 0;
                                           p->Indication->Status &= CLB_OPEN;
                                           break;
                           }
 
-			p->Command->TaskClose = 0;
+			p->TaskClose = 0;
+                        g_Ram.Comands.TaskClose = 0;
 		}
 
 		//Задание/сброс Открыто
-		if(p->Command->TaskOpen != 0)
+		if(g_Ram.Comands.TaskOpen)
 		{
 			
-			switch(p->Command->TaskOpen)
+			switch(g_Ram.Comands.TaskOpen)
 			{
 
 			case 1:	//Выставляем
 				if(!CheckStatus(p, CLB_OPEN)) break;
-				p->Indication->OpenPos = *p->AbsPosition;
+                                p->Indication->OpenPos[0] = *p->AbsPosition & 0xFFFF;
+                                p->Indication->OpenPos[1] = (*p->AbsPosition >> 16)& 0xFFFF;  
 				p->Indication->Status |= CLB_OPEN;
 				break;
 			case 2: // Снимаем
 				if (!CheckStatus(p, 0)) break;
-				p->Indication->OpenPos = 0;
+							p->Indication->OpenPos[0] = 0;
+                        p->Indication->OpenPos[1] = 0;
 				p->Indication->Status &= CLB_CLOSE;
 				break;
 			}
 			
-			p->Command->TaskOpen = 0;
+			p->TaskOpen = 0;
+                        g_Ram.Comands.TaskOpen = 0;
 		}
 
-		// задание количества оборотов на Открытие
-		if (p->Command->RevOpen > 0)
-		{
 		
-			if (CheckStatus(p, CLB_FLAG))
-			{
-				p->Indication->ClosePos = *p->AbsPosition;
-				Data = CalcClbAbsRev(p, p->Command->RevOpen);
-			//	Data = (((LgUns)p->GearRatio * (LgUns)p->Command->RevOpen) << *p->PosSensPow)/10;
-				if (*p->RodType) Data = p->Indication->ClosePos - Data;
-				else Data = p->Indication->ClosePos + Data;
-				p->Indication->OpenPos = Data & p->RevMax;
-				p->Indication->Status = CLB_FLAG;
-			}
-			
-			p->Command->RevOpen = 0;
-		}
-
-		// задание количества оборотов на Закрытие
-		if (p->Command->RevClose > 0)
-		{
-			
-			if (CheckStatus(p, CLB_FLAG))
-			{
-				p->Indication->OpenPos = *p->AbsPosition;
-				Data = CalcClbAbsRev(p, p->Command->RevClose);
-				//Data = (((LgUns)p->GearRatio * (LgUns)p->Command->RevClose) << *p->PosSensPow)/10;
-				if (*p->RodType) Data = p->Indication->OpenPos + Data;
-				else Data = p->Indication->OpenPos - Data;
-				p->Indication->ClosePos = Data & p->RevMax;
-				p->Indication->Status = CLB_FLAG;
-			}
-			
-			p->Command->RevClose = 0;
-		}
 
 }
 
@@ -164,24 +141,28 @@ void Peref_CalibUpdate(TPerefPosition *p)
 	if (*p->RodType)									// если выбран обратный тип штока
 	{
 		Position = p->RevMax - *p->AbsPosition + 1;		// текущая позиция ровна максимальному количеству
-		ClosePos = p->RevMax - Indic->ClosePos + 1;		// положение закрыто  = макс пололжение - запомненное положение закрыто
-		OpenPos  = p->RevMax - Indic->OpenPos  + 1;		// аналогтчно
+		ClosePos = p->RevMax - ((Indic->ClosePos[1]<<16)|Indic->ClosePos[0]) + 1;		// положение закрыто  = макс пололжение - запомненное положение закрыто
+		OpenPos  = p->RevMax - ((Indic->OpenPos[1]<<16)|Indic->OpenPos[0])  + 1;		// аналогтчно
 	}
 	else	// если выбран обычный шток
 	{
 		Position = *p->AbsPosition;			// запоминаем текущее положение
-		ClosePos = Indic->ClosePos;			// запоминаем положение закрыто
-		OpenPos  = Indic->OpenPos;			// запоминаем положение открыто
+		ClosePos = (Indic->ClosePos[1]<<16)|Indic->ClosePos[0];			// запоминаем положение закрыто
+		OpenPos  = (Indic->OpenPos[1]<<16)|Indic->OpenPos[0];		// запоминаем положение открыто
 	}
 	p->Zone = 0;
 
-	if(Indic->Status == CLB_FLAG)
+		if(Indic->Status == CLB_FLAG)
 	{
 		if (!p->FullStep)//Если путь еще не расчитан
 		{
 			// Полный ход в метках энкодера с ограничением на макс. количество меток энкодера
-			p->FullStep = (OpenPos - ClosePos) & p->RevMax;
-			*p->FullWay = (Uint16)CalcClbGearRev(p, (int32)p->FullStep);
+			//p->FullStep = abs(OpenPos - ClosePos) & p->RevMax;
+			if (OpenPos > ClosePos) p->FullStep = (OpenPos - ClosePos) & p->RevMax;
+                        else if (ClosePos > OpenPos) p->FullStep = (ClosePos - OpenPos) & p->RevMax;
+                        else if (ClosePos == OpenPos) p->FullStep = 0;
+                        
+                        *p->FullWay = (Uint16)CalcClbGearRev(p, (int32)p->FullStep);
 			//*p->FullWay = (Uns)(((p->FullStep * 10) >> *p->PosSensPow)/ p->GearRatio);
 			if((*p->FullWay >> 1) <= *p->PositionAcc)
 			{
@@ -217,13 +198,15 @@ void Peref_CalibUpdate(TPerefPosition *p)
 
 			*p->CurWay = CalcClbGearRev(p, p->LinePos);
 			//*p->CurWay = ((p->LinePos * 10) >> *p->PosSensPow)/ p->GearRatio;
-			if (*p->CurWay <= (Int)*p->PositionAcc) p->Zone |= CLB_CLOSE;
-			if (*p->CurWay >= ((Int)*p->FullWay - (Int)*p->PositionAcc)) p->Zone |= CLB_OPEN;
-
+			//if (*p->CurWay <= (Int)*p->PositionAcc) p->Zone |= CLB_CLOSE;
+			//if (*p->CurWay >= ((Int)*p->FullWay - (Int)*p->PositionAcc)) p->Zone |= CLB_OPEN;
+      
 			*p->PositionPr = DivKQ1(p->LinePos, p->FullStep, 1000, 0);
+                        if (*p->PositionPr <= 0 ) p->Zone |= CLB_CLOSE;
+                        if (*p->PositionPr >= 1000 ) p->Zone |= CLB_OPEN;
 			//*p->PositionPr = (p->LinePos*1000UL)/p->FullStep;
-			if ((p->Zone & CLB_CLOSE) && (*p->PositionPr > 0))    *p->PositionPr = 0;
-			if ((p->Zone & CLB_OPEN)  && (*p->PositionPr < 1000)) *p->PositionPr = 1000;
+			//if ((p->Zone & CLB_CLOSE) && (*p->PositionPr > 0))    *p->PositionPr = 0;
+			//if ((p->Zone & CLB_OPEN)  && (*p->PositionPr < 1000)) *p->PositionPr = 1000;
 		}
 	}
 	else
