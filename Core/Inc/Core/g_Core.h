@@ -9,6 +9,7 @@ Outputs
 
 
 #include "main.h"
+#include "core_Protections.h"
 #include "core_InverterControl.h"
 #include "core_Menu.h"
 #include "csl_memory.h"
@@ -149,7 +150,7 @@ typedef struct PID_DATA {
 typedef struct {
 	
     TStatusReg 			Status;			// Статус работы   
-    
+    TCoreProtections	Protections;	// Защиты
     TCoreVlvDrvCtrl		VlvDrvCtrl;		// Управление задвижкой
     // ---
     TTorqObs			TorqObs;		// Расчет момента

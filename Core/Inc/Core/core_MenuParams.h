@@ -64,7 +64,7 @@ const struct MENU_PARAM params[] = {
 		//-------------------------------------------------------------------------
 		"B0.лнлемр OTKP  ", "    ",     0,     60,      2, M_EDIT|M_KMM|M_RMAX(4),					//40
 		"B1.лнлемр 3AKP  ", "    ",	0,     60,	2, M_EDIT|M_KMM|M_RMAX(4),					//41
-		"B2.CL SEAL TRQ  ", "    ",	0,     60,	2, M_EDIT|M_KMM|M_RMAX(4),					//42
+		"B2.лнл сок гюйп ", "    ",	0,     60,	2, M_EDIT|M_KMM|M_RMAX(4),					//42
 		"B3.CL START TRQ ", "    ", 	0,     60,  	4, M_EDIT|M_KMM|M_RMAX(4),					//43
 		"B4.OP SEAL TRQ  ", "    ", 	0,     60,  	2, M_EDIT|M_KMM|M_RMAX(4),					//44
 		"B5.OP START TRQ ", "    ", 	0,     60,  	4, M_EDIT|M_KMM|M_RMAX(4),					//45
@@ -98,7 +98,7 @@ const struct MENU_PARAM params[] = {
 		"B33.SEAL WAY    ", "OB  ", 	1,   1000,    100, M_EDIT|M_RMAX(3)|M_PREC(1),				        //73
 		"B34.рхо рнплнфем", "    ", 	0,      2,  	0, M_SHOW|M_RMAX(4),						//74 0 БШЙК 1 ОН МЮОПЪФ 2 ОН РНЙС
 		"B35.бпелъ рнпл  ", "    ", 	0,    100,  	0, M_SHOW|M_RMAX(4)|M_PREC(1),					//75
-		"B36.гюдюм онкнф ", "%   ", 	0,   1000,      0, M_EDIT|M_RMAX(4),						//76
+		"B36.гюдюм онкнф ", "%   ", 	0,   1000,      0, M_EDIT|M_RMAX(3)|M_PREC(1),						//76
 		" B37.йо пец     ", "    ", 	0,  65535,  	30, M_EDIT|M_RMAX(4)|M_PREC(3),					//77
 		"   B38.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//78
 		"   B39.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//79

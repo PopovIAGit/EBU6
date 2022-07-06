@@ -44,7 +44,7 @@ void Core_Init(TCore *p)
   p->Status.bit.Stop = 1;  
   FM25V10_Init(&Eeprom1);   
   Core_MenuInit(&menu);
- 
+  Core_ProtectionsInit(&p->Protections);	// Защиты
    g_Core.rg1.Gain                 = 1.0;
    g_Core.rg1.Offset               = 0.0;
    

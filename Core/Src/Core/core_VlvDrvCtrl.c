@@ -92,7 +92,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
       LgInt Positiontmp2;
       LgInt Positiontmp3;
     
-    p->DacControl.Enable = p->Valve.PosRegEnable && g_Ram.Status.CalibState == csCalib && g_Ram.Status.Status.bit.Stop;
+    p->DacControl.Enable = p->Valve.PosRegEnable && g_Ram.Status.CalibState == csCalib && g_Ram.Status.Status.bit.Stop && !g_Ram.Status.Status.bit.Fault;
       
       if (!p->DacControl.Enable) return;
     

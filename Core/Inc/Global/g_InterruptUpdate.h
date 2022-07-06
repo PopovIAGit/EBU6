@@ -35,6 +35,7 @@ extern void InterruptUpdate (void);
 TPeriodicalFunction Task18kHz[] =         
 {  
   PrdElemInit(peref_18KHzCalc,                &g_Peref),
+    PrdElemInit(Core_Protections18kHzUpdate,			&g_Core.Protections),
   PrdElemInit(core18kHZupdate,                NULL)  
 };
 
@@ -68,6 +69,8 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
     PrdElemInit(coreTS,					&g_Core),
     PrdElemInit(coreTLocalControl,			&g_Core),
     PrdElemInit(coreTU,			                &g_Core),
+    PrdElemInit(Core_ProtectionsEnable,		    &g_Core.Protections),
+      PrdElemInit(Core_Protections50HZUpdate,		&g_Core.Protections),
     PrdElemInit(LogInputCalc,			&g_Peref.BtnClose),	//	3
     PrdElemInit(LogInputCalc,			&g_Peref.BtnStop1),	//	4
     PrdElemInit(LogInputCalc,			&g_Peref.BtnStop2),	//	5
