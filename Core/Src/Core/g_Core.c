@@ -544,7 +544,15 @@ void core200HZupdate(void)
 
 void core50HZupdate(void)
 {
-
+        if (g_Ram.Comands.PrtReset)
+	{
+          if(!g_Core.Status.bit.Stop) g_Core.VlvDrvCtrl.Mpu.CancelFlag = true;
+          else {                
+                  Core_ProtectionsClear(&g_Core.Protections);
+                  g_Core.VlvDrvCtrl.EvLog.Value = CMD_RES_FAULT;
+                }
+          g_Ram.Comands.PrtReset = 0;
+        }	
 }
 
 double p_Controller(LgInt setPoint, LgInt processValue)

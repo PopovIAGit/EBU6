@@ -40,6 +40,8 @@ uint8_t ADC_data[2];
 uint8_t pBuffOut[2];
 uint16_t DAC_tmp_16;
 
+FDCAN_ProtocolStatusTypeDef FDCANStatus = NULL;
+
 // входное АЦП в проценты
 //----------------------------------------------------------
 // Точки 		     проценты.  АЦП.             4-20.    №
@@ -349,11 +351,19 @@ void peref_2KHzCalc(TPeref *p)
 
 void peref_200HzCalc(TPeref *p)
 {
-    memTest();
+  //  memTest();
+    HAL_StatusTypeDef status = HAL_FDCAN_GetProtocolStatus(&hfdcan2, &FDCANStatus); 
       
-        Cms58mRxHandler(&p->cms58m_1);
-        g_Ram.HideParam.Position = p->cms58m_1.value;
-    //    PrdElemInit(Peref_CalibUpdate, &g_Peref.Position);
+     //FDCANStatus аварии смотреть тут!!!!
+    //if (НЕАВАРИЯ){ 
+      Cms58mRxHandler(&p->cms58m_1);
+      g_Ram.HideParam.Position = p->cms58m_1.value;
+   // }
+   // else ЕСЛИ АВАРИЯ
+   // {
+    //   g_Core.Protections.outFaults.Dev.bit.PosSens = 1;
+    //    g_Ram.HideParam.Position = 65535;
+   // }
 }
 
 //-----------------------------------
@@ -394,6 +404,8 @@ void peref_50HzCalc(TPeref *p)
 void peref_10HzCalc(TPeref *p)//
 {
  
+   if (g_Core.Protections.FaultDelay > 0) return; 
+     
   // LED control
   if (g_Ram.TestParam.Mode == 1)
   {
@@ -674,19 +686,20 @@ uint8_t MCP23S17_read(uint8_t addr)
         
     HAL_GPIO_WritePin(CS_TU_GPIO_Port, CS_TU_Pin, GPIO_PIN_SET);
       
-    return ~data[0] & 0x1F ;
+    return data[0];
 }
 
 void MCP23S17_init(void)
 {
-    MCP23S17_write(MCPS17_IODIRA, 0x1f); // порт А и В входы
-    MCP23S17_write(MCPS17_IODIRB, 0x1f);
+    MCP23S17_write(MCPS17_IODIRA, 0xff); // порт А и В входы
+    MCP23S17_write(MCPS17_IODIRB, 0xff);
 }
 
 void MCP23S17_update(TPeref *p)
 {
     p->TU_data220 = MCP23S17_read(MCPS17_GPIOA);
     p->TU_data24  = MCP23S17_read(MCPS17_GPIOB);
+   
 }
 
 void ADS1118_init(TPeref *p)

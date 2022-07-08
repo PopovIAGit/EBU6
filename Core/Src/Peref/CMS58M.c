@@ -13,7 +13,7 @@ FDCAN_TxHeaderTypeDef  TxHeader;
 FDCAN_RxHeaderTypeDef  RxHeader;
 uint8_t CAN1RxMsg[]; 
 uint8_t CAN1TxMsg[]; 
-extern FDCAN_HandleTypeDef hfdcan2;
+
 const sObject CyclicTimer = {0x6200, 0x00, UInt16, ReadWrite};
 const sObject PresetValue = {0x6003, 0x00, UInt32, ReadWrite};
 

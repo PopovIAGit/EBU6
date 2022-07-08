@@ -41,7 +41,10 @@ void Core_ProtectionsReset(TCoreProtections *p)
 
 void Core_ProtectionsClear(TCoreProtections *p)
 {
-	
+	p->outFaults.Dev.all = 0;					// сбросили все аварии
+	p->outFaults.Net.all = 0;
+	p->outFaults.Load.all = 0;
+	p->outFaults.Proc.all = 0;
 
 }
 
@@ -60,6 +63,13 @@ void Core_Protections18kHzUpdate(TCoreProtections *p)
 
 	if (p->FaultDelay > 0)
 		return;
+
+        if (p->outFaults.Dev.all || p->outFaults.Load.all || p->outFaults.Net.all || p->outFaults.Proc.all)
+	{
+          g_Core.Status.bit.Fault = 1;
+	}
+	else
+	  g_Core.Status.bit.Fault = 0;
 
 	
 	if (!g_Core.Status.bit.Stop)

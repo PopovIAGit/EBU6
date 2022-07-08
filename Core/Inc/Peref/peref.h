@@ -83,7 +83,7 @@ typedef struct ADT7301 {
 #define MCPS17_DEFVALB  ((uint8_t)0x07)
 
 #define MCPS17_INTCONA  ((uint8_t)0x08)
-#define MCPS17_INTCONB  ((uint8_t)0x08).
+#define MCPS17_INTCONB  ((uint8_t)0x08)
 
 #define MCPS17_IOCONA   ((uint8_t)0x0A)
 #define MCPS17_IOCONB   ((uint8_t)0x0B)

@@ -150,7 +150,7 @@ typedef struct PID_DATA {
 typedef struct {
 	
     TStatusReg 			Status;			// Статус работы   
-    TCoreProtections	Protections;	// Защиты
+    TCoreProtections	        Protections;	// Защиты
     TCoreVlvDrvCtrl		VlvDrvCtrl;		// Управление задвижкой
     // ---
     TTorqObs			TorqObs;		// Расчет момента
