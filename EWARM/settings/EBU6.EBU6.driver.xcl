@@ -6,7 +6,7 @@
 
 "-p" 
 
-"D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\arm\CONFIG\debugger\ST\STM32H743II.ddf" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ST\STM32H743II.ddf" 
 
 "--drv_verify_download" 
 

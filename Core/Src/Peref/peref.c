@@ -41,6 +41,7 @@ uint8_t pBuffOut[2];
 uint16_t DAC_tmp_16;
 
 FDCAN_ProtocolStatusTypeDef FDCANStatus = NULL;
+FDCAN_ErrorCountersTypeDef FDCANerrCount = NULL;
 
 // входное АЦП в проценты
 //----------------------------------------------------------
@@ -349,21 +350,57 @@ void peref_2KHzCalc(TPeref *p)
       
 }
 
+int32  tmpDelta = 0;
+int32  tmpDelta2 = 0;
+int32  tmpDelta3 = 0;
+int32  tmpData = 0;
+int32  tmpData2 = 2;
+Uns    flag = 0;
+int32 max = 100;
+
 void peref_200HzCalc(TPeref *p)
 {
-  //  memTest();
-    HAL_StatusTypeDef status = HAL_FDCAN_GetProtocolStatus(&hfdcan2, &FDCANStatus); 
+  
+     HAL_FDCAN_GetErrorCounters(&hfdcan2, &FDCANerrCount);      
+      HAL_FDCAN_GetProtocolStatus(&hfdcan2, &FDCANStatus);
+  
+
       
-     //FDCANStatus аварии смотреть тут!!!!
-    //if (НЕАВАРИЯ){ 
-      Cms58mRxHandler(&p->cms58m_1);
-      g_Ram.HideParam.Position = p->cms58m_1.value;
-   // }
-   // else ЕСЛИ АВАРИЯ
-   // {
-    //   g_Core.Protections.outFaults.Dev.bit.PosSens = 1;
-    //    g_Ram.HideParam.Position = 65535;
-   // }
+         Cms58mRxHandler(&p->cms58m_1);
+         if (FDCANerrCount.RxErrorPassive)
+         g_Core.Protections.outFaults.Dev.bit.PosSens = 1; 
+         else 
+         g_Ram.HideParam.Position = p->cms58m_1.value;
+
+        
+      /*   if (tmpData != p->cms58m_1.value && tmpData2 != tmpData && tmpData2 != p->cms58m_1.value) 
+         {
+            tmpData = p->cms58m_1.value;
+            tmpData2 = p->cms58m_1.value;
+         }
+         else if (tmpData == tmpData2 && tmpData != p->cms58m_1.value) 
+         {
+             tmpData = p->cms58m_1.value;
+         }*/
+           
+             tmpDelta = labs(tmpData - p->cms58m_1.value);
+              tmpDelta2 = labs(tmpData2 - p->cms58m_1.value);
+                tmpDelta3 = labs(tmpData - tmpData2);
+             
+         if ((tmpDelta > max) && ( tmpDelta2> max)&&(tmpDelta3 > max))
+         {
+            tmpData = p->cms58m_1.value;
+            tmpData2 = p->cms58m_1.value;
+         }
+         else if (tmpData == tmpData2 && tmpData != p->cms58m_1.value) 
+         {
+             tmpData = p->cms58m_1.value;
+         }
+ 
+           
+             
+         
+    
 }
 
 //-----------------------------------
