@@ -32,7 +32,7 @@ Uns SpeedTime = 0;      // speed time
 Uns  SpeedEnable = 0;   // enable
 Uns TimerInterp = 0;
 float AngleInterp(float StartValue, float EndValue, Uns Time);
-
+        Uns TimeSpeedStop = 0;
 static void MoveMode (void);
 static void StopMode(void);
 static void StartMode(void);
@@ -173,7 +173,7 @@ void core18kHZupdate(void)
 
     //--------------------------------------------------------------------------
 
-   if (!g_Core.Status.bit.Fault && SpeedRef)
+   if (/*!g_Core.Status.bit.Fault && */SpeedRef)
    {     
     PWM_keys_enable();
       
@@ -184,8 +184,10 @@ void core18kHZupdate(void)
       g_Core.vhz.Input = fabsf(SpeedRef);
       interp2D_calc(&g_Core.vhz);
       OutVolt = g_Core.vhz.Output;   
+
       g_Core.ipark.Ds = OutVolt;
       g_Core.ipark.Qs = 0;      
+ 
       g_Core.ipark.Angle = g_Core.rg1.Out;
       g_Core.park.Angle = g_Core.rg1.Out;            
       ipark_calc(&g_Core.ipark);
@@ -212,7 +214,7 @@ void core18kHZupdate(void)
    }
      else 
      {
-      PWM_keys_disable();
+     // 
      }
                 
 }
@@ -234,7 +236,18 @@ void StopPowerControl(void)
         else if (g_Core.DynBreakEnable) 
           g_Core.MotorControl.WorkMode = wmDynBreak;*/
          
-        g_Core.MotorControl.WorkMode = wmStop;
+      //  g_Core.MotorControl.WorkMode = wmStop;
+        
+        // pf\\заглушка для теста
+        if (g_Core.Status.bit.Fault){
+            g_Core.MotorControl.WorkMode = wmDynBreak ;
+            TimeSpeedStop = g_Ram.UserParam.TimeSpeedStop;
+        }
+        else  
+        {
+            g_Core.MotorControl.WorkMode = wmDynBreak; 
+              TimeSpeedStop = 1;
+        }
         
 }        
 
@@ -298,10 +311,13 @@ static void StopMode(void)
       }
      else 
      {*/
+      
+  
            SpeedEnable = 0;
            SpeedMax = 0;
            SpeedRef = 0.0;
-  //   }
+           PWM_keys_disable();
+
      
   
 }
@@ -352,7 +368,7 @@ static void DynBreakMode(void)
 {
     // что то делаем пока тормозим
   
-    LgInt Level; 
+  /*  Float Level; 
   
     if (g_Ram.UserParam.DcBrakeType == dbtOff) 
     {
@@ -361,9 +377,9 @@ static void DynBreakMode(void)
     }
  
     
-    Level = _IQsat( g_Core.MotorControl.DcBrake.Level, 0.985, 0.000);
+    Level = _IQsat( g_Core.DcBrake.Level, 0.985, 0.000);
     
-    switch (g_Core.MotorControl.DcBrake.Type)
+    switch (g_Core.DcBrake.Type)
     {
     case dbtVolt:
               g_Core.ipark.Ds = Level;
@@ -374,19 +390,28 @@ static void DynBreakMode(void)
       break;
     }
     
-    if (++g_Core.MotorControl.DcBrake.Timer >= g_Core.MotorControl.DcBrake.SetTime)
+    if (++g_Core.DcBrake.Timer >= g_Core.DcBrake.SetTime)
     {
-        g_Core.MotorControl.DcBrake.Timer = 0;
-        g_Core.MotorControl.DcBrake.Flag = true;
+        g_Core.DcBrake.Timer = 0;
+        g_Core.DcBrake.Flag = true;
     }
     
     
-    if (g_Core.MotorControl.DcBrake.Flag)
+    if (g_Core.DcBrake.Flag)
     {
         g_Core.MotorControl.WorkMode = wmStop;
-        g_Core.MotorControl.DcBrake.Flag = false;
+        g_Core.DcBrake.Flag = false;
     }
- 
+ */
+
+          if (SpeedEnable == 2 && SpeedRef != 0)
+          { 
+            SpeedRef = AngleInterp(speedstart, SpeedMax, TimeSpeedStop);
+          }
+          else if (SpeedEnable == 2 && SpeedRef == 0)
+          {
+            g_Core.MotorControl.WorkMode = wmStop;
+          }
   
 }
 //-------------------------------------------------------------------------------
@@ -833,7 +858,29 @@ float AngleInterp(float StartValue, float EndValue, Uns Time)
    }
 } 
 
+/*
+void Coast_stop_calc(TInvControl *v)
+{
+	v->CoastStop.Gain = v->CoastStop.Gain - v->CoastStop.DeltaPower;
+	if (v->CoastStop.Gain < 0) v->CoastStop.Gain = 0;
+	
+	v->ipark.Ds = _IQmpy(v->CoastStop.RefD, v->CoastStop.Gain);
+	v->ipark.Qs = _IQmpy(v->CoastStop.RefQ, v->CoastStop.Gain);
+}
 
-
+ void CoastStopSet(TInvControl *v)
+{
+	if (_IQabs(v->Status.RefOut) < _IQ(0.02))
+	{
+		v->Status.WorkMode = iwmCoastStop;
+		v->CoastStop.Gain  = _IQ(1.0);
+		v->CoastStop.RefD  = v->ipark.Ds;
+		v->CoastStop.RefQ  = v->ipark.Qs;
+	}
+	else
+		if (v->Status.AlarmFlag) v->Status.WorkMode = iwmLock;
+		else v->Status.WorkMode = iwmReady;
+}
+*/
 
 

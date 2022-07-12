@@ -133,7 +133,6 @@ typedef struct _TDmControl {
 	Uns 		OverWayFlag;			// Флаг показывающий что уплотнение не достигнуто
 	Uns 		MufTimer;				// Таймер срабатывания муфты в движении
 	Uns 		CalibStop;				// Остановка по калибровке
-	TInvDcBrake	DcBrake;		// Структура для реализации динамического торможения двигателя
 	Uns		accelTimer;				// Таймер разгона. Пока он считает, муфта не работает
         Int             RequestPos;
 } TDmControl;
@@ -163,7 +162,8 @@ typedef struct {
     PARK                        park;
     SVGENDQ_3PH                 svgen3ph;
     PWM                         Pwm;  
-      
+    TInvCoastStop               CoastStop;
+    TInvDcBrake	                DcBrake;		// Структура для реализации динамического торможения двигателя 
     pData_t                     pidData;
     Float Mash1;			// Масштабный коэффициент для перевода в о.е. (GLOBAL_Q)
     Float Mash2;			// Масштабный коэффициент по времени расчета (GLOBAL_Q)

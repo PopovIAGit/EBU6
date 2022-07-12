@@ -77,7 +77,7 @@ void Cms58mRxHandler (sCms58m   *cms58m)
   // RxHeader.IdType = FDCAN_STANDARD_ID;
     // RxHeader.RxFrameType = FDCAN_DATA_FRAME;
       // RxHeader.DataLength = FDCAN_DLC_BYTES_8;
-        // RxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+       //  RxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
           // RxHeader.BitRateSwitch =  FDCAN_BRS_OFF;
             // RxHeader.FDFormat = FDCAN_CLASSIC_CAN;
               // RxHeader.RxTimestamp = 0x0;
@@ -86,7 +86,7 @@ void Cms58mRxHandler (sCms58m   *cms58m)
       
         HAL_FDCAN_GetRxMessage(&hfdcan2,FDCAN_RX_FIFO0, &RxHeader, CAN1RxMsg);
             
-    cms58m->value = /*0x7FFFFF */ (CAN1RxMsg[2] << 16 |
+    cms58m->value =/* 0x7FFFFF &*/ (CAN1RxMsg[2] << 16 |
                     CAN1RxMsg[1] << 8  |
                     CAN1RxMsg[0]);
     
