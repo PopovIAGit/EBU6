@@ -50,7 +50,7 @@ void Peref_SinObserverUpdateFloat(TSinPhaseObserverFloat *p)		// –мс, угол, пол€
 	p->Sum += p->Input * p->Input;//pow(fabs(p->Input), 2);
 	if(++p->Counter >= BASE_ANGLE*2)
 	{
-		p->Output = (sqrt(p->Sum / (BASE_ANGLE*2)));
+		p->Output = (sqrtf(p->Sum / (BASE_ANGLE*2)));
 		p->Sum = 0;
 		p->Counter = 0;
 	}
@@ -85,13 +85,14 @@ void ileg_fq_calc(ILEG_FQ *v)
 		v->Sum     = 0;
 		v->Counter = 0;
         }
-        else if (++v->Counter >= 128)
+        else if (++v->Counter >= 512)
         {
               	v->Sum     = v->Sum + (v->Sum1 * v->Mash2);
 		v->Sum1    = 0;
 		v->Counter = 0;
         }
-        else v->Sum1 = v->Sum1 + (v->Signal * v->Signal);
+        else 
+          v->Sum1 = v->Sum1 + (v->Signal * v->Signal);
           
           
 	v->RampPrev = *v->Ramp;

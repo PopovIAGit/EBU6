@@ -34,8 +34,14 @@ void g_Ram_Update(TRam *p)
     p->Status.Faults.Load.all   = (g_Core.Protections.outFaults.Load.all | g_Core.Protections.outDefects.Load.all);
     p->Status.Faults.Proc.all   = (g_Core.Protections.outFaults.Proc.all | g_Core.Protections.outDefects.Proc.all);
     p->Status.Faults.Dev.all    = (g_Core.Protections.outFaults.Dev.all  | g_Core.Protections.outDefects.Dev.all);
-
+    
+    p->Status.Iu = g_Peref.Ia.Output*10;
+    p->Status.Iv = g_Peref.Ib.Output*10;
+    p->Status.Iw = g_Peref.Ic.Output*10;
+      
     g_Ram.Status.Position = g_Ram.HideParam.Position;
+    
+      
      //------------------------------------------------------
     Uns PassAddr;
     //-------- Для первого включения -----------------------

@@ -19,7 +19,7 @@
         <EnableCache>0</EnableCache>
     </ArmDriver>
     <StLinkDriver>
-        <stlinkserialNo>55FF6B065065565020301187</stlinkserialNo>
+        <stlinkserialNo>0672FF535752877167083549</stlinkserialNo>
         <stlinkfoundProbes />
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
         <CStepIntDis>_ 0</CStepIntDis>
@@ -27,7 +27,7 @@
         <stlinkResetStrategy>2</stlinkResetStrategy>
     </StLinkDriver>
     <DebugChecksum>
-        <Checksum>140712127</Checksum>
+        <Checksum>1685876523</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -63,26 +63,21 @@
         <ITMlogFile>$PROJ_DIR$\ITM.log</ITMlogFile>
     </SWOTraceHWSettings>
     <struct_types>
-        <Fmt0>FDCAN_GlobalTypeDef-RXF0S	3	0</Fmt0>
-        <Fmt1>TMpuControl-BtnKey	3	0</Fmt1>
-        <Fmt2>TMpuControl-CancelFlag	3	0</Fmt2>
-        <Fmt3>TMpuControl-Enable	3	0</Fmt3>
-        <Fmt4>TUserParam-DuSource	3	0</Fmt4>
-        <Fmt5>TUserParam-InputType	3	0</Fmt5>
-        <Fmt6>TUserParam-MuDuSetup	3	0</Fmt6>
-        <Fmt7>TUserParam-RsBaudRate	3	0</Fmt7>
-        <Fmt8>TUserParam-RsMode	3	0</Fmt8>
+        <Fmt0>TMpuControl-BtnKey	3	0</Fmt0>
+        <Fmt1>TMpuControl-CancelFlag	3	0</Fmt1>
+        <Fmt2>TMpuControl-Enable	3	0</Fmt2>
+        <Fmt3>TUserParam-DuSource	3	0</Fmt3>
+        <Fmt4>TUserParam-InputType	3	0</Fmt4>
+        <Fmt5>TUserParam-MuDuSetup	3	0</Fmt5>
+        <Fmt6>TUserParam-RsBaudRate	3	0</Fmt6>
+        <Fmt7>TUserParam-RsMode	3	0</Fmt7>
     </struct_types>
     <array_types>
         <Fmt0>uint8_t[2]	1	0</Fmt0>
         <Fmt1>uint8_t[3]	1	0</Fmt1>
     </array_types>
     <watch_formats>
-        <Fmt0>{W}42:CAN1RxMsg[0]	1	0</Fmt0>
-        <Fmt1>{W}42:CAN1RxMsg[1]	1	0</Fmt1>
-        <Fmt2>{W}42:CAN1RxMsg[2]	1	0</Fmt2>
-        <Fmt3>{W}42:g_Core.DynBreakEnable	3	0</Fmt3>
-        <Fmt4>{W}42:g_Peref.BtnStatus	1	0</Fmt4>
+        <Fmt0>{W}42:g_Peref.BtnStatus	1	0</Fmt0>
     </watch_formats>
     <Trace2>
         <Enabled>0</Enabled>

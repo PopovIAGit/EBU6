@@ -208,13 +208,17 @@ void peref_Init(void)
     // конфигурируем ТУ 
     MCP23S17_init();
       
+     // токи  
+  //  g_Core.Mash1 = 1;
+   // g_Core.Mash3 = 1;      
+            
     g_Peref.Ia.Input =  0;  
     g_Peref.Ia.Signal = 0;
     g_Peref.Ia.Output = 0;
     g_Peref.Ia.Ramp = &g_Core.rg1.Out;
     g_Peref.Ia.RampPrev = 0;
     g_Peref.Ia.Mash1 = &g_Core.Mash1;
-    g_Peref.Ia.Mash2 = 0;
+   // g_Peref.Ia.Mash2 = 1;
     g_Peref.Ia.Mash3 = &g_Core.Mash3;
     g_Peref.Ia.Sum = 0;
     g_Peref.Ia.Sum1 = 0;
@@ -226,7 +230,7 @@ void peref_Init(void)
     g_Peref.Ib.Ramp = &g_Core.rg1.Out;
     g_Peref.Ib.RampPrev = 0;
     g_Peref.Ib.Mash1 = &g_Core.Mash1;
-    g_Peref.Ib.Mash2 = 0;
+ //   g_Peref.Ib.Mash2 = 1;
     g_Peref.Ib.Mash3 = &g_Core.Mash3;
     g_Peref.Ib.Sum = 0;
     g_Peref.Ib.Sum1 = 0;
@@ -238,13 +242,13 @@ void peref_Init(void)
     g_Peref.Ic.Ramp = &g_Core.rg1.Out;
     g_Peref.Ic.RampPrev = 0;
     g_Peref.Ic.Mash1 = &g_Core.Mash1;
-    g_Peref.Ic.Mash2 = 0;
+  //  g_Peref.Ic.Mash2 = 1;
     g_Peref.Ic.Mash3 = &g_Core.Mash3;
     g_Peref.Ic.Sum = 0;
     g_Peref.Ic.Sum1 = 0;
     g_Peref.Ic.Counter = 0;
    
-     
+     //---------------------------------------
     peref_ApFilter1Init(&g_Peref.URfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
     peref_ApFilter1Init(&g_Peref.USfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
     peref_ApFilter1Init(&g_Peref.UTfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
@@ -415,12 +419,13 @@ void peref_50HzCalc(TPeref *p)
    p->ADCtoProc.input = (Uns)p->ADCToProcfltr.Output;  // отдали в интерполяцию float в Uns
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ADCtoProc); //посчитали интерполяцию
   
-   g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
-      
+   //g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
+      g_Peref.ProctoDAC.input = g_Ram.Status.PositionPr;
     //-- проценты в ЦАП--------------------------------------------------------------
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ProctoDAC);      
    // DAC----------------------------------------------------------------------
-    p->ProctoDAC.output = p->DAC_data;
+   
+    p->DAC_data = p->ProctoDAC.output;
       
     DAC_tmp[0] = DAC_on_off; // когда все гуд 0, чтобы выключить и было 1мА надо установить значение 0х02
     DAC_tmp[1] = ((p->DAC_data)>>8);  
@@ -723,7 +728,7 @@ uint8_t MCP23S17_read(uint8_t addr)
         
     HAL_GPIO_WritePin(CS_TU_GPIO_Port, CS_TU_Pin, GPIO_PIN_SET);
       
-    return data[0];
+        return data[0]^0x1f;
 }
 
 void MCP23S17_init(void)
