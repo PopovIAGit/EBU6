@@ -77,16 +77,18 @@ C:\work\ebu6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\stm32h7xx_hal_msp.
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_display.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_displhal.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Global\g_Ram.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_InverterControl.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter1.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter3.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_VlvDrvCtrl.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_Menu.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_MenuGlobal.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_TorqueObserver.h \
-  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter3.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Global\g_Structs.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_Clock.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\g_Core.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_Protections.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_InverterControl.h \
-  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter1.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\csl_memory.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_VlvDrvCtrl.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_TorqueObserver.h \

@@ -78,6 +78,7 @@ C:\work\ebu6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat.pbi: \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_display.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_displhal.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\g_Core.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_Protections.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_InverterControl.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter1.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter3.h \
@@ -89,6 +90,7 @@ C:\work\ebu6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat.pbi: \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Stat\stat_fm25v10.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Stat\stat.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Stat\stat_fm25v10.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_InverterControl.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_VlvDrvCtrl.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_TorqueObserver.h \
   C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Global\g_Structs.h \

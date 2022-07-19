@@ -51,6 +51,13 @@ void Core_Init(TCore *p)
    PwmFreq   = _IQdiv((HZ), 1);
    PwmDeltat = _IQdiv(1, PwmFreq);
    
+   g_Peref.Ia.Mash2 = PwmDeltat;
+   g_Peref.Ib.Mash2 = PwmDeltat;
+   g_Peref.Ic.Mash2 = PwmDeltat;
+   
+   g_Core.Mash1 = (1.0 / (float)g_Ram.FactoryParam.Inom);
+ //  g_Core.Mash3 = 50.0;
+   
    g_Core.rg1.StepAngleMax         = 50.0 * PwmDeltat;
    
    g_Core.vhz.NumPoints = 3;
@@ -159,6 +166,9 @@ void Core_CalibControl(TCore *p)
 void core18kHZupdate(void)
 {
      
+  g_Core.Mash3 = g_Core.rg1.Freq * 50.0;
+  
+  
     ModuleTemper = g_Peref.adcData1[5]; // all in 
     IDC  = g_Peref.adcData3[0];
     // SHC Protect Test--------------------------------------------------
@@ -277,7 +287,7 @@ void StartPowerControl(TValveCmd ControlWord)
         if(g_Core.MotorControl.RequestDir < 0) g_Core.Status.bit.Closing = 1; 
    
           SpeedEnable = 1;
-          speedstart = 0; 
+          speedstart = 0;
           TimerInterp = 0;      
 }
 
@@ -315,7 +325,7 @@ static void StopMode(void)
   
            SpeedEnable = 0;
            SpeedMax = 0;
-           SpeedRef = 0.0;
+       //    SpeedRef = 0.0;
            PWM_keys_disable();
 
      
@@ -406,7 +416,7 @@ static void DynBreakMode(void)
 
           if (SpeedEnable == 2 && SpeedRef != 0)
           { 
-            SpeedRef = AngleInterp(speedstart, SpeedMax, TimeSpeedStop);
+         //   SpeedRef = AngleInterp(speedstart, SpeedMax, TimeSpeedStop);
           }
           else if (SpeedEnable == 2 && SpeedRef == 0)
           {
@@ -628,31 +638,7 @@ void core10HZupdate(void)
 
 void coreTU(TCore *p)
 {
-  switch (g_Ram.UserParam.MuDuSetup)
-	{
-		case mdDac:
-			
-			p->VlvDrvCtrl.Tu.LocalFlag = false;
-
-			break;
-		case mdMuOnly:
-			
-			p->VlvDrvCtrl.Tu.LocalFlag = false;
-
-			break;
-		case mdDuOnly:
-			
-			p->VlvDrvCtrl.Tu.LocalFlag = false;
-
-			break;
-		case mdSelect:
-			{
-				
-			}
-			break;
-	}
-  
-  if (g_Ram.UserParam.InputType == it24)
+   if (g_Ram.UserParam.InputType == it24)
   {
     g_Ram.HideParam.TuState = g_Peref.TU_data24 ^ g_Ram.UserParam.TuInvert.all;
     g_Ram.Status.StateTu.all       =  g_Peref.TU_data24;
