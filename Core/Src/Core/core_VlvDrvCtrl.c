@@ -138,13 +138,13 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 			default:       return;
 		}
 
-		if (!Flag || p->Status->bit.MuDu)
+		if (!Flag && p->Status->bit.MuDu)
 		{
 			p->ActiveControls |= (CMD_SRC_PDU|CMD_SRC_MPU);
 			if (p->Tu.LocalFlag) p->ActiveControls |= CMD_SRC_DIGITAL;
 		}
 
-		if (!Flag || !p->Status->bit.MuDu)
+		if (!Flag && !p->Status->bit.MuDu)
 		{
 			DigState = p->Tu.LocalFlag ? 0 : CMD_SRC_DIGITAL;
 			switch(*p->DuSource)
@@ -220,7 +220,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 	}
 
 
-		if (*p->Tu.State & (TU_STOP_OPEN | TU_STOP_CLOSE)) TuControl = vcwStop;
+	if (*p->Tu.State & (TU_STOP_OPEN | TU_STOP_CLOSE)) TuControl = vcwStop;
 
 
 	if (TuControl != vcwNone)

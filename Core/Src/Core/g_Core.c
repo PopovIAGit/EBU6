@@ -277,7 +277,7 @@ void StartPowerControl(TValveCmd ControlWord)
         if(g_Core.MotorControl.RequestDir < 0) g_Core.Status.bit.Closing = 1; 
    
           SpeedEnable = 1;
-          speedstart = 0;
+          speedstart = 0; 
           TimerInterp = 0;      
 }
 
@@ -628,13 +628,39 @@ void core10HZupdate(void)
 
 void coreTU(TCore *p)
 {
+  switch (g_Ram.UserParam.MuDuSetup)
+	{
+		case mdDac:
+			
+			p->VlvDrvCtrl.Tu.LocalFlag = false;
+
+			break;
+		case mdMuOnly:
+			
+			p->VlvDrvCtrl.Tu.LocalFlag = false;
+
+			break;
+		case mdDuOnly:
+			
+			p->VlvDrvCtrl.Tu.LocalFlag = false;
+
+			break;
+		case mdSelect:
+			{
+				
+			}
+			break;
+	}
+  
   if (g_Ram.UserParam.InputType == it24)
   {
-      g_Ram.Status.StateTu.all = g_Peref.TU_data24;
+    g_Ram.HideParam.TuState = g_Peref.TU_data24 ^ g_Ram.UserParam.TuInvert.all;
+    g_Ram.Status.StateTu.all       =  g_Peref.TU_data24;
   }
   else if (g_Ram.UserParam.InputType == it220)
   {
-        g_Ram.Status.StateTu.all = g_Peref.TU_data220;
+        g_Ram.HideParam.TuState = g_Peref.TU_data220  ^ g_Ram.UserParam.TuInvert.all;
+        g_Ram.Status.StateTu.all       =  g_Peref.TU_data220;
   }
 }
 

@@ -208,13 +208,17 @@ void peref_Init(void)
     // конфигурируем ТУ 
     MCP23S17_init();
       
+        
+    g_Core.Mash1 = 1;
+    g_Core.Mash3 = 1;      
+            
     g_Peref.Ia.Input =  0;  
     g_Peref.Ia.Signal = 0;
     g_Peref.Ia.Output = 0;
     g_Peref.Ia.Ramp = &g_Core.rg1.Out;
     g_Peref.Ia.RampPrev = 0;
     g_Peref.Ia.Mash1 = &g_Core.Mash1;
-    g_Peref.Ia.Mash2 = 0;
+    g_Peref.Ia.Mash2 = 1;
     g_Peref.Ia.Mash3 = &g_Core.Mash3;
     g_Peref.Ia.Sum = 0;
     g_Peref.Ia.Sum1 = 0;
@@ -226,7 +230,7 @@ void peref_Init(void)
     g_Peref.Ib.Ramp = &g_Core.rg1.Out;
     g_Peref.Ib.RampPrev = 0;
     g_Peref.Ib.Mash1 = &g_Core.Mash1;
-    g_Peref.Ib.Mash2 = 0;
+    g_Peref.Ib.Mash2 = 1;
     g_Peref.Ib.Mash3 = &g_Core.Mash3;
     g_Peref.Ib.Sum = 0;
     g_Peref.Ib.Sum1 = 0;
@@ -238,7 +242,7 @@ void peref_Init(void)
     g_Peref.Ic.Ramp = &g_Core.rg1.Out;
     g_Peref.Ic.RampPrev = 0;
     g_Peref.Ic.Mash1 = &g_Core.Mash1;
-    g_Peref.Ic.Mash2 = 0;
+    g_Peref.Ic.Mash2 = 1;
     g_Peref.Ic.Mash3 = &g_Core.Mash3;
     g_Peref.Ic.Sum = 0;
     g_Peref.Ic.Sum1 = 0;
@@ -337,9 +341,9 @@ void peref_18KHzCalc(TPeref *p)//
     p->Ib.Input =  p->IVfltr.Output;  
     p->Ic.Input =  p->IWfltr.Output; 
       
-        ileg_fq_calc(&p->Ia);
-        ileg_fq_calc(&p->Ib);
-        ileg_fq_calc(&p->Ic);
+    ileg_fq_calc(&p->Ia);
+    ileg_fq_calc(&p->Ib);
+    ileg_fq_calc(&p->Ic);
     
     
 }
@@ -734,8 +738,8 @@ void MCP23S17_init(void)
 
 void MCP23S17_update(TPeref *p)
 {
-    p->TU_data220 = MCP23S17_read(MCPS17_GPIOA);
-    p->TU_data24  = MCP23S17_read(MCPS17_GPIOB);
+ //   p->TU_data220 = MCP23S17_read(MCPS17_GPIOA);
+ //   p->TU_data24  = MCP23S17_read(MCPS17_GPIOB);
    
 }
 
