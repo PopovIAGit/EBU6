@@ -61,7 +61,7 @@ typedef enum {
 
 // Настройка режима МУ/ДУ
 typedef enum {
-  mdDac=0,			// Выключен
+  mdOff=0,			// Выключен
   mdSelect,			// Выбор режима МУ/ДУ
   mdMuOnly,			// Только режим МУ
   mdDuOnly			// Только режим ДУ
@@ -79,7 +79,8 @@ typedef enum {
 typedef enum {
 	mdsAll=0,		// Все интерфейсы
 	mdsDigital,		// Только дискретный
-	mdsSerial		// Только последовательный
+	mdsSerial,		// Только последовательный
+        mdsDac
 } TDuSource;
 
 // Тип реверса

@@ -126,25 +126,25 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 
 		switch(*p->MuDuSetup)
 		{
-			case mdDac:    p->Status->bit.MuDu = 0; Flag = True; break;
+			case mdOff:    p->Status->bit.MuDu = 0; Flag = True; break;
 			case mdSelect:
-						{
-							p->Status->bit.MuDu = p->MuDuInput;
-							Flag = false;
-							break;
-						}
+                                      {
+                                        p->Status->bit.MuDu = p->MuDuInput;
+                                        Flag = false;
+                                        break;
+                                      }
 			case mdMuOnly: p->Status->bit.MuDu = 1; Flag = false;  break;
 			case mdDuOnly: p->Status->bit.MuDu = 0; Flag = false;  break;
 			default:       return;
 		}
 
-		if (!Flag && p->Status->bit.MuDu)
+		if (Flag || p->Status->bit.MuDu)
 		{
 			p->ActiveControls |= (CMD_SRC_PDU|CMD_SRC_MPU);
 			if (p->Tu.LocalFlag) p->ActiveControls |= CMD_SRC_DIGITAL;
 		}
 
-		if (!Flag && !p->Status->bit.MuDu)
+		if (Flag || p->Status->bit.MuDu)
 		{
 			DigState = p->Tu.LocalFlag ? 0 : CMD_SRC_DIGITAL;
 			switch(*p->DuSource)
@@ -152,12 +152,10 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 				case mdsAll:     p->ActiveControls |= (DigState|CMD_SRC_SERIAL); break;
 				case mdsDigital: p->ActiveControls |= DigState; break;
 				case mdsSerial:  p->ActiveControls |= CMD_SRC_SERIAL; break;
-			}
+                                case mdsDac:     p->ActiveControls |= CMD_SRC_ANALOG; break;
+                        }
 		}
-                if (Flag)
-                {
-                    p->ActiveControls |= CMD_SRC_ANALOG;
-                }
+                
 }
 
 // обработка команд с МПУ

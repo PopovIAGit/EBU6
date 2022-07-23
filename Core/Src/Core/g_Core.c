@@ -358,7 +358,7 @@ double tmpdata2 = 0;
 static void MoveMode(void)
 {
     // что то делаем пока едем
-   if (g_Ram.UserParam.MuDuSetup == mdDac)
+   if (g_Ram.UserParam.DuSource == mdsDac)
     {
       tmpdata   = p_Controller(g_Ram.UserParam.SetPosition, g_Ram.Status.PositionPr);
       tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
