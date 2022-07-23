@@ -218,7 +218,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 	}
 
 
-		if (*p->Tu.State & (TU_STOP_OPEN | TU_STOP_CLOSE)) TuControl = vcwStop;
+	if (*p->Tu.State & (TU_STOP_OPEN | TU_STOP_CLOSE)) TuControl = vcwStop;
 
 
 	if (TuControl != vcwNone)
