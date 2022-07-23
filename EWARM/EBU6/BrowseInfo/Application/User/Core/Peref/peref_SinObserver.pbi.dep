@@ -1,0 +1,53 @@
+C:\work\ebu6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_SinObserver.pbi: \
+  C:\work\ebu6\EBU6\Core\Src\Peref\peref_SinObserver.c \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\main.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\std.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\stdlib.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\ycheck.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\yvals.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Defaults.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Config_Normal.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\ysizet.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product_stdlib.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\string.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product_string.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\math.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_float_setup.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\float.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\delay.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\std.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModbusRtu.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModBusTimers.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Global\g_Structs.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_SerialComm.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Global\g_Ram.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_InverterControl.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter1.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter3.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_VlvDrvCtrl.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_Menu.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_MenuGlobal.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_TorqueObserver.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Global\g_Structs.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_Clock.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\g_Core.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_Protections.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_InverterControl.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\csl_memory.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_VlvDrvCtrl.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Core\core_TorqueObserver.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Stat\stat_fm25v10.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Stat\stat.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Stat\stat_fm25v10.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter1.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_ApFilter3.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_SensObserver.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_SinObserver.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_Clock.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_Calibs.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\CMS58M.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_display.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Peref\peref_displhal.h

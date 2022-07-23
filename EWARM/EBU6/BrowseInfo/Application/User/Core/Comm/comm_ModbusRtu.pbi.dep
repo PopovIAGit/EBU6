@@ -1,0 +1,26 @@
+C:\work\ebu6\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Comm\comm_ModbusRtu.pbi: \
+  C:\work\ebu6\EBU6\Core\Src\Comm\comm_ModbusRtu.c \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModbusRtu.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModBusTimers.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\std.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\stdlib.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\ycheck.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\yvals.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Defaults.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Config_Normal.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\ysizet.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product_stdlib.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\string.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product_string.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\math.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_float_setup.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\float.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Global\g_Structs.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModbusConfig.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModbusRtu.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModbusCrc.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModbusEvent.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModBusRtu.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModbusFrame.h \
+  C:\work\ebu6\EBU6\EWARM\..\Core\Inc\Comm\comm_ModbusInterrupts.h
