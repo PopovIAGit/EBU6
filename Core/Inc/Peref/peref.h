@@ -178,6 +178,7 @@ typedef struct {
 	APFILTER3  			IU3fltr;
 	APFILTER3  			IV3fltr;
 	APFILTER3  			IW3fltr;
+          
         TSensObserver			sensObserver;		// Масштабирование сигналов с датчиков
 	TSinObserver			sinObserver;		// Вычисление RMS напряжений
         
@@ -194,10 +195,11 @@ typedef struct {
         RTC_Obj			RtcData;
         RTC_TimeTypeDef         Time;
         RTC_DateTypeDef         Date;
-        //--------------------------
+        //-----Датчик температуры блока-----------
         ADT7301                 Temper;
         Int                     BlockTemper;
         Uns                     TenControl;
+        APFILTER1  		TEMPERfltr;
         // ADC ADS1118------------------------------------
         TADS1118                ADC_Out_Config;
         uint16_t                ADC_Out_data;

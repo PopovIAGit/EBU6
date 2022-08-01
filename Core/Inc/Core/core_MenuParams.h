@@ -10,6 +10,7 @@
 
 #define MAX_LEVEL			2 
 #define GROUP_COUNT			4 
+#define SUBGR_INIT(GR, D)	GR, D
 
 const struct MENU_GROUP groups[] = {
 	"   1 цпсоою     ", "хмдхйюжхъ       ", GetAdr(Status),         SIZE(TStatus),
@@ -17,6 +18,14 @@ const struct MENU_GROUP groups[] = {
 	"   3 цпсоою     ", "мюярпнийх гюбнд ", GetAdr(FactoryParam),   SIZE(TFactoryParam),
 	"   4 цпсоою     ", "йнлюмдш         ", GetAdr(Comands),        SIZE(TComands)
 };
+
+const struct MENU_GROUP subgroups[] = {
+	"  1.1 ярюрсяш   ", " яхярелш        ", GetAdr(Status),         SIZE(TStatus),
+	"  1.2 онйюгшмхъ ", "мюярпнийх онкэг ", GetAdr(UserParam),      SIZE(TUserParam),
+	"   3 цпсоою     ", "мюярпнийх гюбнд ", GetAdr(FactoryParam),   SIZE(TFactoryParam),
+	"   4 цпсоою     ", "йнлюмдш         ", GetAdr(Comands),        SIZE(TComands)
+};
+
 
 #ifdef CREATE_STRUCTS
 
