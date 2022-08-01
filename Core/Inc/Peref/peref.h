@@ -36,6 +36,11 @@ typedef struct {
 	Uns				adc;		// Величина АЦП 
 } TDot;
 
+typedef struct {
+	Int				temper;		// Температура
+	Uns				adc;		// Величина АЦП (сопротивление датчика температуры)
+} TDotTemper;
+
 //---------------------------------------------------------------------
 typedef struct {
 	TDot						dots[DOTS];	        // Массив точек для интерполяции
@@ -44,7 +49,14 @@ typedef struct {
 	Bool						fault;		        // Флаг сбоя 
 } TLineObserver;
 
-
+//---------------------------------------------------------------------
+typedef struct {
+	TDotTemper					dots[8];	// Массив точек для интерполяции
+	Uns				        inputR;		// Вход: АЦП (сопротивление датчика температуры)
+	Uns					maxResist;	// Параметр: максимальное сопротивление датчика
+	Int					outputT;	// Выход: температура
+	Bool					fault;		// Флаг сбоя датчика
+} TTempObserver;
 
 
 
@@ -218,6 +230,7 @@ typedef struct {
          //TDot                   dotsADCtoProc[DOTS];
          TLineObserver          ProctoDAC;
          //TDot                   dotsProctoDAC[DOTS];
+         TTempObserver          temperDrive;
          TPerefPosition 	Position;			// Калибровка датчика положения и расчет скорости  
          //энкодер
          sCms58m                 cms58m_1;
@@ -265,6 +278,10 @@ void peref_ADCtoPRCObserverInit(TPeref *);
 void peref_ProctoDACObserverInit(TPeref *);
 
 void peref_ADCDACtoPRCObserverUpdate(TLineObserver *);
+
+//прототипы функций
+void TempObserverInit(TTempObserver *);
+void TempObserverUpdate (TTempObserver *);
 
 // Работа с Eeprom
 void memTest(void);

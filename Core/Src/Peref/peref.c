@@ -115,6 +115,17 @@ TDot dotsDAC[DOTS] = {	        484,      0,		//  4		0
                                 2436,     968,
                                 2498,     1000};	//  20  16		
 //--------------------------------------------------------
+// Точки 		  темпер.  АЦП.        сопр.    №
+TDotTemper dotsTemper[8] = {	-40,   465,		//  525		0
+                        0,     585,		//  577		1
+                        25,    642,		//  1379	2
+                        50,    687,		//  1569	3
+                        80,    731,		//  1670	4
+                        100,   773,		//  1993	5
+                        110,   834,		//  2471	6
+                        120,   854};	       //  2535	7
+
+
 
 char Icons[NUM_ICONS][7] =	{
 					0x1F,0x11,0x1F,0x04,0x06,0x04,0x07,
@@ -278,6 +289,9 @@ void peref_Init(void)
         
       Peref_CalibInit(&g_Peref.Position);
     ///  g_Ram.HideParam.Position ///= &g_Peref.cms58m_1.value;
+
+      TempObserverInit(&g_Peref.temperDrive);
+
 }
 
 void peref_ADCtoPRCObserverInit(TPeref *p)
@@ -448,6 +462,11 @@ void peref_10HzCalc(TPeref *p)//
  
    if (g_Core.Protections.FaultDelay > 0) return; 
      
+       
+   p->temperDrive.inputR = p->adcData1[4];
+   TempObserverUpdate(&p->temperDrive);
+   g_Ram.Status.DriveTemper = p->temperDrive.outputT;  
+         
   // LED control
   if (g_Ram.TestParam.Mode == 1)
   {
@@ -868,5 +887,65 @@ void memTest(void)
           break; 
         }
 }
+
+void TempObserverInit(TTempObserver *p)
+{
+	int i = 0;
+	
+          for (i = 0; i<8; i++)
+          {
+            p->dots[i] = dotsTemper[i]; 
+          }
+           p->maxResist = 921;  // число максимума 
+	
+	
+}
+
+//--------------------------------------------------------
+void TempObserverUpdate(TTempObserver *p)
+{
+	static Int i=0;
+
+	// Значение АЦП меньше минимально-допустимого или больше минимально-допустимого
+	if (p->inputR <= p->dots[0].adc)
+	{
+		p->fault = false;
+		p->outputT = -999;
+		return;
+	}
+	else if (p->inputR >= p->maxResist )
+	{
+		p->fault = true;					// это значит обрыв датчика температуры или его сбой
+		p->outputT = 999;
+		return;		
+	}
+	else 									// Значение АЦП в пределах
+		p->fault = false;					// - нет аварии 
+
+	// Определяем, между какими значениями dots находится R_входное
+	//while (! ((p->inputR >= p->dots[i].resist)&&(p->inputR < p->dots[i+1].resist)) )	// Для сопротивления (прямая зависимость)
+	while (! ((p->inputR >= p->dots[i].adc)&&(p->inputR < p->dots[i+1].adc)) )	// Для АЦП (обратная зависимость)
+	{
+		if (p->inputR > p->dots[i].adc)
+		{
+			i++;	// Движемся по характеристике вверх и вниз
+		//	if(i > 7) i = 7;
+		}
+		else
+		{
+			i--;
+		//	if(i < -1) i = -1;
+		}							// пока не окажемся между двумя точками
+	}
+	
+	if (i > 8) i = 8;
+	else if (i < 0) i = 0;
+
+	if (p->inputR == p->dots[i].adc)			// Если четко попали на точку
+		p->outputT = p->dots[i].temper;		// берем значение температуры этой точки
+	else// Линейная интерполяция			   в противном случае интерполируем
+		p->outputT = LinearInterpolation(p->dots[i].adc, p->dots[i].temper ,p->dots[i+1].adc ,p->dots[i+1].temper, p->inputR);
+}
+
 
 

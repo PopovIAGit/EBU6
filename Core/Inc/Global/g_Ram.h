@@ -35,7 +35,7 @@ typedef struct _TStatus
 	Int             Temper;         // 22. 22 Температура блока
 	Uns             VersionPO;      // 23. 23 Версия ПО
 	Uns 		VDC;	        // 24. 25-39 Резерв
-        Uns 		Rsvd25;	        // 25. 25-39 Резерв
+        Int 		DriveTemper;	        // 25. 25-39 Резерв
         Uns 		Rsvd26;	        // 26. 25-39 Резерв
         Uns 		Rsvd27;	        // 27. 25-39 Резерв
         Uns 		Rsvd28;	        // 28. 25-39 Резерв
