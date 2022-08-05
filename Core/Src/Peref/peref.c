@@ -144,7 +144,7 @@ void peref_Init(void)
     g_Peref.BtnOpen.LogType = ltAnMin;
     g_Peref.BtnOpen.Enable = TRUE;
     g_Peref.BtnOpen.Input = Null;
-   g_Peref.BtnOpen.Output = &g_Peref.BtnStatus;
+    g_Peref.BtnOpen.Output = &g_Peref.BtnStatus;
     g_Peref.BtnOpen.Level = &BtnLevel;
     g_Peref.BtnOpen.Timeout = &BtnTout;
     g_Peref.BtnOpen.BitMask = 1<<0;
@@ -290,6 +290,7 @@ void peref_Init(void)
       Peref_CalibInit(&g_Peref.Position);
     ///  g_Ram.HideParam.Position ///= &g_Peref.cms58m_1.value;
 
+      peref_ApFilter1Init(&g_Peref.TEMPERfltr, PRD_10HZ, g_Ram.FactoryParam.RmsTf); 
       TempObserverInit(&g_Peref.temperDrive);
 
 }
@@ -461,13 +462,14 @@ void peref_10HzCalc(TPeref *p)//
 {
  
    if (g_Core.Protections.FaultDelay > 0) return; 
-     
-       
-   p->temperDrive.inputR = p->adcData1[4];
+  // температура двигателя---------------------------------------------------------------   
+   p->TEMPERfltr.Input = (float)p->adcData1[4];
+   peref_ApFilter1Calc(&p->ADCToProcfltr);      
+   p->temperDrive.inputR = (Uns)p->TEMPERfltr.Output;
    TempObserverUpdate(&p->temperDrive);
    g_Ram.Status.DriveTemper = p->temperDrive.outputT;  
          
-  // LED control
+  // LED control--------------------------------------------------------------------------
   if (g_Ram.TestParam.Mode == 1)
   {
     HAL_GPIO_WritePin(ALARM_SD_GPIO_Port, ALARM_SD_Pin, g_Ram.TestParam.LedsReg.bit.Fault);
@@ -498,7 +500,7 @@ void peref_10HzCalc(TPeref *p)//
       HAL_GPIO_WritePin(CLOSED_SD_GPIO_Port, CLOSED_SD_Pin, g_Ram.Status.Status.bit.Closed);
     }
   }
-   // передача данных с ручек 
+   // передача данных с ручек ---------------------------------------------------------------------
   
     btnOpen  = HAL_GPIO_ReadPin(OPEN_HAL_GPIO_Port, OPEN_HAL_Pin);
     btnClose = HAL_GPIO_ReadPin(CLOSE_HAL_GPIO_Port, CLOSE_HAL_Pin);

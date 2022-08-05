@@ -240,6 +240,7 @@ extern HRTIM_HandleTypeDef hhrtim;
 extern UART_HandleTypeDef huart4;
 extern FDCAN_HandleTypeDef hfdcan2;
 
+
 extern Uns PauseModbus;
 
 

@@ -18,12 +18,25 @@ const struct MENU_GROUP groups[] = {
 	"   3 цпсоою     ", "мюярпнийх гюбнд ", GetAdr(FactoryParam),   SIZE(TFactoryParam),
 	"   4 цпсоою     ", "йнлюмдш         ", GetAdr(Comands),        SIZE(TComands)
 };
-
+//
 const struct MENU_GROUP subgroups[] = {
 	"  1.1 ярюрсяш   ", " яхярелш        ", GetAdr(Status),         SIZE(TStatus),
-	"  1.2 онйюгшмхъ ", "мюярпнийх онкэг ", GetAdr(UserParam),      SIZE(TUserParam),
-	"   3 цпсоою     ", "мюярпнийх гюбнд ", GetAdr(FactoryParam),   SIZE(TFactoryParam),
-	"   4 цпсоою     ", "йнлюмдш         ", GetAdr(Comands),        SIZE(TComands)
+	"  1.2 ярюрсяш   ", "мюярпнийх онкэг ", GetAdr(UserParam),      SIZE(TUserParam),
+        "  1.3 ярюрсяш   ", "мюярпнийх онкэг ", GetAdr(UserParam),      SIZE(TUserParam),
+        "  1.4 ярюрсяш   ", "мюярпнийх онкэг ", GetAdr(UserParam),      SIZE(TUserParam),
+        //---
+        "  2.1 мюярпийх  ", "сярпниярбю      ", GetAdr(UserParam),      SIZE(TUserParam),
+        "  2.2 мюярпийх  ", "дхяйп яхцмюкнб  ", GetAdr(UserParam),      SIZE(TUserParam),
+        "  2.3 мюярпийх  ", "онякед хмрмптеия", GetAdr(UserParam),      SIZE(TUserParam),
+        "  2.4 мюярпийх  ", "пефхлю пюанрш   ", GetAdr(UserParam),      SIZE(TUserParam),
+        //----
+        "  3.2 наыхе     ", "мюярпнийх       ", GetAdr(UserParam),      SIZE(TUserParam),
+        "  3.2 мюярпийх  ", "мюярпнийх онкэг ", GetAdr(UserParam),      SIZE(TUserParam),
+        "  3.2 мюярпийх  ", "мюярпнийх онкэг ", GetAdr(UserParam),      SIZE(TUserParam),
+        "  3.2 мюярпийх  ", "мюярпнийх онкэг ", GetAdr(UserParam),      SIZE(TUserParam),
+        //---    
+	"  4.1 цпсоою    ", "мюярпнийх гюбнд ", GetAdr(FactoryParam),   SIZE(TFactoryParam),
+	"  4.2 цпсоою    ", "йнлюмдш         ", GetAdr(Comands),        SIZE(TComands)
 };
 
 

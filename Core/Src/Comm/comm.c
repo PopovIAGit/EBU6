@@ -12,13 +12,8 @@ static char ReadRegs(TMbPort *Port, Uint16 *Data, Uint16 Addr, Uint16 Count);
 void Comm_Init(TComm *p)
 {
 
-	//InitChanelAsuModbus(&g_Comm.mbAsu);
-
-	//InitChanelShnModbus(&g_Comm.mbEncoder);
-
-
-	//SerialCommInit(&g_Comm.mbAsu);
-	//SerialCommInit(&g_Comm.mbEncoder);
+	InitChanelAsuModbus(&g_Comm.mbAsu);
+	SerialCommInit(&g_Comm.mbAsu);
 }
 
 //---------------------------------------------------
@@ -37,33 +32,8 @@ void Comm_Update(TComm *p)
 	{
 		ModBusUpdate(&g_Comm.mbAsu); 			
 	}
-
-	if (PauseModbus == 0)
-	{
-		ModBusUpdate(&g_Comm.mbEncoder);  
-
-		if (p->mbEncoder.Stat.Status.bit.Busy == 0)
-		{
-			CommandATS48++;
-			p->mbEncoder.Stat.Status.bit.Ready = 0;
-
-			switch (CommandATS48)
-			{
-			case 1:
-                                        //mb_read_ATS48(&g_Comm, GetAdr(ramGroupATS.State1), 1);
-					break;
-			case 2:
-					//mb_write_ATS48(&g_Comm, GetAdr(ramGroupATS.Control1), 1, g_Ram.ramGroupATS.Control1.all);
-	
-                                  break;
-			case 3:
-				CommandATS48 = 0;
-				break;
-			}
-		}
-		Comm_ControlModbusUpdateAltistar48(&g_Comm);
-
-	}
+          
+            /*тут добавлять связь с БРП*/ 
 }
 
 static char ReadRegs(TMbPort *Port, Uint16 *Data, Uint16 Addr, Uint16 Count)

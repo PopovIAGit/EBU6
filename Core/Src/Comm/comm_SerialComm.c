@@ -1,26 +1,34 @@
-
-#include "main.h"
+/*#include "main.h"
 #include "g_Core.h"
-#include "comm.h"
-#include "comm_SerialComm.h"
-#include "g_Ram.h"
-#include "stat.h"
 
-Bool MbBkpConnect=False;
-Bool MbAsuConnect=False;
-Bool MbShnConnect=False;
-Bool MbBtConnect=False;
+#include "comm_SerialComm.h"
+
+#include "stat.h"*/
+
+#include "comm.h"
+#include "g_Ram.h"
+
+Bool MbBkpConnect = False;
+Bool MbAsuConnect = False;
+Bool MbShnConnect = False;
+Bool MbBtConnect = False;
 
 static Uns BaudRates[7] = SCI_DEFAULT_BAUD_RATES;
-static Uns BrrValues[7] = SCI_DEFAULT_BRR_VALUES;
+static Uns BrrValues[7] = SCI_DEFAULT_BAUD_RATES;//SCI_DEFAULT_BRR_VALUES;
 
 #define IM_MB_START_ADDR		65123
-#define CHECK_IM_MB_ADDR(Addr)	(Addr==IM_MB_START_ADDR)
+#define CHECK_IM_MB_ADDR(Addr)	        (Addr==IM_MB_START_ADDR)
 #define IM_MB_START_DATA_ADDR		65124
 #define CHECK_IM_MB_DATA_ADDR(Addr)	(Addr==IM_MB_START_DATA_ADDR)
 
-__inline Byte UpdatePacket(TMbPacket *Packet);
-__inline Byte WriteData(Uns Addr, Uns *Data, Uns Count);
+ Byte UpdatePacket(TMbPacket *Packet);
+ Byte WriteData(Uns Addr, Uns *Data, Uns Count);
+ void AsuMbSetTr(Byte Lev);
+
+ void AsuMbSetTr(Byte Lev)  
+{
+   HAL_GPIO_WritePin(RX485DE_ASU_GPIO_Port, RX485DE_ASU_Pin, (GPIO_PinState)Lev);
+}
 
 //---------------------------------------------------
 void InitChanelAsuModbus(TMbHandle hPort)
@@ -49,36 +57,18 @@ void InitChanelAsuModbus(TMbHandle hPort)
 	hPort->Params.RxDelay     = 10;
 	hPort->Params.TxDelay     = 10;
 	hPort->Params.AckTimeout  = 1;//1000;
-//	hPort->Params.TrEnable    = &AsuMbSetTr; // управление направлением
+	hPort->Params.TrEnable    = &AsuMbSetTr; // управление направлением
 	hPort->Frame.TimerPre.Timeout = 1;
 
 	hPort->Params.HardWareType	= 0;
 	hPort->Packet.ParamMode	= 0;
 
 	hPort->Params.TrEnable(0);
-}
-//---------------------------------------------------
-void InitChanelEncoderModbus(TMbHandle hPort)
-{
-	
-	hPort->Params.Mode     = MB_MASTER;
-	hPort->Params.Slave    = 1;
-	hPort->Params.BaudRate = BaudRates[3];
-	hPort->Params.UartBaud = BrrValues[3];
-	hPort->Params.Parity   = 0;
 
-	hPort->Params.RetryCount  = 2;
-	hPort->Params.Scale       = MB_SCALE;
-	hPort->Params.ConnTimeout = 40;//400;
-	hPort->Params.RxDelay     = 10;
-	hPort->Params.TxDelay     = 10;//200;
-	hPort->Params.AckTimeout  = 1;//2000;//1000;
-//	hPort->Params.TrEnable    = &ShnMbSetTr;        // управление ножкой напрявления
-	hPort->Frame.TimerPre.Timeout = 1;
-
-	hPort->Params.HardWareType	= 0;
-	hPort->Packet.ParamMode	= 0;
 }
+
+
+
 //---------------------------------------------------
 
 void SerialCommInit(TMbHandle hPort)
@@ -120,7 +110,7 @@ void ModBusControl(TMbHandle hPort)
 
 }
 
-__inline Byte UpdatePacket(TMbPacket *Packet)
+ Byte UpdatePacket(TMbPacket *Packet)
 {
 	Uns Addr=0, Res=0, Tmp=0, i=0;
 
@@ -257,7 +247,7 @@ __inline Byte UpdatePacket(TMbPacket *Packet)
 }
 
 //---------------------------------------------------
-__inline Byte WriteData(Uns Addr, Uns *Data, Uns Count)
+ Byte WriteData(Uns Addr, Uns *Data, Uns Count)
 {
 	struct MENU_DCR Dcr;
 	struct MENU_VAL_CFG *Val = &Dcr.Config.Val;

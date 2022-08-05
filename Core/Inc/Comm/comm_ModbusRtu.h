@@ -175,7 +175,7 @@ typedef struct _TMbParams {
 	Uns  TxDelay;              // Задержка при передаче кадров (в мсек)
 	Uns  ConnTimeout;          // Тайм-аут определения связи (в мсек)
 	Uns  AckTimeout;           // Тайм-аут подтверждения (в мсек)
-	TMbTrFunc TrEnable;   		// Функция разрешения передачи
+	TMbTrFunc TrEnable;   	   // Функция разрешения передачи
 	Uns  HardWareType;			// тип аппаратного канала передачи данных
 } TMbParams;
 

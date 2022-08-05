@@ -1,5 +1,4 @@
 
-
 #define _MASTER_
 #define _SLAVE_
 
@@ -9,6 +8,8 @@
 #include "comm_ModbusEvent.h"
 #include "comm_ModbusFrame.h"
 #include "comm_ModbusInterrupts.h"
+#include "main.h"
+
 
 Uns testPreamble=0;
 Uns TestCount;
@@ -17,23 +18,18 @@ Uns CrcTable[256];
 static Bool CrcTableGenFlag = false;
 static Bool OpenFlags[4] = {false, false, false, false};
 
-__inline void UpdateNewFrame(TMbPort *hPort);
-
-__inline void MasterRequest(TMbPort *hPort);
-__inline void MasterConfirmation(TMbPort *hPort);
-
-__inline void SlaveIndication(TMbPort *hPort);
-__inline void SlaveResponse(TMbPort *hPort);
-
-__inline void CrcPack(TMbPort *);
-
+ void UpdateNewFrame(TMbPort *hPort);
+ void MasterRequest(TMbPort *hPort);
+ void MasterConfirmation(TMbPort *hPort);
+ void SlaveIndication(TMbPort *hPort);
+ void SlaveResponse(TMbPort *hPort);
+ void CrcPack(TMbPort *);
 
 //-------------------------------------------------------------------------------
  void BreakFrameEvent(TMbPort *hPort)
-{
-	//if (hPort->Params.HardWareType==0) 
-        
+{      
            //поменять функции  SCI_rx_disable(hPort->Params.ChannelID);	
+          __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE);
 }
 
 //-------------------------------------------------------------------------------
@@ -54,7 +50,8 @@ __inline void CrcPack(TMbPort *);
 {
 	hPort->Frame.Data = hPort->Frame.Buf;
 
-	//поменять функцию if (hPort->Params.HardWareType==0) SCI_transmit(hPort->Params.ChannelID, *hPort->Frame.Data++);	
+	//SCI_transmit(hPort->Params.ChannelID, *hPort->Frame.Data++);
+          HAL_UART_Transmit_IT(&huart4, hPort->Frame.Data++, 1);
 }
 
 //-------------------------------------------------------------------------------
@@ -70,6 +67,11 @@ __inline void CrcPack(TMbPort *);
 		//for(i=0; i<1000; i++){}
 		//SCI_tx_disable(hPort->Params.ChannelID);
 		//SCI_rx_enable(hPort->Params.ChannelID);
+          
+            __HAL_UART_DISABLE_IT(&huart4, UART_IT_TC);
+            __HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
+          
+            
 	}
           
 	if (hPort->Params.Mode==MB_SLAVE) hPort->Params.TrEnable(0);
@@ -119,6 +121,9 @@ __inline void CrcPack(TMbPort *);
 			hPort->Params.TrEnable(1);
 			//SCI_rx_disable(hPort->Params.ChannelID); поменять функцию
 			//SCI_tx_disable(hPort->Params.ChannelID);
+                          
+                        __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE);
+                        __HAL_UART_DISABLE_IT(&huart4, UART_IT_TC);
 
 			if (hPort->Stat.SlaveNoRespCount<65500) hPort->Stat.SlaveNoRespCount++;// Счетчик неответов
 			if (hPort->Frame.RetryCounter > hPort->Params.RetryCount)
@@ -149,14 +154,11 @@ void SendFrame(TMbPort *hPort)
 {
 	CrcPack(hPort);
 	hPort->Params.TrEnable(1);
-
-	/*if (hPort->Params.HardWareType==0)
-	{
-		
-                 SCI_rx_disable(hPort->Params.ChannelID);
-		SCI_tx_enable(hPort->Params.ChannelID);
-	}*/
-
+       // SCI_rx_disable(hPort->Params.ChannelID);
+       // SCI_tx_enable(hPort->Params.ChannelID);
+          
+        __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE);
+        __HAL_UART_ENABLE_IT(&huart4, UART_IT_TC);
 	StartTimer(&hPort->Frame.TimerPre);
 	hPort->Stat.TxMsgCount++;
 }
@@ -234,7 +236,7 @@ void ModBusTimings(TMbPort *hPort)
 	}
 }
 
-__inline void UpdateNewFrame(TMbPort *hPort)
+ void UpdateNewFrame(TMbPort *hPort)
 {
 	TMbFrame *Frame = &hPort->Frame;
 	TMbStat  *Stat  = &hPort->Stat;
@@ -275,6 +277,7 @@ FRAMING_ERROR:
 	Stat->BusErrCount++;
 
 	// поменять функции if (hPort->Params.HardWareType==0) SCI_rx_enable(hPort->Params.ChannelID);
+        __HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
 
 	if (hPort->Frame.Buf[0]==0) hPort->Frame.Buf[0]=1;
 	if (hPort->Frame.Buf[1]!=3 || hPort->Frame.Buf[1]!=16) hPort->Frame.Buf[1]=3;
@@ -282,15 +285,16 @@ FRAMING_ERROR:
 	hPort->Packet.Response = EX_SLAVE_DEVICE_FAILURE;
 }
 
-__inline void MasterRequest(TMbPort *hPort)
+ void MasterRequest(TMbPort *hPort)
 {
 	TMbPacket *Packet = &hPort->Packet;
 
 	if (!Packet->Request) return;
 	if (hPort->Frame.WaitResponse) return;
 	
-	if (hPort->Params.HardWareType==0)
-		SCI_rx_disable(hPort->Params.ChannelID);	
+		/*SCI_rx_disable(hPort->Params.ChannelID);	*/
+                  __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE);
+                   
 
 	Packet->Exception = 0;
 	switch(Packet->Request)
@@ -314,20 +318,20 @@ __inline void MasterRequest(TMbPort *hPort)
 	}
 }
 
-__inline void SlaveIndication(TMbPort *hPort)
+ void SlaveIndication(TMbPort *hPort)
 {
 	TMbPacket *Packet = &hPort->Packet;
 	Byte Slave, Func;
 	
 	Slave = hPort->Frame.Buf[0];
 
-	/*поменять функции SCI_rx_enable if ((Slave != 0) && (Slave != hPort->Params.Slave))
+	 if ((Slave != 0) && (Slave != hPort->Params.Slave))
 	{
-		if (hPort->Params.HardWareType==0) SCI_rx_enable(hPort->Params.ChannelID);
-		
+		//SCI_rx_enable(hPort->Params.ChannelID);
+		 __HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
 
 		return;	
-	}*/
+	}
 	
 	hPort->Stat.SlaveMsgCount++;
 	if (!Slave || hPort->Frame.ListenMode)
@@ -368,7 +372,7 @@ __inline void SlaveIndication(TMbPort *hPort)
 	else Packet->Request = Func;
 }
 
-__inline void SlaveResponse(TMbPort *hPort)
+ void SlaveResponse(TMbPort *hPort)
 {
 	TMbPacket *Packet = &hPort->Packet;
 	TMbFrame *Frame = &hPort->Frame;
@@ -411,7 +415,7 @@ __inline void SlaveResponse(TMbPort *hPort)
 	SendFrame(hPort);
 }
 
-__inline void MasterConfirmation(TMbPort *hPort)
+ void MasterConfirmation(TMbPort *hPort)
 {
 	TMbPacket *Packet = &hPort->Packet;
 	TMbFrame *Frame = &hPort->Frame;
@@ -535,7 +539,7 @@ void GenerateCrcTable(void)
 	} while (--Count);
 }
 
-__inline void CrcPack(TMbPort *hPort)
+ void CrcPack(TMbPort *hPort)
 {
 	Uns Crc = CalcFrameCrc((hPort->Frame.Buf), hPort->Frame.TxLength);
 	hPort->Frame.Buf[hPort->Frame.TxLength++] = (Byte)(Crc & 0xFF);
@@ -904,10 +908,10 @@ void ModBusRxIsr(TMbPort *hPort)
 	TMbFrame *Frame = &hPort->Frame;
 	Byte Data = 0;
 
-	/*поменять функции if (hPort->Params.HardWareType==0)
-	{
-		Data = SCI_recieve(hPort->Params.ChannelID);
-	}*/
+
+	//Data = SCI_recieve(hPort->Params.ChannelID);
+        HAL_UART_Receive_IT(&huart4, &Data, 1);
+          
 		
 	if ((Frame->Data - Frame->Buf) < 256)
 	{
@@ -929,17 +933,16 @@ void ModBusTxIsr(TMbPort *hPort)
 	Uns Stop=0;
 	
 	if ((Frame->Data - Frame->Buf) < Frame->TxLength){
-		if (hPort->Params.HardWareType==0)
-		{
-			SCI_transmit(hPort->Params.ChannelID, *Frame->Data++);
-			StartTimer(&Frame->TimerPost);
-		}		
+		
+		//SCI_transmit(hPort->Params.ChannelID, *Frame->Data++);
+		HAL_UART_Transmit_IT(&huart4, Frame->Data++, 1);
+                StartTimer(&Frame->TimerPost);	
 	}
 	else
 	{
 		StartTimer(&Frame->TimerPost);
 	}
-	//StartTimer(&Frame->TimerPost);
+
 	
 	hPort->Stat.TxBytesCount++;
 }
@@ -950,7 +953,49 @@ static void ResetCommumication(TMbPort *hPort, Bool ClearEventLog)
 	TMbFrame *Frame = &hPort->Frame;
 	Uns Tout1_5, Tout3_5, Scale = (Uns)Params->Scale;
 	
-	// поменять функции if (hPort->Params.HardWareType==0) SCI_init(Params->ChannelID, Params->UartBaud, Params->Parity, 8);
+	//SCI_init(Params->ChannelID, Params->UartBaud, Params->Parity, 8);
+          
+           HAL_UART_DeInit(&huart4);
+           huart4.Instance = UART4;
+            
+           huart4.Init.BaudRate = Params->UartBaud * 100;
+           
+           huart4.Init.WordLength = UART_WORDLENGTH_8B;
+           huart4.Init.StopBits = UART_STOPBITS_1;
+           switch (Params->Parity)
+           {
+             case pmNone: huart4.Init.Parity = UART_PARITY_NONE;  break;
+             case pmOdd:  huart4.Init.Parity = UART_PARITY_ODD;   break;
+             case pmEven: huart4.Init.Parity = UART_PARITY_EVEN;  break;
+           }
+           
+         //  huart4.Init.Parity = UART_PARITY_NONE;
+           
+             
+           huart4.Init.Mode = UART_MODE_TX_RX;
+           huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+           huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+           huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+           huart4.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+           huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+            if (HAL_UART_Init(&huart4) != HAL_OK)
+            {
+              Error_Handler();
+            }
+            if (HAL_UARTEx_SetTxFifoThreshold(&huart4, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+            {
+              Error_Handler();
+            }
+            if (HAL_UARTEx_SetRxFifoThreshold(&huart4, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+            {
+              Error_Handler();
+            }
+            if (HAL_UARTEx_DisableFifoMode(&huart4) != HAL_OK)
+            {
+              Error_Handler();
+            }
+        
+            
 	
 	Params->TrEnable(0);
 	

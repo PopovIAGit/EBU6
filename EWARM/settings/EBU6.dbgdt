@@ -153,7 +153,7 @@
                     <item>g_Peref</item>
                     <item>DAC_on_off</item>
                     <item>SpeedRef</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

@@ -33,7 +33,6 @@ typedef struct {
 	Uns			outputCmdSrc;	// 
 	// ---
 	TMbPort  		mbAsu;		// modbus ASU
-        TMbPort  		mbEncoder;	// modbus Encoder
 } TComm;
 //--------------------------------------------------------
 

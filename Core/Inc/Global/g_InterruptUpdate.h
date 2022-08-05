@@ -47,7 +47,6 @@ TPeriodicalFunction Task2kHz[] =          //Ќе более 8-х задач
 {
   PrdElemInit(FM25V10_Update,		      &Eeprom1),
   PrdElemInit(SerialCommTimings,	      &g_Comm.mbAsu),	//РЅР° 2 Рєв€љС†
-  PrdElemInit(SerialCommTimings,	      &g_Comm.mbEncoder),	//РЅР° 2 Рєв€љС†
   PrdElemInit(peref_2KHzCalc,                 &g_Peref)
 };
 // ================================ 200 vц ==================================

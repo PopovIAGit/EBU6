@@ -77,7 +77,7 @@
     1, {GetAdr(ramGroupB.StartOpenTorque),0,0,0,0},    \
     1, {0,0,0,0,0}, \
     1, {GetAdr(ramGroupB.MuDuSetup),0,0,0,0},  \
-    groups, Null, params, values, addr_params_altistar48, "РЕЗЕРВ", \
+    groups, subgroups, params, values, addr_params_altistar48, "РЕЗЕРВ", \
     StartDispl, EnableEdit, WriteValue/*, GetExpressText, GetExpressState*/\
 }
 
