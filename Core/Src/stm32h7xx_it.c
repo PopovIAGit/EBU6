@@ -64,6 +64,7 @@ extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi6;
 extern TIM_HandleTypeDef htim2;
 extern UART_HandleTypeDef huart4;
+extern UART_HandleTypeDef huart5;
 extern UART_HandleTypeDef huart8;
 /* USER CODE BEGIN EV */
 
@@ -291,15 +292,16 @@ void SPI1_IRQHandler(void)
 void UART4_IRQHandler(void)
 {
   /* USER CODE BEGIN UART4_IRQn 0 */
-  if (__HAL_UART_GET_FLAG(&huart4, UART_IT_RXNE))
+ /* if (__HAL_UART_GET_IT(&huart4, UART_IT_RXNE))
   {
       ModBusRxIsr(&g_Comm.mbAsu);
-  }
+  }*/
     
-  if (__HAL_UART_GET_FLAG(&huart4, UART_IT_TC))
+/*  if (__HAL_UART_GET_IT(&huart4, UART_IT_TXE))
   {
       ModBusTxIsr(&g_Comm.mbAsu);
-  }
+  }*/
+  
   /* USER CODE END UART4_IRQn 0 */
   HAL_UART_IRQHandler(&huart4);
   /* USER CODE BEGIN UART4_IRQn 1 */
@@ -308,6 +310,29 @@ void UART4_IRQHandler(void)
 
 
   /* USER CODE END UART4_IRQn 1 */
+}
+
+/**
+  * @brief This function handles UART5 global interrupt.
+  */
+void UART5_IRQHandler(void)
+{
+  /* USER CODE BEGIN UART5_IRQn 0 */
+  /*if (__HAL_UART_GET_IT(&huart5, UART_IT_RXNE))
+  {
+      ModBusRxIsr(&g_Comm.mbAsu);
+  }
+  
+  if (__HAL_UART_GET_IT(&huart4, UART_IT_TXE))
+  {
+      ModBusTxIsr(&g_Comm.mbAsu);
+  }*/
+  
+  /* USER CODE END UART5_IRQn 0 */
+  HAL_UART_IRQHandler(&huart5);
+  /* USER CODE BEGIN UART5_IRQn 1 */
+
+  /* USER CODE END UART5_IRQn 1 */
 }
 
 /**

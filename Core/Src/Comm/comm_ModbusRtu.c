@@ -29,7 +29,7 @@ static Bool OpenFlags[4] = {false, false, false, false};
  void BreakFrameEvent(TMbPort *hPort)
 {      
            //поменять функции  SCI_rx_disable(hPort->Params.ChannelID);	
-          __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE);
+          __HAL_UART_DISABLE_IT(&huart5, UART_IT_RXNE);
 }
 
 //-------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ static Bool OpenFlags[4] = {false, false, false, false};
 	hPort->Frame.Data = hPort->Frame.Buf;
 
 	//SCI_transmit(hPort->Params.ChannelID, *hPort->Frame.Data++);
-          HAL_UART_Transmit_IT(&huart4, hPort->Frame.Data++, 1);
+          HAL_UART_Transmit_IT(&huart5, hPort->Frame.Data++, 1);
 }
 
 //-------------------------------------------------------------------------------
@@ -68,8 +68,8 @@ static Bool OpenFlags[4] = {false, false, false, false};
 		//SCI_tx_disable(hPort->Params.ChannelID);
 		//SCI_rx_enable(hPort->Params.ChannelID);
           
-            __HAL_UART_DISABLE_IT(&huart4, UART_IT_TC);
-            __HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
+            __HAL_UART_DISABLE_IT(&huart5, UART_IT_TXE);
+            __HAL_UART_ENABLE_IT(&huart5, UART_IT_RXNE);
           
             
 	}
@@ -122,8 +122,8 @@ static Bool OpenFlags[4] = {false, false, false, false};
 			//SCI_rx_disable(hPort->Params.ChannelID); поменять функцию
 			//SCI_tx_disable(hPort->Params.ChannelID);
                           
-                        __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE);
-                        __HAL_UART_DISABLE_IT(&huart4, UART_IT_TC);
+                        __HAL_UART_DISABLE_IT(&huart5, UART_IT_RXNE);
+                        __HAL_UART_DISABLE_IT(&huart5, UART_IT_TXE);
 
 			if (hPort->Stat.SlaveNoRespCount<65500) hPort->Stat.SlaveNoRespCount++;// Счетчик неответов
 			if (hPort->Frame.RetryCounter > hPort->Params.RetryCount)
@@ -157,8 +157,8 @@ void SendFrame(TMbPort *hPort)
        // SCI_rx_disable(hPort->Params.ChannelID);
        // SCI_tx_enable(hPort->Params.ChannelID);
           
-        __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE);
-        __HAL_UART_ENABLE_IT(&huart4, UART_IT_TC);
+        __HAL_UART_DISABLE_IT(&huart5, UART_IT_RXNE);
+        __HAL_UART_ENABLE_IT(&huart5, UART_IT_TXE);
 	StartTimer(&hPort->Frame.TimerPre);
 	hPort->Stat.TxMsgCount++;
 }
@@ -277,7 +277,7 @@ FRAMING_ERROR:
 	Stat->BusErrCount++;
 
 	// поменять функции if (hPort->Params.HardWareType==0) SCI_rx_enable(hPort->Params.ChannelID);
-        __HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
+        __HAL_UART_ENABLE_IT(&huart5, UART_IT_RXNE);
 
 	if (hPort->Frame.Buf[0]==0) hPort->Frame.Buf[0]=1;
 	if (hPort->Frame.Buf[1]!=3 || hPort->Frame.Buf[1]!=16) hPort->Frame.Buf[1]=3;
@@ -293,7 +293,7 @@ FRAMING_ERROR:
 	if (hPort->Frame.WaitResponse) return;
 	
 		/*SCI_rx_disable(hPort->Params.ChannelID);	*/
-                  __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE);
+                  __HAL_UART_DISABLE_IT(&huart5, UART_IT_RXNE);
                    
 
 	Packet->Exception = 0;
@@ -328,7 +328,7 @@ FRAMING_ERROR:
 	 if ((Slave != 0) && (Slave != hPort->Params.Slave))
 	{
 		//SCI_rx_enable(hPort->Params.ChannelID);
-		 __HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
+		 __HAL_UART_ENABLE_IT(&huart5, UART_IT_RXNE);
 
 		return;	
 	}
@@ -910,8 +910,8 @@ void ModBusRxIsr(TMbPort *hPort)
 
 
 	//Data = SCI_recieve(hPort->Params.ChannelID);
-        HAL_UART_Receive_IT(&huart4, &Data, 1);
-          
+        //HAL_UART_Receive_IT(&huart4, &Data, 1);
+       Data =  UART5->RDR & 0xFF;  
 		
 	if ((Frame->Data - Frame->Buf) < 256)
 	{
@@ -935,7 +935,7 @@ void ModBusTxIsr(TMbPort *hPort)
 	if ((Frame->Data - Frame->Buf) < Frame->TxLength){
 		
 		//SCI_transmit(hPort->Params.ChannelID, *Frame->Data++);
-		HAL_UART_Transmit_IT(&huart4, Frame->Data++, 1);
+		HAL_UART_Transmit_IT(&huart5, Frame->Data++, 1);
                 StartTimer(&Frame->TimerPost);	
 	}
 	else
@@ -955,42 +955,42 @@ static void ResetCommumication(TMbPort *hPort, Bool ClearEventLog)
 	
 	//SCI_init(Params->ChannelID, Params->UartBaud, Params->Parity, 8);
           
-           HAL_UART_DeInit(&huart4);
-           huart4.Instance = UART4;
+           HAL_UART_DeInit(&huart5);
+           huart5.Instance = UART5;
             
-           huart4.Init.BaudRate = Params->UartBaud * 100;
+           huart5.Init.BaudRate = Params->UartBaud * 100;
            
-           huart4.Init.WordLength = UART_WORDLENGTH_8B;
-           huart4.Init.StopBits = UART_STOPBITS_1;
+           huart5.Init.WordLength = UART_WORDLENGTH_8B;
+           huart5.Init.StopBits = UART_STOPBITS_1;
            switch (Params->Parity)
            {
-             case pmNone: huart4.Init.Parity = UART_PARITY_NONE;  break;
-             case pmOdd:  huart4.Init.Parity = UART_PARITY_ODD;   break;
-             case pmEven: huart4.Init.Parity = UART_PARITY_EVEN;  break;
+             case pmNone: huart5.Init.Parity = UART_PARITY_NONE;  break;
+             case pmOdd:  huart5.Init.Parity = UART_PARITY_ODD;   break;
+             case pmEven: huart5.Init.Parity = UART_PARITY_EVEN;  break;
            }
            
          //  huart4.Init.Parity = UART_PARITY_NONE;
            
              
-           huart4.Init.Mode = UART_MODE_TX_RX;
-           huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-           huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-           huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-           huart4.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-           huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-            if (HAL_UART_Init(&huart4) != HAL_OK)
+           huart5.Init.Mode = UART_MODE_TX_RX;
+           huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+           huart5.Init.OverSampling = UART_OVERSAMPLING_16;
+           huart5.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+           huart5.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+           huart5.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+            if (HAL_UART_Init(&huart5) != HAL_OK)
             {
               Error_Handler();
             }
-            if (HAL_UARTEx_SetTxFifoThreshold(&huart4, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+            if (HAL_UARTEx_SetTxFifoThreshold(&huart5, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
             {
               Error_Handler();
             }
-            if (HAL_UARTEx_SetRxFifoThreshold(&huart4, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+            if (HAL_UARTEx_SetRxFifoThreshold(&huart5, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
             {
               Error_Handler();
             }
-            if (HAL_UARTEx_DisableFifoMode(&huart4) != HAL_OK)
+            if (HAL_UARTEx_DisableFifoMode(&huart5) != HAL_OK)
             {
               Error_Handler();
             }
