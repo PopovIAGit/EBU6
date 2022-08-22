@@ -65,7 +65,7 @@ UART_HandleTypeDef huart3;
 /* USER CODE BEGIN PV */
 extern float SpeedRef;
 Uns PauseModbus = 0;
-
+ U8 uartdata = 1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,6 +89,7 @@ static void MX_FDCAN2_Init(void);
 /* USER CODE BEGIN PFP */
 uint16_t adc[6];
 
+uint8_t str[20];
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -128,7 +129,7 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_ADC3_Init();
-  MX_RTC_Init();
+//  MX_RTC_Init();
   MX_SPI1_Init();
   MX_SPI6_Init();
   MX_TIM1_Init();
@@ -170,19 +171,28 @@ int main(void)
 
      
       HAL_TIM_Base_Start_IT (&htim2); // Р·Р°РїСѓСЃС‚РёР»Рё СЂС‚РѕСЃ
-      
+   __HAL_UART_ENABLE_IT (&huart5, UART_IT_RXNE);    
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-     
+    
   while (1)
   {
-    Comm_Update(&g_Comm);
+  //  Comm_Update(&g_Comm);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  //     ADT7301_Update(&g_Peref.Temper);// ToDo 
+    ADT7301_Update(&g_Peref.Temper);// ToDo 
+/*все что ниже удалить  peref_10HzCalc 454 строка удалить*/
+    
+    HAL_GPIO_WritePin(RX485DE_BRP_GPIO_Port, RX485DE_BRP_Pin, tmp1);
+ __HAL_UART_ENABLE_IT (&huart5, UART_IT_RXNE);
+ 
+ 
+      if( HAL_UART_Receive_IT (&huart5, str, 1) != HAL_BUSY ) {
+      while( HAL_UART_Transmit_IT(&huart5, str, 1) == HAL_BUSY );
+      }
   }
   /* USER CODE END 3 */
 }
@@ -216,7 +226,7 @@ void SystemClock_Config(void)
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 1;
@@ -879,7 +889,7 @@ static void MX_UART4_Init(void)
 
   /* USER CODE END UART4_Init 1 */
   huart4.Instance = UART4;
-  huart4.Init.BaudRate = 115200;
+  huart4.Init.BaudRate = 19200;
   huart4.Init.WordLength = UART_WORDLENGTH_8B;
   huart4.Init.StopBits = UART_STOPBITS_1;
   huart4.Init.Parity = UART_PARITY_NONE;
@@ -927,7 +937,7 @@ static void MX_UART5_Init(void)
 
   /* USER CODE END UART5_Init 1 */
   huart5.Instance = UART5;
-  huart5.Init.BaudRate = 115200;
+  huart5.Init.BaudRate = 19200;
   huart5.Init.WordLength = UART_WORDLENGTH_8B;
   huart5.Init.StopBits = UART_STOPBITS_1;
   huart5.Init.Parity = UART_PARITY_NONE;

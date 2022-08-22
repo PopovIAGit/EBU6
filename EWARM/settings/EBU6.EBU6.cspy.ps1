@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\common\bin\cspybat" -f "D:\WorkOther\EBU6\EWARM\settings\EBU6.EBU6.general.xcl" --backend -f "D:\WorkOther\EBU6\EWARM\settings\EBU6.EBU6.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\work\ebu6\EBU6\EBU6\EWARM\settings\EBU6.EBU6.general.xcl" --backend -f "C:\work\ebu6\EBU6\EBU6\EWARM\settings\EBU6.EBU6.driver.xcl" 
 }
 else
 {
-& "D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\common\bin\cspybat" -f "D:\WorkOther\EBU6\EWARM\settings\EBU6.EBU6.general.xcl" --debug_file=$debugfile --backend -f "D:\WorkOther\EBU6\EWARM\settings\EBU6.EBU6.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\work\ebu6\EBU6\EBU6\EWARM\settings\EBU6.EBU6.general.xcl" --debug_file=$debugfile --backend -f "C:\work\ebu6\EBU6\EBU6\EWARM\settings\EBU6.EBU6.driver.xcl" 
 }

@@ -28,10 +28,10 @@ void Comm_Update(TComm *p)
                 g_Ram.Comands.RsReset = 0;
         }
 
-	if (PauseModbus == 0)
-	{
+	
+
 		ModBusUpdate(&g_Comm.mbAsu); 			
-	}
+	
           
             /*тут добавлять связь с БРП*/ 
 }

@@ -27,7 +27,7 @@ static Uns BrrValues[7] = SCI_DEFAULT_BAUD_RATES;//SCI_DEFAULT_BRR_VALUES;
 
  void AsuMbSetTr(Byte Lev)  
 {
-   HAL_GPIO_WritePin(RX485DE_ASU_GPIO_Port, RX485DE_ASU_Pin, (GPIO_PinState)Lev);
+ //  HAL_GPIO_WritePin(RX485DE_BRP_GPIO_Port, RX485DE_BRP_Pin, (GPIO_PinState)Lev);
 }
 
 //---------------------------------------------------
