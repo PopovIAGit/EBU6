@@ -69,7 +69,7 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
     PrdElemInit(coreTLocalControl,			&g_Core),
     PrdElemInit(coreTU,			                &g_Core),
     PrdElemInit(Core_ProtectionsEnable,		    &g_Core.Protections),
-      PrdElemInit(Core_Protections50HZUpdate,		&g_Core.Protections),
+    PrdElemInit(Core_Protections50HZUpdate,		&g_Core.Protections),
     PrdElemInit(LogInputCalc,			&g_Peref.BtnClose),	//	3
     PrdElemInit(LogInputCalc,			&g_Peref.BtnStop1),	//	4
     PrdElemInit(LogInputCalc,			&g_Peref.BtnStop2),	//	5

@@ -129,7 +129,7 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_ADC3_Init();
-//  MX_RTC_Init();
+ // MX_RTC_Init();
   MX_SPI1_Init();
   MX_SPI6_Init();
   MX_TIM1_Init();
@@ -179,20 +179,20 @@ int main(void)
     
   while (1)
   {
-  //  Comm_Update(&g_Comm);
+    Comm_Update(&g_Comm);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
     ADT7301_Update(&g_Peref.Temper);// ToDo 
 /*все что ниже удалить  peref_10HzCalc 454 строка удалить*/
     
-    HAL_GPIO_WritePin(RX485DE_BRP_GPIO_Port, RX485DE_BRP_Pin, tmp1);
+  /*  HAL_GPIO_WritePin(RX485DE_BRP_GPIO_Port, RX485DE_BRP_Pin, tmp1);
  __HAL_UART_ENABLE_IT (&huart5, UART_IT_RXNE);
  
  
       if( HAL_UART_Receive_IT (&huart5, str, 1) != HAL_BUSY ) {
       while( HAL_UART_Transmit_IT(&huart5, str, 1) == HAL_BUSY );
-      }
+      }*/
   }
   /* USER CODE END 3 */
 }

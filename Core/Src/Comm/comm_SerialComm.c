@@ -27,18 +27,18 @@ static Uns BrrValues[7] = SCI_DEFAULT_BAUD_RATES;//SCI_DEFAULT_BRR_VALUES;
 
  void AsuMbSetTr(Byte Lev)  
 {
- //  HAL_GPIO_WritePin(RX485DE_BRP_GPIO_Port, RX485DE_BRP_Pin, (GPIO_PinState)Lev);
+   HAL_GPIO_WritePin(RX485DE_BRP_GPIO_Port, RX485DE_BRP_Pin, (GPIO_PinState)Lev);
 }
 
 //---------------------------------------------------
 void InitChanelAsuModbus(TMbHandle hPort)
 {
-	//hPort->Params.ChannelID = ASU_SCI_ID;//
-	hPort->Params.Mode     	= MB_SLAVE;//
-	hPort->Params.Slave    	= g_Ram.UserParam.RsStation;//
-	hPort->Params.BaudRate	= BaudRates[g_Ram.UserParam.RsBaudRate];//
-	hPort->Params.UartBaud 	= BrrValues[g_Ram.UserParam.RsBaudRate];//
-	hPort->Params.Parity   	= g_Ram.UserParam.RsMode;//
+	hPort->Params.ChannelID = ASU_SCI_ID;                   // для разделения на разные каналы
+	hPort->Params.Mode     	= MB_SLAVE;                     // мастер слэйв
+	hPort->Params.Slave    	= g_Ram.UserParam.RsStation;    // параметр настройки адреса 
+	hPort->Params.BaudRate	= BaudRates[g_Ram.UserParam.RsBaudRate];// скорости
+	hPort->Params.UartBaud 	= BrrValues[g_Ram.UserParam.RsBaudRate];// так же скорость, так как в стм не надо пересчитывать баудрэйт
+	hPort->Params.Parity   	= g_Ram.UserParam.RsMode;// паритет
 
 /*	hPort->Params.RetryCount  = 0;
 	hPort->Params.Scale       = 2;//MB_SCALE;
@@ -57,7 +57,7 @@ void InitChanelAsuModbus(TMbHandle hPort)
 	hPort->Params.RxDelay     = 10;
 	hPort->Params.TxDelay     = 10;
 	hPort->Params.AckTimeout  = 1;//1000;
-	hPort->Params.TrEnable    = &AsuMbSetTr; // СѓРїСЂР°РІР»РµРЅРёРµ РЅР°РїСЂР°РІР»РµРЅРёРµРј
+	hPort->Params.TrEnable    = &AsuMbSetTr; // функция управления направлением переачи
 	hPort->Frame.TimerPre.Timeout = 1;
 
 	hPort->Params.HardWareType	= 0;

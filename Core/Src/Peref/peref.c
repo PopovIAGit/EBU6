@@ -457,12 +457,9 @@ void peref_50HzCalc(TPeref *p)
 
 
 }
-uint8_t fdata = 12;
+
 void peref_10HzCalc(TPeref *p)//
-{
- 
-   HAL_UART_Transmit(&huart5, &fdata, 1, 10000);
-     
+{  
    if (g_Core.Protections.FaultDelay > 0) return; 
   // температура двигателя---------------------------------------------------------------   
    p->TEMPERfltr.Input = (float)p->adcData1[4];

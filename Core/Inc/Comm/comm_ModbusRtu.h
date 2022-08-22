@@ -24,9 +24,9 @@ extern "C" {
 #define SCIC	2
 
 
-#define BKP_SCI_ID			SCIA
+
 #define ASU_SCI_ID			SCIB
-#define SHN_SCI_ID			SCIC
+
 
 #define SCI_PARITY_ERROR	0x04
 #define SCI_OVERRUN_ERROR	0x08

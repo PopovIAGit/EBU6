@@ -952,9 +952,7 @@ static void ResetCommumication(TMbPort *hPort, Bool ClearEventLog)
 	TMbParams *Params = &hPort->Params;
 	TMbFrame *Frame = &hPort->Frame;
 	Uns Tout1_5, Tout3_5, Scale = (Uns)Params->Scale;
-	
-	//SCI_init(Params->ChannelID, Params->UartBaud, Params->Parity, 8);
-          
+	         
            HAL_UART_DeInit(&huart5);
            huart5.Instance = UART5;
             
@@ -968,9 +966,6 @@ static void ResetCommumication(TMbPort *hPort, Bool ClearEventLog)
              case pmOdd:  huart5.Init.Parity = UART_PARITY_ODD;   break;
              case pmEven: huart5.Init.Parity = UART_PARITY_EVEN;  break;
            }
-           
-         //  huart4.Init.Parity = UART_PARITY_NONE;
-           
              
            huart5.Init.Mode = UART_MODE_TX_RX;
            huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
