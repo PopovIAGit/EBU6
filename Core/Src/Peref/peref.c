@@ -126,6 +126,16 @@ TDotTemper dotsTemper[8] = {	-40,   465,		//  525		0
                         120,   854};	       //  2535	7
 
 
+// Точки 		  темпер.  АЦП.        сопр.    №
+TDotTemper dotsTemperModule[8] = {	-40,   465,		//  525		0
+                                          0,     585,		//  577		1
+                                          25,    642,		//  1379	2
+                                          50,    687,		//  1569	3
+                                          80,    731,		//  1670	4
+                                          100,   773,		//  1993	5
+                                          110,   834,		//  2471	6
+                                          120,   854};	       //  2535	7
+
 
 char Icons[NUM_ICONS][7] =	{
 					0x1F,0x11,0x1F,0x04,0x06,0x04,0x07,
@@ -134,6 +144,48 @@ char Icons[NUM_ICONS][7] =	{
 					0x0E,0x11,0x11,0x11,0x1F,0x1B,0x1F,
 					0x0E,0x11,0x10,0x10,0x1F,0x1B,0x1F,
 				};
+
+void SPIReinit(void)
+{
+    if ((g_Ram.UserParam.DuSource == mdsDigital && hspi6.Init.CLKPhase != SPI_PHASE_1EDGE )||(g_Ram.UserParam.DuSource == mdsDac && hspi6.Init.CLKPhase != SPI_PHASE_2EDGE ))
+    {
+          HAL_SPI_DeInit(&hspi6);
+          
+          hspi6.Instance = SPI6;
+          hspi6.Init.Mode = SPI_MODE_MASTER;
+          hspi6.Init.Direction = SPI_DIRECTION_2LINES;
+          hspi6.Init.DataSize = SPI_DATASIZE_8BIT;
+          hspi6.Init.CLKPolarity = SPI_POLARITY_LOW;
+           if (g_Ram.UserParam.DuSource == mdsDigital)
+           {
+            hspi6.Init.CLKPhase = SPI_PHASE_2EDGE;
+           }
+           else if (g_Ram.UserParam.DuSource == mdsDac) 
+           {
+            hspi6.Init.CLKPhase = SPI_PHASE_2EDGE;
+           }
+          hspi6.Init.NSS = SPI_NSS_SOFT;
+          hspi6.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+          hspi6.Init.FirstBit = SPI_FIRSTBIT_MSB;
+          hspi6.Init.TIMode = SPI_TIMODE_DISABLE;
+          hspi6.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+          hspi6.Init.CRCPolynomial = 0x0;
+          hspi6.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+          hspi6.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
+          hspi6.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
+          hspi6.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
+          hspi6.Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
+          hspi6.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
+          hspi6.Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
+          hspi6.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
+          hspi6.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
+          hspi6.Init.IOSwap = SPI_IO_SWAP_DISABLE;
+          if (HAL_SPI_Init(&hspi6) != HAL_OK)
+          {
+            Error_Handler();
+          }    
+    }
+}
 
 void peref_Init(void)
 {	 
@@ -292,7 +344,8 @@ void peref_Init(void)
 
       peref_ApFilter1Init(&g_Peref.TEMPERfltr, PRD_10HZ, g_Ram.FactoryParam.RmsTf); 
       TempObserverInit(&g_Peref.temperDrive);
-
+      TempObserverInit(&g_Peref.temperModule);  
+      
 }
 
 void peref_ADCtoPRCObserverInit(TPeref *p)
@@ -461,13 +514,19 @@ void peref_50HzCalc(TPeref *p)
 void peref_10HzCalc(TPeref *p)//
 {  
    if (g_Core.Protections.FaultDelay > 0) return; 
+     
+   SPIReinit();
   // температура двигателя---------------------------------------------------------------   
    p->TEMPERfltr.Input = (float)p->adcData1[4];
    peref_ApFilter1Calc(&p->ADCToProcfltr);      
    p->temperDrive.inputR = (Uns)p->TEMPERfltr.Output;
    TempObserverUpdate(&p->temperDrive);
    g_Ram.Status.DriveTemper = p->temperDrive.outputT;  
-         
+    
+   // температура модуля ---------------------------------------------------------------------   
+   p->temperModule.inputR =  (float)p->adcData1[5];    
+   TempObserverUpdate(&p->temperModule);
+   g_Ram.Status.ModuleTempers = p->temperModule.outputT;  
   // LED control--------------------------------------------------------------------------
   if (g_Ram.TestParam.Mode == 1)
   {

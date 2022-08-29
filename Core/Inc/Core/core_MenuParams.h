@@ -66,11 +66,11 @@ const struct MENU_PARAM params[] = {
 		"A20.рейсыхи осрэ", "на  ",-3000U,   3000,      0, M_SHOW|M_SIGN|M_RMAX(3)|M_PREC(1),		                //20 20
 		"A21.явер жхйкнб ", "    ", 	0,  65530,  	0, M_SHOW|M_RMAX(4),						//21 21
 		"A22.релоепюрспю ", "    ", -100U,    100,      0, M_SHOW|M_SIGN|M_RMAX(2),					//22 22
-		"A23.бепяхъ он   ", "    ", 	0,  65530,  	0, M_SHOW|M_RMAX(3)|M_PREC(3),				        //24 24
-		"A24.мюоп VDC    ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//28 28
-		"A25.релоеп дбхц ", "    ", -999U,    999,      0, M_SHOW|M_SIGN|M_RMAX(2),						//28 28
-                "A26.RESERV      ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//28 28
-		"A27.RESERV      ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//28 28
+		"A23.бепяхъ он   ", "    ", 	0,  65530,  	0, M_SHOW|M_RMAX(3)|M_PREC(3),				        //23 23
+		"A24.мюоп VDC    ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//24 24
+		"A25.релоеп дбхц ", "    ", -999U,    999,      0, M_SHOW|M_SIGN|M_RMAX(2),					//25 25
+                "A25.релоеп лндск", "    ", -999U,    999,      0, M_SHOW|M_SIGN|M_RMAX(2),					//26 26
+		"A27.RESERV      ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//27 27
 		"A28.RESERV      ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//28 28
 		"A29.RESERV      ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//29 29
 		"A30.RESERV      ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//30 30
@@ -102,7 +102,7 @@ const struct MENU_PARAM params[] = {
 		"   B15.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),					        //55
 		"   B16.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//56
 		"B17.MU/DU       ", "    ", 	0,      3,  	1, M_LIST|M_SADR(135),						//57
-		"B18.DU SOURSE   ", "    ", 	0,      3,  	0, M_EDIT|M_SADR(139),						//58
+		"B18.DU SOURSE   ", "    ", 	1,      3,  	1, M_EDIT|M_SADR(139),						//58
 		"B19.BLOK ZALIP  ", "    ", 	0,      1,  	0, M_EDIT|M_RMAX(4),						//59
 		"B20.COMMAND TIME", "S   ", 	1,    100,  	1, M_EDIT|M_RMAX(2)|M_PREC(1),				        //60
 		"B21.IN TYP SIG  ", "    ", 	0,      1,  	0, M_EDIT|M_RMAX(4),						//61

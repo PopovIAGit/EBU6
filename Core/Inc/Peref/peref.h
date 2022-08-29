@@ -214,6 +214,8 @@ typedef struct {
         //-----Датчик температуры двигателя-----------  
          TTempObserver          temperDrive;
          APFILTER1  		TEMPERfltr;
+         //  Датчик температуры модуля----------------
+         TTempObserver          temperModule; 
         // ADC ADS1118------------------------------------
         TADS1118                ADC_Out_Config;
         uint16_t                ADC_Out_data;
@@ -228,9 +230,9 @@ typedef struct {
         //-----------------------------------------------------------------
          APFILTER1 		ADCToProcfltr;			// Фильтр угола фи
           
-         TLineObserver          ADCtoProc;
+         TLineObserver          ADCtoProc;                      // ацп в проценты положения
          //TDot                   dotsADCtoProc[DOTS];
-         TLineObserver          ProctoDAC;
+         TLineObserver          ProctoDAC;                      // проценты положения в ацп
          //TDot                   dotsProctoDAC[DOTS];
 
          
@@ -288,5 +290,8 @@ void TempObserverUpdate (TTempObserver *);
 
 // Работа с Eeprom
 void memTest(void);
+
+// переключение настройки СПИАЙ
+void SPIReinit(void);
 
 #endif
