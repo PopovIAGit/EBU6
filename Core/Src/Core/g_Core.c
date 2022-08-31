@@ -416,7 +416,7 @@ static void DynBreakMode(void)
 
           if (SpeedEnable == 2 && SpeedRef != 0)
           { 
-         //   SpeedRef = AngleInterp(speedstart, SpeedMax, TimeSpeedStop);
+            SpeedRef = AngleInterp(speedstart, SpeedMax, TimeSpeedStop);
           }
           else if (SpeedEnable == 2 && SpeedRef == 0)
           {

@@ -158,7 +158,7 @@ void SPIReinit(void)
           hspi6.Init.CLKPolarity = SPI_POLARITY_LOW;
            if (g_Ram.UserParam.DuSource == mdsDigital)
            {
-            hspi6.Init.CLKPhase = SPI_PHASE_2EDGE;
+            hspi6.Init.CLKPhase = SPI_PHASE_1EDGE;
            }
            else if (g_Ram.UserParam.DuSource == mdsDac) 
            {

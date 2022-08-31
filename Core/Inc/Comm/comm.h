@@ -7,9 +7,9 @@
 
 #include "std.h"
 //#include "main.h"
-#include "comm_ModbusRtu.h"
-#include "comm_SerialComm.h"
 
+
+#include "drv_modbus.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,7 +32,9 @@ typedef struct {
 	// ---
 	Uns			outputCmdSrc;	// 
 	// ---
-	TMbPort  		mbAsu;		// modbus ASU
+	//TMbPort  		mbAsu;		// modbus ASU
+        
+        TMbPort                 Mb;
 } TComm;
 //--------------------------------------------------------
 

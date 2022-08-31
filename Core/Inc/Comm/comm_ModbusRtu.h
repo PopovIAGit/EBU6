@@ -5,9 +5,8 @@
 #ifndef MODBUS_RTU_
 #define MODBUS_RTU_
 
-
-#include "comm_ModBusTimers.h"
 #include "g_Structs.h"
+#include "stdint.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -207,8 +206,8 @@ typedef struct _TMbFrame {
 	Uns        RxLength;       // Длина принятого кадра
 	Uns        TxLength;       // Длина передаваемого кадра
 	Uns 	   AddCount;
-	Byte      *Data;           // Указатель в буфере данных кадара
-	Byte       Buf[256];       // Буфер данных кадра
+	uint8_t      *Data;           // Указатель в буфере данных кадара
+	uint8_t       Buf[256];       // Буфер данных кадра
 } TMbFrame;
 
 typedef union {

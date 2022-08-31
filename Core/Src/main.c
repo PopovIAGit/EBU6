@@ -166,12 +166,14 @@ int main(void)
       Comm_Init(&g_Comm);
       peref_Init();
       Stat_Init(&g_Stat);
-   
+      SerialCommInit();
+    SerialCommRefresh();
       HAL_TIM_Base_Start(&htim1);
 
      
       HAL_TIM_Base_Start_IT (&htim2); // Р·Р°РїСѓСЃС‚РёР»Рё СЂС‚РѕСЃ
-   __HAL_UART_ENABLE_IT (&huart5, UART_IT_RXNE);    
+   __HAL_UART_ENABLE_IT (&huart5, UART_IT_RXNE);   
+   __HAL_UART_DISABLE_IT(&huart5, UART_IT_TXE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -183,7 +185,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    ADT7301_Update(&g_Peref.Temper);// ToDo 
+   // ADT7301_Update(&g_Peref.Temper);// ToDo 
 /*все что ниже удалить  peref_10HzCalc 454 строка удалить*/
     
   /*  HAL_GPIO_WritePin(RX485DE_BRP_GPIO_Port, RX485DE_BRP_Pin, tmp1);

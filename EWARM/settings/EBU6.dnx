@@ -12,22 +12,22 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <PlDriver>
+        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ST\STM32H743II.ddf</MemConfigValue>
         <FirstRun>0</FirstRun>
-        <MemConfigValue>D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\arm\CONFIG\debugger\ST\STM32H743II.ddf</MemConfigValue>
     </PlDriver>
     <ArmDriver>
         <EnableCache>0</EnableCache>
     </ArmDriver>
     <StLinkDriver>
-        <stlinkserialNo>066BFF535550755187043319</stlinkserialNo>
-        <stlinkfoundProbes />
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
         <CStepIntDis>_ 0</CStepIntDis>
         <stlinkResetStyle>0</stlinkResetStyle>
         <stlinkResetStrategy>2</stlinkResetStrategy>
+        <stlinkserialNo>0672FF535752877167083549</stlinkserialNo>
+        <stlinkfoundProbes />
     </StLinkDriver>
     <DebugChecksum>
-        <Checksum>1575966201</Checksum>
+        <Checksum>1938696194</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -71,13 +71,23 @@
         <Fmt5>TUserParam-MuDuSetup	3	0</Fmt5>
         <Fmt6>TUserParam-RsBaudRate	3	0</Fmt6>
         <Fmt7>TUserParam-RsMode	3	0</Fmt7>
+        <Fmt8>USART_TypeDef-RDR	1	0</Fmt8>
     </struct_types>
     <array_types>
-        <Fmt0>uint8_t[2]	1	0</Fmt0>
-        <Fmt1>uint8_t[3]	1	0</Fmt1>
+        <Fmt0>Byte[256]	5	0</Fmt0>
+        <Fmt1>Uint16[109]	4	0</Fmt1>
+        <Fmt2>Uns[10]	4	0</Fmt2>
+        <Fmt3>Uns[7]	1	0</Fmt3>
+        <Fmt4>uint8_t[2]	1	0</Fmt4>
+        <Fmt5>uint8_t[3]	1	0</Fmt5>
     </array_types>
     <watch_formats>
-        <Fmt0>{W}42:g_Peref.BtnStatus	1	0</Fmt0>
+        <Fmt0>{W}42:&amp;g_Comm.mbAsu.Frame.Buf	3	0</Fmt0>
+        <Fmt1>{W}42:&amp;g_Comm.mbAsu.Frame.Data	3	0</Fmt1>
+        <Fmt2>{W}42:addrbuf	3	0</Fmt2>
+        <Fmt3>{W}42:addrdata	3	0</Fmt3>
+        <Fmt4>{W}42:cntaddr	3	0</Fmt4>
+        <Fmt5>{W}42:g_Peref.BtnStatus	1	0</Fmt5>
     </watch_formats>
     <Trace2>
         <Enabled>0</Enabled>
@@ -128,13 +138,9 @@
         <mode>0</mode>
     </DisassembleMode>
     <Breakpoints2>
-        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Core\Src\main.c}.711.3" 0 0 1 "" 0 "" 0</Bp0>
+        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Core\Src\Comm\drv_modbus.c}.177.54" 0 0 1 "" 0 "" 0</Bp0>
         <Count>1</Count>
     </Breakpoints2>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -157,4 +163,8 @@
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
 </settings>

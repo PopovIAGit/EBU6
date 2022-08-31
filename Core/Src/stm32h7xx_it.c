@@ -318,15 +318,15 @@ void UART4_IRQHandler(void)
 void UART5_IRQHandler(void)
 {
   /* USER CODE BEGIN UART5_IRQn 0 */
-  /*if (__HAL_UART_GET_IT(&huart5, UART_IT_RXNE))
+  if (__HAL_UART_GET_IT(&huart5, UART_IT_RXNE))
   {
-      ModBusRxIsr(&g_Comm.mbAsu);
+      SerialCommRxHandler(&g_Comm.Mb);
   }
   
-  if (__HAL_UART_GET_IT(&huart4, UART_IT_TXE))
+  if (!__HAL_UART_GET_IT(&huart5, UART_IT_TXE))
   {
-      ModBusTxIsr(&g_Comm.mbAsu);
-  }*/
+      SerialCommTxHandler(&g_Comm.Mb);
+  }
   
   /* USER CODE END UART5_IRQn 0 */
   HAL_UART_IRQHandler(&huart5);

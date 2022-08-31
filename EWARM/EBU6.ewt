@@ -1438,10 +1438,7 @@
                         <name>$PROJ_DIR$\..\Core\Src\Comm\comm.c</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\Core\Src\Comm\comm_ModbusRtu.c</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\Core\Src\Comm\comm_SerialComm.c</name>
+                        <name>$PROJ_DIR$\..\Core\Src\Comm\drv_modbus.c</name>
                     </file>
                 </group>
                 <group>
@@ -1531,28 +1528,13 @@
                         <name>$PROJ_DIR$\..\Core\Inc\Comm\comm.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusConfig.h</name>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\drv_modbus.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusCrc.h</name>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\modbus_rtu.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusEvent.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusFrame.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusInterrupts.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModbusRtu.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_ModBusTimers.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\Core\Inc\Comm\comm_SerialComm.h</name>
+                        <name>$PROJ_DIR$\..\Core\Inc\Comm\responses.h</name>
                     </file>
                 </group>
                 <group>

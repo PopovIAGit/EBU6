@@ -36,7 +36,9 @@ static Bool OpenFlags[4] = {false, false, false, false};
  void NewFrameEvent(TMbPort *hPort)
 {
 	hPort->Frame.NewMessage = true;
-	hPort->Frame.RxLength   = hPort->Frame.Data - hPort->Frame.Buf;
+	Uns tmp = hPort->Frame.Data - hPort->Frame.Buf;
+        hPort->Frame.RxLength   = hPort->Frame.AddCount;
+        hPort->Frame.AddCount = 0;
 	hPort->Frame.Data       = hPort->Frame.Buf;
 	if (hPort->Params.ChannelID == SCIB)
 	{
@@ -902,27 +904,38 @@ void GenerateCrcTable(void)
 	}
 	return TRUE;
 }
-
+uint8_t DataUns[50];
+uint16_t CntRx = 0;
+uint8_t cntaddr;
 void ModBusRxIsr(TMbPort *hPort)
 {
 	TMbFrame *Frame = &hPort->Frame;
-	Byte Data = 0;
+	uint8_t Data = 0;
 
 
 	//Data = SCI_recieve(hPort->Params.ChannelID);
-        //HAL_UART_Receive_IT(&huart4, &Data, 1);
-       Data =  UART5->RDR & 0xFF;  
-		
-	if ((Frame->Data - Frame->Buf) < 256)
+     //   HAL_UART_Receive_IT(&huart5, &Data, 1);
+        Data =  UART5->RDR & 0xFF;  
+	
+            cntaddr  = Frame->Data - Frame->Buf;  
+	/*if ((Frame->Data - Frame->Buf) < 256)
 	{
-		
-			*Frame->Data++ = Data;
-
+                *Frame->Data++ = Data;
+                DataUns[hPort->Stat.RxBytesCount] =  Data;
 		StartTimer(&Frame->Timer1_5);
 		StartTimer(&Frame->Timer3_5);
-	}
+	}*/
+          
+        if (Frame->AddCount < 256)
+	{
+		Frame->Buf[Frame->AddCount++] = Data;
+		StartTimer(&Frame->Timer1_5);
+		StartTimer(&Frame->Timer3_5);
+	}    
 
 	hPort->Stat.RxBytesCount++;
+          
+     
 }
 
 //-------------------------------------------------------------------------------
@@ -954,6 +967,7 @@ static void ResetCommumication(TMbPort *hPort, Bool ClearEventLog)
 	Uns Tout1_5, Tout3_5, Scale = (Uns)Params->Scale;
 	         
            HAL_UART_DeInit(&huart5);
+             
            huart5.Instance = UART5;
             
            huart5.Init.BaudRate = Params->UartBaud * 100;

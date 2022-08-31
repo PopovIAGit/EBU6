@@ -102,8 +102,9 @@ const struct MENU_PARAM params[] = {
 		"   B15.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),					        //55
 		"   B16.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//56
 		"B17.MU/DU       ", "    ", 	0,      3,  	1, M_LIST|M_SADR(135),						//57
-		"B18.DU SOURSE   ", "    ", 	1,      3,  	1, M_EDIT|M_SADR(139),						//58
-		"B19.BLOK ZALIP  ", "    ", 	0,      1,  	0, M_EDIT|M_RMAX(4),						//59
+		"   B16.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),	
+                "B18.DU SOURSE   ", "    ", 	1,      3,  	2, M_LIST|M_SADR(139),						//58
+                "B19.BLOK ZALIP  ", "    ", 	0,      1,  	0, M_EDIT|M_RMAX(4),						//59
 		"B20.COMMAND TIME", "S   ", 	1,    100,  	1, M_EDIT|M_RMAX(2)|M_PREC(1),				        //60
 		"B21.IN TYP SIG  ", "    ", 	0,      1,  	0, M_EDIT|M_RMAX(4),						//61
 		"B22.IN MASK     ", "    ", 	0,     31,  	0, M_BINE|M_RMAX(4),						//62
@@ -132,8 +133,7 @@ const struct MENU_PARAM params[] = {
 		"   B45.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//85
 		"   B46.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//86
 		"   B47.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//87
-		"   B48.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//88
-		"   B49.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//89
+		"   B48.RESERV   ", "    ", 	0,  65535,  	0, M_SHOW|M_RMAX(4),						//88						//89
 
 		//------------------------------------------------------------------
 		" C0.PASSWORD    ", "    ",     0,  65530,      0, M_CODE,							//90

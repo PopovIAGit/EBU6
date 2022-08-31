@@ -69,10 +69,11 @@ typedef struct _TUserParam
 	Uns            	MainCode;        	// B12. 52 Код доступа
 	TTimeVar 	DevTime;		// B13. 53 Время
 	TDateVar 	DevDate;		// B14. 54 Дата
-	Uns		reserv55;		// B15. 55 Корректеровка времени
+	Uns		reserv55;		// B15. 55 reserv
 	Uns		reserv56;		// B16. 56 Резерв
 	TMuDuSetup  	MuDuSetup;              // B17. 57 Настройка режима МУ/ДУ
-	TDuSource	DuSource;		// B18. 58 Источник команд ДУ
+	Uns		reserv57;		// B16. 56 Резерв
+        TDuSource	DuSource;		// B18. 58 Источник команд ДУ
 	Uns         	TuLockSeal;             // B19. 59 Блокировка залипани
 	Uns         	TuTime;                 // B20. 60 Время команды
 	TInputType 	InputType;		// B21. 61 Тип входного сигнала 24/220
@@ -82,7 +83,6 @@ typedef struct _TUserParam
 	Uns             RsStation;              // B25. 65 Адрес станции
 	TParityMode	RsMode;			// B26. 66 Режим связи
 	Uns		MuffTimer;		// B27. 67
-        Uns		MuffTimer2;		// B27. 67
 	Uns		TimeSpeedStart;		// B28. 68 
 	Int		SpeedStart;		// B29. 69 
         Uns		TimeSpeedStop;		// B30. 70 
@@ -483,6 +483,9 @@ typedef struct _TTestRam
 #define REG_LOG_ADDR			GetAdr(HideParam.LogEvAddr)
 #define REG_LOG_TIME			GetAdr(Log.LogTime)
 #define REG_LOG_DATE			GetAdr(Log.LogDate)
+
+#define REG_TASK_CLOSE			GetAdr(Comands.TaskClose)
+#define REG_RS_RESET			GetAdr(Comands.RsReset)
 
 #define REG_CODE			GetAdr(UserParam.MainCode)
 #define REG_FCODE			GetAdr(FactoryParam.FactCode)
