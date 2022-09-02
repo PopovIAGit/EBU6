@@ -25,7 +25,7 @@ Uns ShC_Level = 32767;                  // shc level
 Uns ModuleTemper = 0;
 Uns IDC = 0;
 Uns ModFault = 1; // 1 norm, 0 - fault
-
+Uns GoToLocalFLag = 0;
 float speedstart = 0;   // speed start
 float SpeedMax = 0;     // to speed
 Uns SpeedTime = 0;      // speed time
@@ -255,10 +255,12 @@ void StopPowerControl(void)
         }
         else  
         {
-            g_Core.MotorControl.WorkMode = wmDynBreak; 
+          if (SpeedRef != 0){
+              g_Core.MotorControl.WorkMode = wmDynBreak; 
               TimeSpeedStop = 1;
+          }else g_Core.MotorControl.WorkMode = wmStop;
         }
-        
+        g_Core.VlvDrvCtrl.StartDelay = (Uns)START_DELAY_TIME;
 }        
 
 // �������� ��� �����
@@ -327,7 +329,7 @@ static void StopMode(void)
            SpeedMax = 0;
        //    SpeedRef = 0.0;
            PWM_keys_disable();
-
+          // g_Core.VlvDrvCtrl.StartDelay = (Uns)START_DELAY_TIME;
      
   
 }
@@ -413,7 +415,7 @@ static void DynBreakMode(void)
         g_Core.DcBrake.Flag = false;
     }
  */
-
+          g_Core.VlvDrvCtrl.StartDelay = 0xFFFF;
           if (SpeedEnable == 2 && SpeedRef != 0)
           { 
             SpeedRef = AngleInterp(speedstart, SpeedMax, TimeSpeedStop);
@@ -421,6 +423,7 @@ static void DynBreakMode(void)
           else if (SpeedEnable == 2 && SpeedRef == 0)
           {
             g_Core.MotorControl.WorkMode = wmStop;
+            g_Core.VlvDrvCtrl.StartDelay = (Uns)START_DELAY_TIME;
           }
   
 }
@@ -632,21 +635,91 @@ void core10HZupdate(void)
       HAL_HRTIM_SimplePWMStart(&hhrtim, HRTIM_TIMERINDEX_TIMER_D, HRTIM_OUTPUT_TD1);
     }
         
-    
-
+    if (g_Ram.UserParam.DuSource == mdsDigital) g_Peref.DAC_on_off = 0x02;
+    else if (g_Ram.UserParam.DuSource == mdsDac)
+    {
+      if (g_Ram.Status.CalibState == csCalib)
+      g_Peref.DAC_on_off = 0;
+      else g_Peref.DAC_on_off = 0x2;
+    }
+    uint16_t addr = 0;
+    Uns data = 0;
+   if (GoToLocalFLag)
+   {
+        GoToLocalFLag = 0;
+        if (g_Ram.UserParam.MuDuSetup != mdMuOnly && IsMemParReady())
+        {
+                g_Ram.UserParam.MuDuSetup = mdMuOnly;
+                data = g_Ram.UserParam.MuDuSetup;
+                addr = GetAdr(UserParam.MuDuSetup);
+               
+                ReadWriteEeprom(&Eeprom1,F_WRITE,addr,&data,1);
+        }
+   
+   }
 }
 
 void coreTU(TCore *p)
 {
-   if (g_Ram.UserParam.InputType == it24)
-  {
-    g_Ram.HideParam.TuState        =  g_Peref.TU_data24 ^ g_Ram.UserParam.TuInvert.all;
-    g_Ram.Status.StateTu.all       =  g_Peref.TU_data24;
+  static Byte clrReset = 0;
+  
+  if (g_Ram.UserParam.DuSource == mdsDigital){
+    
+   
+    
+    if (g_Ram.UserParam.InputType == it24)
+    {
+      g_Ram.HideParam.TuState        =  g_Peref.TU_data24 ^ g_Ram.UserParam.TuInvert.all;
+      g_Ram.Status.StateTu.all       =  g_Peref.TU_data24;
+    }
+    else if (g_Ram.UserParam.InputType == it220)
+    {
+          g_Ram.HideParam.TuState    = g_Peref.TU_data220  ^ g_Ram.UserParam.TuInvert.all;
+          g_Ram.Status.StateTu.all   = g_Peref.TU_data220;
+    }
+    
+    switch (g_Ram.UserParam.MuDuSetup)
+    {
+                case mdOff:
+		case mdMuOnly:
+		case mdDuOnly:
+				/*GrA->Faults.Proc.bit.MuDuDef = 0;
+				MuDuDefTimer = 0;
+				mudustatedefect = 0;
+				mudustatefault = 0;*/
+				break;
+                case mdSelect:{
+                              if (g_Ram.Status.Status.bit.Stop)
+                              {
+                                   if (g_Ram.Status.StateTu.bit.DU ^ g_Ram.UserParam.TuInvert.bit.DU)
+                                   {
+                                        p->VlvDrvCtrl.MuDuInput = 0;
+                                   }
+                                   else 
+                                   {
+                                        p->VlvDrvCtrl.MuDuInput = 1;
+                                   }
+                              }
+    
+                  }
+                  break;
+    }
+    
+    if (g_Ram.Status.StateTu.bit.ResetAlarm ^ g_Ram.UserParam.TuInvert.bit.ResetAlarm)
+    {
+        
+        if (clrReset==0)g_Ram.Comands.PrtReset = 1;
+        clrReset = 1;
+    }
+    else 
+    {
+      clrReset = 0;
+    }
   }
-  else if (g_Ram.UserParam.InputType == it220)
+  else 
   {
-        g_Ram.HideParam.TuState = g_Peref.TU_data220  ^ g_Ram.UserParam.TuInvert.all;
-        g_Ram.Status.StateTu.all       =  g_Peref.TU_data220;
+    g_Ram.HideParam.TuState = 0;
+    g_Ram.Status.StateTu.all = 0;
   }
 }
 
@@ -731,6 +804,7 @@ void coreTLocalControl(TCore *p)
                           if (p->Status.bit.Stop)
                           {
                            menu.Key = KEY_ENTER;
+                           readyForNewCmd = false;
                           }
                       }       
                        break; 
@@ -753,7 +827,12 @@ void coreTLocalControl(TCore *p)
                           speedstart = SpeedRef;}
                           if (p->Status.bit.MuDu || g_Ram.UserParam.MuDuSetup == mdOff)*/
                          // Mcu.Mpu.BtnKey = KEY_STOP;
-                          g_Ram.HideParam.CmdButton =KEY_STOP;
+                          
+                          
+                      GoToLocalFLag = 1;
+                      g_Ram.HideParam.CmdButton =KEY_STOP;
+                          
+                          
                 break;
                 
                 case BTN_STOP2:
@@ -765,6 +844,7 @@ void coreTLocalControl(TCore *p)
                           if (p->Status.bit.MuDu || g_Ram.UserParam.MuDuSetup == mdOff)*/
                          // Mcu.Mpu.BtnKey = KEY_STOP;
                             g_Ram.HideParam.CmdButton =KEY_STOP;
+                            GoToLocalFLag = 1;
                 break;
               }
 
@@ -788,7 +868,8 @@ float data2 = 0;
 float AngleInterp(float StartValue, float EndValue, Uns Time)
 {
  
-   if (EndValue > 0){
+   if (EndValue > 0)
+   {
 	if (TimerInterp == 0) 
           OutputQ15 = StartValue;
 	//else OutputQ15 = OutputQ15 - _IQ15div(((LgInt)(StartValue - EndValue) << 15), _IQ15mpy((LgInt)Time * 3277, _IQ15(200.0)));	// При переносе функции из другого проекта, будьте внимательными!!

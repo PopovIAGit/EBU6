@@ -51,7 +51,7 @@ void Core_ValveDriveInit(TCoreVlvDrvCtrl *p)
         p->DacControl.CancelFlag        = false;
 	p->MuDuInput			= 0;
 	p->ActiveControls		= 0;
-	p->StartDelay			= 0;
+	p->StartDelay			= 0;	// Ограничение времени паузы между остановом и след. запуском;
 	p->IgnorComFlag			= 0;
 	p->StartControl			= &StartPowerControl;
 	p->StopControl			= &StopPowerControl;
@@ -144,7 +144,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 			if (p->Tu.LocalFlag) p->ActiveControls |= CMD_SRC_DIGITAL;
 		}
 
-		if (Flag || p->Status->bit.MuDu)
+		if (Flag || !p->Status->bit.MuDu)
 		{
 			DigState = p->Tu.LocalFlag ? 0 : CMD_SRC_DIGITAL;
 			switch(*p->DuSource)
@@ -164,8 +164,8 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
                         Uns Key = 0;
 			Uns  Active = 0;
 
-		p->Mpu.Enable = p->Status->bit.MuDu ;
-
+		//p->Mpu.Enable = p->Status->bit.MuDu ;
+                  p->Mpu.Enable = 1;
 		if(!p->Mpu.Enable) return;				// выключено выходим
 
 		if (*p->Mpu.BtnKey)						// Пришла команда с ручек
@@ -201,7 +201,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 
 	if (!(p->ActiveControls & CMD_SRC_DIGITAL))
 	{
-		*p->Tu.State &= ~(TU_STOP_OPEN|TU_STOP_CLOSE|TU_CLOSE|TU_OPEN);
+		*p->Tu.State &= ~(TU_STOP|TU_CLOSE|TU_OPEN);
 		p->Tu.Ready = True;
 		return;
 	}
@@ -218,7 +218,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 	}
 
 
-	if (*p->Tu.State & (TU_STOP_OPEN | TU_STOP_CLOSE)) TuControl = vcwStop;
+	if (*p->Tu.State & (TU_STOP)) TuControl = vcwStop;
 
 
 	if (TuControl != vcwNone)
@@ -226,7 +226,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 		*p->ControlWord = TuControl;
 		p->EvLog.Source = CMD_SRC_DIGITAL;
 	}
-	*p->Tu.State &= ~(TU_STOP_OPEN|TU_STOP_CLOSE|TU_CLOSE|TU_OPEN);
+	*p->Tu.State &= ~(TU_STOP|TU_CLOSE|TU_OPEN);
 }
 
  void UnitControl(TCoreVlvDrvCtrl *p)

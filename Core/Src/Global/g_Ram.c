@@ -29,16 +29,23 @@ void g_Ram_Update(TRam *p)
      p->Status.Temper = g_Peref.BlockTemper;
     //------ Core -> RAM ------------------------------------
      p->Status.Status 		= g_Core.Status;
-    p->Status.StateTs.all       =  p->HideParam.HideStateTs.all;
+    
     p->Status.Faults.Net.all    = (g_Core.Protections.outFaults.Net.all  | g_Core.Protections.outDefects.Net.all);
     p->Status.Faults.Load.all   = (g_Core.Protections.outFaults.Load.all | g_Core.Protections.outDefects.Load.all);
     p->Status.Faults.Proc.all   = (g_Core.Protections.outFaults.Proc.all | g_Core.Protections.outDefects.Proc.all);
     p->Status.Faults.Dev.all    = (g_Core.Protections.outFaults.Dev.all  | g_Core.Protections.outDefects.Dev.all);
     
+      if (g_Ram.Status.Status.bit.Stop)
+      {
+        p->Status.Iu = 0;
+          p->Status.Iv = 0;
+            p->Status.Iw = 0;
+      }
+      else {
     p->Status.Iu = g_Peref.Ia.Output*10;
     p->Status.Iv = g_Peref.Ib.Output*10;
     p->Status.Iw = g_Peref.Ic.Output*10;
-      
+      }
     g_Ram.Status.Position = g_Ram.HideParam.Position;
     
       
@@ -78,9 +85,12 @@ void RefreshParams(Uns addr)
 	if (addr >= REG_ADC_DOTS && addr <= REG_DAC_DOTS)	{
 
 		      peref_ADCtoPRCObserverInit(&g_Peref);
-                    //  peref_ProctoDACObserverInit(&g_Peref);
 
 	}else if (addr >= REG_DAC_DOTS && addr <= REG_RSVD196){
+                      peref_ProctoDACObserverInit(&g_Peref);
+        }else if (addr == REG_ADC_REVERS)	{
+		      peref_ADCtoPRCObserverInit(&g_Peref);
+	}else if (addr >= REG_DAC_REVERS ){
                       peref_ProctoDACObserverInit(&g_Peref);
         }
           

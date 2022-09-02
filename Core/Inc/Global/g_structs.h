@@ -364,12 +364,10 @@ typedef union _TUInvert {
 	 struct {
 		Uns Open:1;       	// 0     Открыть
 		Uns Close:1;      	// 1     Закрыть
-		Uns StopO:1;       	// 2     Стоп open
-		Uns StopC:1;       	// 3     Стоп close
-		Uns Mu:1;		// 4	 Му
-		Uns Du:1;		// 5	 Ду
-		Uns ResetAlarm:1;	// 6
-		Uns Rsvd:9;      	// 7-15  Резерв
+		Uns Stop:1;       	// 2     Стоп open
+		Uns DU:1;		// 3	 Му
+		Uns ResetAlarm:1;	// 4
+		Uns Rsvd:11;      	// 5-15  Резерв
 	 } bit;
 } TUInvert;
 

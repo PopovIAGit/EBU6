@@ -18,7 +18,7 @@ Outputs
 #include "stat_fm25v10.h"
 
 #define CANCEL_TOUT				(2.000 * PRD_10HZ)
-
+#define START_DELAY_TIME		(2.000 * PRD_50HZ)	// Ограничение времени паузы между остановом и след. запуском
 // обработка датчиков холла
 #define BTN_OPEN			1
 #define BTN_CLOSE			2
@@ -146,6 +146,21 @@ typedef struct PID_DATA {
 
 } pData_t;
 
+// Струкутра для компенсации момента
+typedef struct {
+	Float InputVolt;  				// Входное напряжение
+	Float OutputVolt; 				// Выходное напряжение
+	Float Referense;				// Направление движения
+	Float Gain; 	  				// Коэффициент компенсации момента
+	Float GenGain; 	  				// Коэффициент компенсации момента в ген.режиме
+	Float RmsCurrent; 				// Действующее значение статорного тока
+	Float Rs;						// Сопротивление статора
+	Float OutMax;	  				// Максимальное ограничение выхода
+	Float VoltAddIR;	  			// Вольтодобавка IR-компенсации
+	Float VoltAddLoad;	  			// Вольтодобавка по нагрузке
+	Float LoadTorque;	  			// Момент нагрузки
+} TInvTorq;
+
 typedef struct {
 	
     TStatusReg 			Status;			// Статус работы   
@@ -153,7 +168,8 @@ typedef struct {
     TCoreVlvDrvCtrl		VlvDrvCtrl;		// Управление задвижкой
     // ---
     TTorqObs			TorqObs;		// Расчет момента
-    //--Работа инвертора---------------------------------------------
+    TInvTorq                    TorqInv;                // расчет момента для инвертора
+      //--Работа инвертора---------------------------------------------
     TDmControl                  MotorControl; 
  
     RAMPGEN                     rg1;  

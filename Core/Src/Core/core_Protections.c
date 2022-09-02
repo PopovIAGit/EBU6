@@ -6,7 +6,7 @@
 
 void Core_ProtectionsInit(TCoreProtections *p)
 {
-    p->FaultDelay = (Uns) (PRD_50HZ * 2);
+    p->FaultDelay = (Uns) (PRD_50HZ * 3);
 }
 
 void Core_ProtectionsEnable(TCoreProtections *p)

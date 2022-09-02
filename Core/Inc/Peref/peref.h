@@ -226,7 +226,9 @@ typedef struct {
         uint8_t                 TS_outData;
         GPIO_PinState           TS_Enable; 
         //  AD5061BRJ DAC------------------------------------------------------
-        uint16_t                DAC_data;  
+        uint16_t                DAC_data;
+        uint8_t                 DAC_on_off;   
+        
         //-----------------------------------------------------------------
          APFILTER1 		ADCToProcfltr;			// Фильтр угола фи
           

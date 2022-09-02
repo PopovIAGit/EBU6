@@ -32,7 +32,7 @@ uint8_t pADS1118_ConfRegData[2];
 Uns TirTimer = 2*PRD_50HZ;
 
 uint8_t DAC_tmp[3];
-uint8_t DAC_on_off = 0x02; // по умолчанию токовый выход выключен, его нужно включить в меню при выборе управления АНАЛОГОВОЕ когда подключают токовый вход и выход (выставить 0)
+// по умолчанию токовый выход выключен, его нужно включить в меню при выборе управления АНАЛОГОВОЕ когда подключают токовый вход и выход (выставить 0)
 
 //данные для ADS1118 ----------------
 
@@ -346,28 +346,52 @@ void peref_Init(void)
       TempObserverInit(&g_Peref.temperDrive);
       TempObserverInit(&g_Peref.temperModule);  
       
+        
+          g_Peref.DAC_on_off = 0x02; 
 }
 
 void peref_ADCtoPRCObserverInit(TPeref *p)
 {
   int i = 0;
+  int j = DOTS;
     
-      for (i = 0; i<DOTS; i++)
-      {
-        p->ADCtoProc.dots[i] = dotsADC[i];
-          p->ADCtoProc.dots[i].adc = g_Ram.FactoryParam.ADCdots[i];
-      }              
+      if (g_Ram.FactoryParam.ReversADC == 0){
+        for (i = 0; i<DOTS; i++)
+        {
+          p->ADCtoProc.dots[i] = dotsADC[i];
+            p->ADCtoProc.dots[i].adc = g_Ram.FactoryParam.ADCdots[i];
+        } 
+      }else {
+         for (i = 0; i<DOTS; i++)
+        {
+          j--;
+          p->ADCtoProc.dots[i] = dotsADC[i];
+            p->ADCtoProc.dots[i].adc = g_Ram.FactoryParam.ADCdots[j];
+        } 
+      }
 }
 
 void peref_ProctoDACObserverInit(TPeref *p)
 {
   int i = 0;
-    
+  int j = DOTS;
+      
+     if (g_Ram.FactoryParam.ReversDAC == 0)
+     {
       for (i = 0; i<DOTS; i++)
       {
+        
         p->ProctoDAC.dots[i] = dotsDAC[i];
           p->ProctoDAC.dots[i].proc = g_Ram.FactoryParam.DACdots[i];
       }
+     } else{
+          for (i = 0; i<DOTS; i++)
+      {
+        j--;
+        p->ProctoDAC.dots[i] = dotsDAC[i];
+          p->ProctoDAC.dots[i].proc = g_Ram.FactoryParam.DACdots[j];
+      }
+     } 
 }
 
 void peref_18KHzCalc(TPeref *p)//
@@ -488,14 +512,19 @@ void peref_50HzCalc(TPeref *p)
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ADCtoProc); //посчитали интерполяцию
   
    //g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
+    if (g_Ram.Status.CalibState == csCalib)
       g_Peref.ProctoDAC.input = g_Ram.Status.PositionPr;
+    else{ 
+      g_Peref.ProctoDAC.input = 1;
+      
+    }
     //-- проценты в ЦАП--------------------------------------------------------------
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ProctoDAC);      
    // DAC----------------------------------------------------------------------
    
     p->DAC_data = p->ProctoDAC.output;
       
-    DAC_tmp[0] = DAC_on_off; // когда все гуд 0, чтобы выключить и было 1мА надо установить значение 0х02
+    DAC_tmp[0] = g_Peref.DAC_on_off; // когда все гуд 0, чтобы выключить и было 1мА надо установить значение 0х02
     DAC_tmp[1] = ((p->DAC_data)>>8);  
     DAC_tmp[2] = (p->DAC_data);  
    
@@ -513,6 +542,7 @@ void peref_50HzCalc(TPeref *p)
 
 void peref_10HzCalc(TPeref *p)//
 {  
+   
    if (g_Core.Protections.FaultDelay > 0) return; 
      
    SPIReinit();
@@ -828,7 +858,7 @@ void ADS1118_init(TPeref *p)
   
   p->ADC_Out_Config.bit.OS = 0;
     p->ADC_Out_Config.bit.MUX =4;
-      p->ADC_Out_Config.bit.PGA = 2;
+      p->ADC_Out_Config.bit.PGA = 0;
         p->ADC_Out_Config.bit.MODE = 0;
           p->ADC_Out_Config.bit.DR = 7; //111
           p->ADC_Out_Config.bit.TS_MODE = 0;
@@ -836,8 +866,8 @@ void ADS1118_init(TPeref *p)
               p->ADC_Out_Config.bit.NOP = 0x1;
                 p->ADC_Out_Config.bit.CNV_RDY_FL = 0;
                   
- pADS1118_ConfRegData[1] = g_Peref.ADC_Out_Config.all & 0xFF;
- pADS1118_ConfRegData[0] = (g_Peref.ADC_Out_Config.all>>8) & 0xFF;
+  pADS1118_ConfRegData[1] = g_Peref.ADC_Out_Config.all & 0xFF;
+  pADS1118_ConfRegData[0] = (g_Peref.ADC_Out_Config.all>>8) & 0xFF;
  
   HAL_GPIO_WritePin(CS_Iin_GPIO_Port, CS_Iin_Pin, GPIO_PIN_RESET);
   HAL_SPI_Transmit(&hspi6, (uint8_t*)pADS1118_ConfRegData,  2, 100);

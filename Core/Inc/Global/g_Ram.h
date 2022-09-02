@@ -72,30 +72,29 @@ typedef struct _TUserParam
 	Uns		reserv55;		// B15. 55 reserv
 	Uns		reserv56;		// B16. 56 Резерв
 	TMuDuSetup  	MuDuSetup;              // B17. 57 Настройка режима МУ/ДУ
-	Uns		reserv57;		// B16. 56 Резерв
-        TDuSource	DuSource;		// B18. 58 Источник команд ДУ
-	Uns         	TuLockSeal;             // B19. 59 Блокировка залипани
-	Uns         	TuTime;                 // B20. 60 Время команды
-	TInputType 	InputType;		// B21. 61 Тип входного сигнала 24/220
-	TUInvert	TuInvert;		// B22. 62 Маска дискретных входов
-	TSInvert 	TsInvert;		// B23. 63 Маска дискретных выходов
-	TBaudRate       RsBaudRate;             // B24. 64 Скорость связи
-	Uns             RsStation;              // B25. 65 Адрес станции
-	TParityMode	RsMode;			// B26. 66 Режим связи
-	Uns		MuffTimer;		// B27. 67
-	Uns		TimeSpeedStart;		// B28. 68 
-	Int		SpeedStart;		// B29. 69 
-        Uns		TimeSpeedStop;		// B30. 70 
-	Uns		reserv71;		// B31. 71 Резерв
-	Uns		NoMoveTime;		// B32. 72 Время отсутствия движения
-	Uns		OverwayZone;		// B33. 73 Максимальный путь уплотнения
-        Uns	        DcBrakeType;		// B34. 74 торможение постоянным током
-	Uns		DcBreakTime;		// B35. 75 Резерв
- 	Uns		SetPosition;		// B36. 76 задание для приезда в точку 1000 - 100%
- 	Uns		Kp;		        // B37. 77 пропорциональный кэф 
- 	Uns		reserv78;		// B38. 78 Резерв
+	Uns		reserv57;		// B18. 58 Резерв
+        TDuSource	DuSource;		// B19. 59 Источник команд ДУ
+	Uns         	TuLockSeal;             // B20. 60 Блокировка залипани
+	Uns         	TuTime;                 // B21. 61 Время команды
+	TInputType 	InputType;		// B22. 62 Тип входного сигнала 24/220
+	TUInvert	TuInvert;		// B23. 63 Маска дискретных входов
+	TSInvert 	TsInvert;		// B24. 64 Маска дискретных выходов
+	TBaudRate       RsBaudRate;             // B25. 65 Скорость связи
+	Uns             RsStation;              // B26. 66 Адрес станции
+	TParityMode	RsMode;			// B27. 67 Режим связи
+	Uns		MuffTimer;		// B28. 68
+	Uns		TimeSpeedStart;		// B29. 69 
+	Int		SpeedStart;		// B30. 70 
+        Uns		TimeSpeedStop;		// B31. 71 
+	Uns		reserv71;		// B32. 72 Резерв
+	Uns		NoMoveTime;		// B33. 73 Время отсутствия движения
+	Uns		OverwayZone;		// B34. 74 Максимальный путь уплотнения
+        Uns	        DcBrakeType;		// B35. 75 торможение постоянным током
+	Uns		DcBreakTime;		// B36. 76 Резерв
+ 	Uns		SetPosition;		// B37. 77 задание для приезда в точку 1000 - 100%
+ 	Uns		Kp;		        // B38. 78 пропорциональный кэф 
  	Uns		reserv79;		// B39. 79 Резерв
-        Uns		reserv80;		// B40. 80 Резерв
+ 	Uns		reserv80;		// B40. 80 Резерв
         Uns		reserv81;		// B41. 81 Резерв
         Uns		reserv82;		// B42. 82 Резерв
         Uns		reserv83;		// B43. 83 Резерв
@@ -105,6 +104,7 @@ typedef struct _TUserParam
         Uns		reserv87;		// B47. 87 Резерв
         Uns		reserv88;		// B48. 88 Резерв
         Uns		reserv89;		// B49. 89 Резерв
+  
 	  
 }TUserParam;
 
@@ -148,8 +148,8 @@ typedef struct _TFactoryParam
  	Uns		reserv125;		// С35. 125 Резерв
         Uns		reserv126;		// С36. 126 Резерв
         Uns		reserv127;		// С37. 127 Резерв
-        Uns		reserv128;		// С38. 128 Резерв
-        Uns		reserv129;		// С39. 129 Резерв
+        Uns		ReversADC;		// С38. 128 Резерв
+        Uns		ReversDAC;		// С39. 129 Резерв
         Uns             ADCdots[33];            // C40-C72 130-162 точки для преобразования АЦП в 4-20
         Uns             DACdots[33];            // C73-105 163-195 точки для преобразования ЦАП в 4-20
         Uns		reserv196;		// С106. 196 Резерв
@@ -498,6 +498,8 @@ typedef struct _TTestRam
 #define REG_GEAR_RATIO			GetAdr(FactoryParam.GearRatio)
 #define REG_DRIVE_TYPE			GetAdr(UserParam.DriveType)
 
+#define REG_ADC_REVERS                  GetAdr(FactoryParam.ReversADC)
+#define REG_DAC_REVERS                  GetAdr(FactoryParam.ReversADC)
 #define REG_ADC_DOTS                    GetAdr(FactoryParam.ADCdots[0])
 #define REG_DAC_DOTS                    GetAdr(FactoryParam.DACdots[0])
 #define REG_RSVD196                     GetAdr(FactoryParam.reserv196)
