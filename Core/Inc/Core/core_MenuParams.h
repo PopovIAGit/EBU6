@@ -106,7 +106,7 @@ const struct MENU_PARAM params[] = {
                 "B18.DU SOURSE   ", "    ", 	1,      3,  	2, M_LIST|M_SADR(139),						//58
                 "B19.BLOK ZALIP  ", "    ", 	0,      1,  	0, M_EDIT|M_RMAX(4),						//59
 		"B20.COMMAND TIME", "S   ", 	1,    100,  	1, M_EDIT|M_RMAX(2)|M_PREC(1),				        //60
-		"B21.IN TYP SIG  ", "    ", 	0,      1,  	0, M_EDIT|M_RMAX(4),						//61
+		"B21.IN TYP SIG  ", "    ", 	0,      1,  	0, M_LIST|M_SADR(145),							//61
 		"B22.IN MASK     ", "    ", 	0,     31,  	0, M_BINE|M_RMAX(4),						//62
 		"B23.OUT MASK    ", "    ", 	0,  65530,  	0, M_BINE|M_RMAX(7),						//63
 		"B24.BAUD RATE   ", "    ", 	0,      6,  	3, M_LIST|M_SADR(147),						//64

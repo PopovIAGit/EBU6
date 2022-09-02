@@ -640,7 +640,7 @@ void coreTU(TCore *p)
 {
    if (g_Ram.UserParam.InputType == it24)
   {
-    g_Ram.HideParam.TuState = g_Peref.TU_data24 ^ g_Ram.UserParam.TuInvert.all;
+    g_Ram.HideParam.TuState        =  g_Peref.TU_data24 ^ g_Ram.UserParam.TuInvert.all;
     g_Ram.Status.StateTu.all       =  g_Peref.TU_data24;
   }
   else if (g_Ram.UserParam.InputType == it220)

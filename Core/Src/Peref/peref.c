@@ -818,8 +818,8 @@ void MCP23S17_init(void)
 
 void MCP23S17_update(TPeref *p)
 {
-    p->TU_data220 = MCP23S17_read(MCPS17_GPIOA);
-    p->TU_data24  = MCP23S17_read(MCPS17_GPIOB);
+    p->TU_data220 = MCP23S17_read(MCPS17_GPIOA) & NUM_OF_INPUT_TU;
+    p->TU_data24  = MCP23S17_read(MCPS17_GPIOB) & NUM_OF_INPUT_TU;
    
 }
 
