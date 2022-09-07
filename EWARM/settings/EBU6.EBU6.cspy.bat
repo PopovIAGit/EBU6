@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\work\ebu6\EBU6\EWARM\settings\EBU6.EBU6.general.xcl" --backend -f "C:\work\ebu6\EBU6\EWARM\settings\EBU6.EBU6.driver.xcl" 
+"D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\common\bin\cspybat" -f "D:\WorkOther\EBU6\EWARM\settings\EBU6.EBU6.general.xcl" --backend -f "D:\WorkOther\EBU6\EWARM\settings\EBU6.EBU6.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\work\ebu6\EBU6\EWARM\settings\EBU6.EBU6.general.xcl" "--debug_file=%~1" --backend -f "C:\work\ebu6\EBU6\EWARM\settings\EBU6.EBU6.driver.xcl" 
+"D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\common\bin\cspybat" -f "D:\WorkOther\EBU6\EWARM\settings\EBU6.EBU6.general.xcl" "--debug_file=%~1" --backend -f "D:\WorkOther\EBU6\EWARM\settings\EBU6.EBU6.driver.xcl" 
 
 @echo off 
 :end

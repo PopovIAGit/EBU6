@@ -510,7 +510,7 @@ void peref_50HzCalc(TPeref *p)
    peref_ApFilter1Calc(&p->ADCToProcfltr);             // пофильтровали
    p->ADCtoProc.input = (Uns)p->ADCToProcfltr.Output;  // отдали в интерполяцию float в Uns
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ADCtoProc); //посчитали интерполяцию
-  
+   g_Ram.UserParam.SetPosition = g_Peref.ADCtoProc.output;
    //g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
     if (g_Ram.Status.CalibState == csCalib)
       g_Peref.ProctoDAC.input = g_Ram.Status.PositionPr;

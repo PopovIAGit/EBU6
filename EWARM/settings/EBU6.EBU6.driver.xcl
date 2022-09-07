@@ -1,20 +1,12 @@
 "--endian=little" 
 
-"--cpu=Cortex-M7" 
+"--cpu=Cortex-M3" 
 
-"--fpu=VFPv5_D16" 
-
-"-p" 
-
-"C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ST\STM32H743II.ddf" 
+"--fpu=None" 
 
 "--drv_verify_download" 
 
 "--semihosting" 
-
-"--device=STM32H743II" 
-
-"--drv_tpiu_regbase=0xE00E3002" 
 
 "--drv_interface=SWD" 
 

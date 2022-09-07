@@ -37,13 +37,13 @@ void Cms58mConfig (sCms58m* cms58m)
 {
   uint32_t tt;
     txWriteNmt(StopNode, cms58m);            // останавливаю
- //  for (tt = 0; tt < 59560000; tt++);
+   for (tt = 0; tt < 59560000; tt++);
     txWriteNmt(ResetCommunication, cms58m);  // вгоняю в режим настройки
-// for (tt = 0; tt < 59560000; tt++);
+ for (tt = 0; tt < 59560000; tt++);
     
     uint8_t data[4]={0x05,0x00,0x00,0x00};
     txWriteSdo(CyclicTimer,data, cms58m);    // в циклический таймер значение периода посылки PDO1
- // for (tt = 0; tt < 59560000; tt++);
+  for (tt = 0; tt < 59560000; tt++);
 }
 
 void Cms58mStart (sCms58m* cms58m)
