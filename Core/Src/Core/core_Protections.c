@@ -239,8 +239,7 @@ void Core_ProtectionsEnable(TCoreProtections *p)
                 
                 Enable = g_Ram.FactoryParam.driveTemper != pmOff;
 		p->driveTemper.Cfg.bit.Enable = Enable;
-                
-                
+                             
                 Enable = g_Ram.FactoryParam.moduleTemper != pmOff;
 		p->moduleTemper.Cfg.bit.Enable = Enable;
 		break;

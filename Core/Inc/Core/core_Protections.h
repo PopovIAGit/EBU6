@@ -22,7 +22,7 @@
 #define Overway_bit			5
 #define Mufta_bit			6
 #define MuDuDef_bit			7
-#define SoftStarter_bit		8
+
 
 // Номера битов g_Structs.h -> TNetReg
 #define UvR_bit				0
@@ -35,20 +35,16 @@
 #define BvR_bit				8
 #define BvS_bit				9
 #define BvT_bit				10
-#define OvR_max_bit			11
-#define OvS_max_bit			12
-#define OvT_max_bit			13
 
 
 // Номера битов g_Structs.h -> TLoadReg
 #define PhlU_bit			0
 #define PhlV_bit			1
 #define PhlW_bit			2
-#define I2t_bit				3
-#define ShCU_bit			4
-#define ShCV_bit			5
-#define ShCW_bit			6
-#define ISkew_bit			11
+#define ShCU_bit			5
+#define ShCV_bit			6
+#define ShCW_bit			7
+
 
 // Номера битов g_Structs.h -> TDeviceReg
 #define PosSens_bit			0

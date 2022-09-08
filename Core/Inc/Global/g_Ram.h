@@ -175,7 +175,7 @@ typedef struct _TFactoryParam
 	Uns             overHeatLevel;      	// C126. 216 Уровень обрыва фаз
 	Uns             overHeatTime;       	// C127. 217 Время определения обрыва фаз          
         TPrtMode        underCold;           	// C128. 218 Защита от обрыва фаз нагрузки
-	Uns             underColdLevel;      	// C129. 219 Уровень обрыва фаз
+	Int             underColdLevel;      	// C129. 219 Уровень обрыва фаз
 	Uns             underColdTime;       	// C130. 220 Время определения обрыва фаз           
         TPrtMode        driveTemper;           	// C131. 221 Защита от обрыва фаз нагрузки
 	Uns             driveTemperLevel;      	// C132. 222 Уровень обрыва фаз

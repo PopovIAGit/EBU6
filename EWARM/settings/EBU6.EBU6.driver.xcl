@@ -1,12 +1,20 @@
 "--endian=little" 
 
-"--cpu=Cortex-M3" 
+"--cpu=Cortex-M7" 
 
-"--fpu=None" 
+"--fpu=VFPv5_D16" 
+
+"-p" 
+
+"D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\arm\CONFIG\debugger\ST\STM32H743IG.ddf" 
 
 "--drv_verify_download" 
 
 "--semihosting" 
+
+"--device=STM32H743IG" 
+
+"--drv_tpiu_regbase=0xE00E3002" 
 
 "--drv_interface=SWD" 
 
