@@ -204,18 +204,18 @@ void Core_ProtectionsEnable(TCoreProtections *p)
 	case 2:  // Защиты по наряжению
 		Enable = (g_Ram.FactoryParam.Uv != pmOff) && (!p->outFaults.Net.bit.BvR)&& (!p->outFaults.Net.bit.BvS)&& (!p->outFaults.Net.bit.BvT);						// Понижеие напряжения
 		p->underVoltageR.Cfg.bit.Enable = Enable;
-		p->underVoltageS.Cfg.bit.Enable = Enable;
-		p->underVoltageT.Cfg.bit.Enable = Enable;
+		p->underVoltageS.Cfg.bit.Enable = Enable & !g_Ram.FactoryParam.MCU220380;
+		p->underVoltageT.Cfg.bit.Enable = Enable & !g_Ram.FactoryParam.MCU220380;
 		
 		Enable = (g_Ram.FactoryParam.Ov != pmOff);						// Повышение напряжения
 		p->overVoltageR.Cfg.bit.Enable = Enable;
-		p->overVoltageS.Cfg.bit.Enable = Enable;
-		p->overVoltageT.Cfg.bit.Enable = Enable;
+		p->overVoltageS.Cfg.bit.Enable = Enable & !g_Ram.FactoryParam.MCU220380;
+		p->overVoltageT.Cfg.bit.Enable = Enable & !g_Ram.FactoryParam.MCU220380;
 		
 		Enable = (g_Ram.FactoryParam.Bv != pmOff);						// Обрыв фаз напряжения
 		p->breakVoltR.Cfg.bit.Enable = Enable;
-		p->breakVoltS.Cfg.bit.Enable = Enable;
-		p->breakVoltT.Cfg.bit.Enable = Enable;
+		p->breakVoltS.Cfg.bit.Enable = Enable & !g_Ram.FactoryParam.MCU220380;
+		p->breakVoltT.Cfg.bit.Enable = Enable & !g_Ram.FactoryParam.MCU220380;
 		break;
 	case 3:  // Защиты по току
 		Enable = (g_Ram.FactoryParam.Phl != pmOff) && (!g_Core.Status.bit.Stop);					// Обрыв выходных фаз (двиг.)
