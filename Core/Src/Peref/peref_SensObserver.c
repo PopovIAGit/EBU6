@@ -1,8 +1,8 @@
 /*======================================================================
 Имя файла:          peref_SensObserver.c
 Автор:				Попов И.А.
-Версия файла:		1.0
-Дата изменения:		04.04.14
+Версия файла:		1.1
+Дата изменения:		08.09.22
 Описание: Обработка датчиков тока и напряжения
 Вход  - Фильтрованной значение с АЦП в
 Выход - Приведенные значения I и U   в
@@ -46,10 +46,6 @@ void Peref_SensObserverUpdate(TSensObserver *p) // 18000 Гц
 	p->IUinp        = g_Peref.adcData3[1];              // 0 VDC_A     1 IU_ADC    2 IV_ADC    3 IW_ADC
 	p->IVinp        = g_Peref.adcData3[2];
 	p->IWinp        = g_Peref.adcData3[3];
-        
-        
-        
-        
 
 	// Преобразование напряжений
 	//p->URout = 0.00001*((g_Peref.sensObserver.URinp - g_Ram.FactoryParam.UR_Offset) * g_Ram.FactoryParam.UR_Mpy);

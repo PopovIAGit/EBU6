@@ -492,17 +492,15 @@ void peref_200HzCalc(TPeref *p)
          {
              tmpData = p->cms58m_1.value;
          }
- 
-           
-             
-         
     
 }
 
 //-----------------------------------
 void peref_50HzCalc(TPeref *p)
 { 
-    //ADC 4-20 мА ---------------------------------------------------------------
+   Int tmpDACData; 
+      
+     //ADC 4-20 мА ---------------------------------------------------------------
      ADS1118_update(&g_Peref);  // считали ацп
     //--АДЦ в проценты--------------------------------------------------------------
       
@@ -512,11 +510,14 @@ void peref_50HzCalc(TPeref *p)
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ADCtoProc); //посчитали интерполяцию
    g_Ram.UserParam.SetPosition = g_Peref.ADCtoProc.output;
    //g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
-    if (g_Ram.Status.CalibState == csCalib)
-      g_Peref.ProctoDAC.input = g_Ram.Status.PositionPr;
-    else{ 
-      g_Peref.ProctoDAC.input = 1;
-      
+     if (g_Ram.Status.CalibState == csCalib){
+        tmpDACData = g_Ram.Status.PositionPr;     
+        if (tmpDACData > 1000) tmpDACData = 10000;
+        if (tmpDACData < 0) tmpDACData = 0;
+        g_Peref.ProctoDAC.input = (Uns)tmpDACData; 
+     }
+     else{ 
+      g_Peref.ProctoDAC.input = 1; 
     }
     //-- проценты в ЦАП--------------------------------------------------------------
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ProctoDAC);      

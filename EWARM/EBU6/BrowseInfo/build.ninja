@@ -49,6 +49,16 @@ build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_P
   flags = D$:\WorkOther\EBU6\Core\Src\Core\core_Protections.c -D USE_HAL_DRIVER -D STM32H743xx -o D$:\WorkOther\EBU6\EWARM\EBU6\Obj\Application\User\Core\Core --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None --dlib_config "D$:\Distr\IAR$ Embedded$ Workbench$ for$ ARM$ v9.10.2$ x64\arm\inc\c\DLib_Config_Normal.h" -I D$:\WorkOther\EBU6\EWARM/../Core/Inc\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Device/ST/STM32H7xx/Include\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Include\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Comm\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Core\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Global\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Peref\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Stat\ -On --source_encoding locale --text_out locale --predef_macros D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_Protections.tmp
   rspfile_name = D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_Protections.xcl.rsp
 
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.xcl : COMPILER_XCL 
+  xclcommand = -source_file D$:\WorkOther\EBU6\Core\Src\Core\core_ProtectionsAlarm.c -xcl_file D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.xcl -macro_file D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.tmp -icc_path "D$:\Distr\IAR$ Embedded$ Workbench$ for$ ARM$ v9.10.2$ x64\arm\bin\iccarm.exe"
+  flags = D$:\WorkOther\EBU6\Core\Src\Core\core_ProtectionsAlarm.c -D USE_HAL_DRIVER -D STM32H743xx -o D$:\WorkOther\EBU6\EWARM\EBU6\Obj\Application\User\Core\Core --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None --dlib_config "D$:\Distr\IAR$ Embedded$ Workbench$ for$ ARM$ v9.10.2$ x64\arm\inc\c\DLib_Config_Normal.h" -I D$:\WorkOther\EBU6\EWARM/../Core/Inc\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Device/ST/STM32H7xx/Include\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Include\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Comm\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Core\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Global\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Peref\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Stat\ -On --source_encoding locale --text_out locale --predef_macros D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.tmp
+  rspfile_name = D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.xcl.rsp
+
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.xcl : COMPILER_XCL 
+  xclcommand = -source_file D$:\WorkOther\EBU6\Core\Src\Core\core_ProtectionSHC.c -xcl_file D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.xcl -macro_file D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.tmp -icc_path "D$:\Distr\IAR$ Embedded$ Workbench$ for$ ARM$ v9.10.2$ x64\arm\bin\iccarm.exe"
+  flags = D$:\WorkOther\EBU6\Core\Src\Core\core_ProtectionSHC.c -D USE_HAL_DRIVER -D STM32H743xx -o D$:\WorkOther\EBU6\EWARM\EBU6\Obj\Application\User\Core\Core --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None --dlib_config "D$:\Distr\IAR$ Embedded$ Workbench$ for$ ARM$ v9.10.2$ x64\arm\inc\c\DLib_Config_Normal.h" -I D$:\WorkOther\EBU6\EWARM/../Core/Inc\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Device/ST/STM32H7xx/Include\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Include\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Comm\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Core\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Global\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Peref\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Stat\ -On --source_encoding locale --text_out locale --predef_macros D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.tmp
+  rspfile_name = D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.xcl.rsp
+
 build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.xcl : COMPILER_XCL 
   xclcommand = -source_file D$:\WorkOther\EBU6\Core\Src\Core\core_VlvDrvCtrl.c -xcl_file D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.xcl -macro_file D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.tmp -icc_path "D$:\Distr\IAR$ Embedded$ Workbench$ for$ ARM$ v9.10.2$ x64\arm\bin\iccarm.exe"
   flags = D$:\WorkOther\EBU6\Core\Src\Core\core_VlvDrvCtrl.c -D USE_HAL_DRIVER -D STM32H743xx -o D$:\WorkOther\EBU6\EWARM\EBU6\Obj\Application\User\Core\Core --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug --endian=little --cpu=Cortex-M3 -e --fpu=None --dlib_config "D$:\Distr\IAR$ Embedded$ Workbench$ for$ ARM$ v9.10.2$ x64\arm\inc\c\DLib_Config_Normal.h" -I D$:\WorkOther\EBU6\EWARM/../Core/Inc\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Device/ST/STM32H7xx/Include\ -I D$:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Include\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Comm\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Core\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Global\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Peref\ -I D$:\WorkOther\EBU6\EWARM\..\Core\Inc\Stat\ -On --source_encoding locale --text_out locale --predef_macros D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.tmp
@@ -309,6 +319,14 @@ build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_P
 D$:\WorkOther\EBU6\Core\Src\Core\core_Protections.c
   flags = -out=D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_Protections.pbi -f D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_Protections.xcl
 
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.pbi : INDEXER D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.xcl |  $
+D$:\WorkOther\EBU6\Core\Src\Core\core_ProtectionsAlarm.c
+  flags = -out=D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.pbi -f D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.xcl
+
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.pbi : INDEXER D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.xcl |  $
+D$:\WorkOther\EBU6\Core\Src\Core\core_ProtectionSHC.c
+  flags = -out=D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.pbi -f D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.xcl
+
 build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.pbi : INDEXER D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.xcl |  $
 D$:\WorkOther\EBU6\Core\Src\Core\core_VlvDrvCtrl.c
   flags = -out=D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.pbi -f D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.xcl
@@ -509,69 +527,71 @@ D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Comm\drv_modbus.p
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_InverterControl.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_Menu.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_Protections.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\g_Core.pbi
-  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part0.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Comm\comm.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Comm\drv_modbus.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_InverterControl.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_Menu.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_Protections.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\g_Core.pbi
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.pbi $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.pbi
+  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part0.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Comm\comm.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Comm\drv_modbus.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_InverterControl.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_Menu.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_Protections.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionsAlarm.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_ProtectionSHC.pbi
 
-build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part1.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Global\g_InterruptUpdate.pbi |  $
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part1.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.pbi |  $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\g_Core.pbi $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Global\g_InterruptUpdate.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Global\g_Ram.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\CMS58M.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_ApFilter1.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_ApFilter3.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_Calibs.pbi
-  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part1.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Global\g_InterruptUpdate.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Global\g_Ram.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\CMS58M.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_ApFilter1.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_ApFilter3.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_Calibs.pbi
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_ApFilter1.pbi
+  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part1.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\core_VlvDrvCtrl.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\g_Core.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Global\g_InterruptUpdate.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Global\g_Ram.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\CMS58M.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_ApFilter1.pbi
 
-build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part2.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_Clock.pbi |  $
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part2.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_ApFilter3.pbi |  $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_Calibs.pbi $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_Clock.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_display.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_SensObserver.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_SinObserver.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat_fm25v10.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\add_ValueConv.pbi
-  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part2.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_Clock.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_display.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_SensObserver.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_SinObserver.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat_fm25v10.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\add_ValueConv.pbi
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat.pbi
+  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part2.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_ApFilter3.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_Calibs.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_Clock.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_display.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_SensObserver.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Peref\peref_SinObserver.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat.pbi
 
-build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part3.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\main.pbi |  $
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part3.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat_fm25v10.pbi |  $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\add_ValueConv.pbi $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\main.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\stm32h7xx_hal_msp.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\stm32h7xx_it.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\CMSIS\system_stm32h7xx.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_adc.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_adc_ex.pbi
-  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part3.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\main.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\stm32h7xx_hal_msp.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\stm32h7xx_it.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\CMSIS\system_stm32h7xx.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_adc.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_adc_ex.pbi
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal.pbi
+  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part3.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Stat\stat_fm25v10.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\add_ValueConv.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\main.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\stm32h7xx_hal_msp.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\stm32h7xx_it.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\CMSIS\system_stm32h7xx.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal.pbi
 
-build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part4.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_cortex.pbi |  $
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part4.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_adc.pbi |  $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_adc_ex.pbi $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_cortex.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_dma.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_dma_ex.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_exti.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_fdcan.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_flash.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_flash_ex.pbi
-  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part4.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_cortex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_dma.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_dma_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_exti.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_fdcan.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_flash.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_flash_ex.pbi
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_fdcan.pbi
+  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part4.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_adc.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_adc_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_cortex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_dma.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_dma_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_exti.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_fdcan.pbi
 
-build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part5.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_gpio.pbi |  $
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part5.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_flash.pbi |  $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_flash_ex.pbi $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_gpio.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_hrtim.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_hsem.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_i2c.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_i2c_ex.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_mdma.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_pwr.pbi
-  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part5.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_gpio.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_hrtim.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_hsem.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_i2c.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_i2c_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_mdma.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_pwr.pbi
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_i2c_ex.pbi
+  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part5.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_flash.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_flash_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_gpio.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_hrtim.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_hsem.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_i2c.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_i2c_ex.pbi
 
-build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part6.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_pwr_ex.pbi |  $
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part6.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_mdma.pbi |  $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_pwr.pbi $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_pwr_ex.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rcc.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rcc_ex.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rtc.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rtc_ex.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_spi.pbi $
-D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_spi_ex.pbi
-  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part6.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_pwr_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rcc.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rcc_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rtc.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rtc_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_spi.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_spi_ex.pbi
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rtc_ex.pbi
+  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part6.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_mdma.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_pwr.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_pwr_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rcc.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rcc_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rtc.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_rtc_ex.pbi
 
-build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part7.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_tim.pbi |  $
+build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part7.pbi : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_spi.pbi |  $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_spi_ex.pbi $
+D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_tim.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_tim_ex.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_uart.pbi $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_uart_ex.pbi
-  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part7.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_tim.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_tim_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_uart.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_uart_ex.pbi
+  flags = -M D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part7.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_spi.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_spi_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_tim.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_tim_ex.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_uart.pbi D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_uart_ex.pbi
 
 build D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6.pbd : PDBLINK D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part0.pbi |  $
 D$:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\EBU6_part1.pbi $

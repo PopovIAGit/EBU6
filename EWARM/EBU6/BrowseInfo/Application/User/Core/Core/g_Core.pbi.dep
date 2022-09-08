@@ -90,6 +90,8 @@ D:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Application\User\Core\Core\g_Core.pbi: \
   D:\WorkOther\EBU6\EWARM\..\Core\Inc\csl_memory.h \
   D:\WorkOther\EBU6\EWARM\..\Core\Inc\Stat\stat_fm25v10.h \
   D:\WorkOther\EBU6\EWARM\..\Core\Inc\Core\core_Protections.h \
+  D:\WorkOther\EBU6\EWARM\..\Core\Inc\Core\core_ProtectionsAlarm.h \
+  D:\WorkOther\EBU6\EWARM\..\Core\Inc\Core\core_ProtectionSHC.h \
   D:\WorkOther\EBU6\EWARM\..\Core\Inc\Core\core_InverterControl.h \
   D:\WorkOther\EBU6\EWARM\..\Core\Inc\Core\core_VlvDrvCtrl.h \
   D:\WorkOther\EBU6\EWARM\..\Core\Inc\Core\core_TorqueObserver.h \

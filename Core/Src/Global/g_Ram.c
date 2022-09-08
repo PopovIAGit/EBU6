@@ -30,21 +30,28 @@ void g_Ram_Update(TRam *p)
     //------ Core -> RAM ------------------------------------
      p->Status.Status 		= g_Core.Status;
     
-    p->Status.Faults.Net.all    = (g_Core.Protections.outFaults.Net.all  | g_Core.Protections.outDefects.Net.all);
-    p->Status.Faults.Load.all   = (g_Core.Protections.outFaults.Load.all | g_Core.Protections.outDefects.Load.all);
-    p->Status.Faults.Proc.all   = (g_Core.Protections.outFaults.Proc.all | g_Core.Protections.outDefects.Proc.all);
-    p->Status.Faults.Dev.all    = (g_Core.Protections.outFaults.Dev.all  | g_Core.Protections.outDefects.Dev.all);
+    p->Status.Faults.Net.all    = (g_Core.Protections.outFaults.Net.all);
+    p->Status.Faults.Load.all   = (g_Core.Protections.outFaults.Load.all);
+    p->Status.Faults.Proc.all   = (g_Core.Protections.outFaults.Proc.all);
+    p->Status.Faults.Dev.all    = (g_Core.Protections.outFaults.Dev.all);
     
       if (g_Ram.Status.Status.bit.Stop)
       {
         p->Status.Iu = 0;
-          p->Status.Iv = 0;
-            p->Status.Iw = 0;
+        p->Status.Iv = 0;
+        p->Status.Iw = 0;
+        p->HideParam.IuPr = 0;
+        p->HideParam.IvPr = 0;
+        p->HideParam.IwPr = 0;
       }
       else {
-    p->Status.Iu = g_Peref.Ia.Output*10;
-    p->Status.Iv = g_Peref.Ib.Output*10;
-    p->Status.Iw = g_Peref.Ic.Output*10;
+        p->Status.Iu = g_Peref.Ia.Output*10;
+        p->Status.Iv = g_Peref.Ib.Output*10;
+        p->Status.Iw = g_Peref.Ic.Output*10;
+          
+        p->HideParam.IuPr = (g_Peref.Ia.Output * 10) / p->FactoryParam.Inom;
+	p->HideParam.IvPr = (g_Peref.Ib.Output * 10) / p->FactoryParam.Inom;
+	p->HideParam.IwPr = (g_Peref.Ic.Output * 10) / p->FactoryParam.Inom;
       }
     g_Ram.Status.Position = g_Ram.HideParam.Position;
     

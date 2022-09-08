@@ -101,10 +101,7 @@ typedef union _TProcessReg {
 		Uns NoCalib:1;		// 4     Калибровка не выполнена
 		Uns Overway:1;		// 5     Уплотнение не достигнуто
 		Uns Mufta:1;		// 6	 Муфта
-		Uns MuDuDef:1;		// 7     Ошибка по дискретным входам Му/Ду
-		Uns SoftStarter:1;	// 8	 Ошибка УПП
-		Uns FireContErr:1;	// 9	 не замкнут конитактор в режиме пожрка
-		Uns Rsvd:6;			// 11-15  Резерв
+		Uns Rsvd:9;		// 7-15  Резерв
 	} bit;
 } TProcessReg;
 
@@ -127,15 +124,12 @@ typedef union _TNetReg {
 		Uns OvR:1;			// 3     Превышение напряжения в фазе R
 		Uns OvS:1;			// 4     Превышение напряжения в фазе S
 		Uns OvT:1;			// 5     Превышение напряжения в фазе T
-		Uns Rsvd2:1;		// 6
+		Uns Rsvd2:1;		        // 6
 		Uns VSk:1;			// 7     Асимметрия напряжения входной сети
 		Uns BvR:1;			// 8     Обрыв фазы R входной сети
 		Uns BvS:1;			// 9     Обрыв фазы S входной сети
 		Uns BvT:1;			// 10    Обрыв фазы T входной сети
-		Uns OvR_max:1;			// 11    Превышение напряжения в фазе R на 47%
-		Uns OvS_max:1;			// 12    Превышение напряжения в фазе S на 47%
-		Uns OvT_max:1;			// 13    Превышение напряжения в фазе T на 47%
-		Uns Rsvd:2;			// 14-15 Резерв
+		Uns Rsvd:5;			// 11-15 Резерв
 	} bit;
 } TNetReg;
 
@@ -153,14 +147,13 @@ typedef union _TLoadReg {
 		Uns PhlU:1;			// 0     Обрыв фазы U
 		Uns PhlV:1;			// 1     Обрыв фазы V
 		Uns PhlW:1;			// 2     Обрыв фазы W
-		Uns I2t:1;			// 3     Время-токовая перегрузка
-		Uns Rsvd1:1;			// 4     Резерв
+		Uns Rsvd3:1;			// 3     Резерв
+		Uns Rsvd4:1;			// 4     Резерв
 		Uns ShCU:1;			// 5	 Короткое замыкание в фазе U
 		Uns ShCV:1;			// 6	 Короткое замыкание в фазе V
 		Uns ShCW:1;			// 7	 Короткое замыкание в фазе W
-		Uns Rsvd2:3;			// 8-10	 Резерв
-		Uns ISkew:1;			// 11    Ассиметрия тока
-		Uns Rsvd:4;			// 13-15 Резерв
+		Uns Rsvd8:4;			// 8-10	 Резерв
+		Uns Rsvd13:4;			// 13-15 Резерв
 	} bit;
 } TLoadReg;
 
@@ -176,19 +169,19 @@ typedef union _TDeviceReg {
 		Uns PosSens:1;		// 0     Сбой датчика положения
 		Uns Memory1:1;		// 1     Сбой памяти 1
 		Uns Memory2:1;		// 2     Сбой памяти 2
-		Uns Rtc:1;			// 3     Сбой часов реального времени
+		Uns Rtc:1;		// 3     Сбой часов реального времени
 		Uns TSens:1;		// 4     Сбой датчика температуры
-		Uns Th_BCP:1;		// 5     Перегрев блока БКП
-		Uns Tl_BCP:1;		// 6     Переохлождение блока БКП
-		Uns Th_BCD:1;		// 7     Перегрев блока БКД
-		Uns Tl_BCD:1;		// 8     Переохлождение блока БКД
-		Uns Dac:1;			// 9     Сбой ЦАП
-		Uns LowPower:1;		// 10     Выключение БКД
-		Uns NoBCP_Connect:1;// 11   нет связи с БКП
-		Uns BatteryLow:1;	// 12   Замена батарейки через 3 года
-		Uns BlueNoLaunch:1;	// 13	не запустился БКЭП
-		Uns BCP_ErrorType:1;// 14	не верный тип БКП
-		Uns Rsvd:1;       	// 15 Резерв
+		Uns Th:1;		// 5     Перегрев блока 
+		Uns Tl:1;		// 6     Переохлождение блока 
+		Uns DriveTemper:1;      // 7     перегрев двигателя
+                Uns ModuleTemper:1;     // 8     перегрев силового модуля
+		Uns Dac:1;		// 9     Сбой ЦАП
+		Uns LowPower:1;		// 10    Выключение 
+		Uns Rsvd11:1;           // 11   Резерв
+		Uns Rsvd12:1;	        // 12   Резерв
+		Uns Rsvd13:1;	        // 13	Резерв
+		Uns Rsvd14:1;           // 14	Резерв
+		Uns Rsvd115:1;       	// 15   Резерв
   } bit;
 } TDeviceReg;
 

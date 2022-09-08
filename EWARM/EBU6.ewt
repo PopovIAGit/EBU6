@@ -1453,6 +1453,12 @@
                         <name>$PROJ_DIR$\..\Core\Src\Core\core_Protections.c</name>
                     </file>
                     <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Core\core_ProtectionsAlarm.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Core\core_ProtectionSHC.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\Core\Src\Core\core_VlvDrvCtrl.c</name>
                     </file>
                     <file>
@@ -1553,6 +1559,12 @@
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Core\core_Protections.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_ProtectionsAlarm.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_ProtectionSHC.h</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Core\core_TorqueObserver.h</name>

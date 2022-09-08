@@ -754,7 +754,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>lnk0t.icf</state>
+                    <state>$TOOLKIT_DIR$\CONFIG\generic_cortex.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -814,7 +814,7 @@
                 </option>
                 <option>
                     <name>IlinkProgramEntryLabel</name>
-                    <state></state>
+                    <state>__iar_program_start</state>
                 </option>
                 <option>
                     <name>DoFill</name>
@@ -987,7 +987,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>###Unitialized###</state>
+                    <state>EBU6_import_lib.o</state>
                 </option>
                 <option>
                     <name>OILinkExtraOption</name>
@@ -1091,6 +1091,12 @@
                         <name>$PROJ_DIR$\..\Core\Src\Core\core_Protections.c</name>
                     </file>
                     <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Core\core_ProtectionsAlarm.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Core\core_ProtectionSHC.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\Core\Src\Core\core_VlvDrvCtrl.c</name>
                     </file>
                     <file>
@@ -1191,6 +1197,12 @@
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Core\core_Protections.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_ProtectionsAlarm.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\core_ProtectionSHC.h</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Core\core_TorqueObserver.h</name>

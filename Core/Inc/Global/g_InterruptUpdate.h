@@ -84,7 +84,23 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
     PrdElemInit(Comm_CommandUpdate,				&g_Comm),
     PrdElemInit(Core_ControlMode, 				&g_Core),
     PrdElemInit(Core_ValveDriveUpdate, 			&g_Core.VlvDrvCtrl),
-    
+        PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.overVoltageR),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.overVoltageS),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.overVoltageT),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.underVoltageR),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.underVoltageS),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.underVoltageT),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.breakVoltR),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.breakVoltS),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.breakVoltT),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.breakCurrU),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.breakCurrV),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.breakCurrW),
+    	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.overHeat),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.underCold),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.driveTemper),
+	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.moduleTemper),
+
     PrdElemInit(peref_50HzCalc,                 &g_Peref)
 };
 

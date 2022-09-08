@@ -5,10 +5,12 @@
 
 //----------- Подключение заголовочных файлов ------------------------------
 #include "main.h"
+#include "core_ProtectionsAlarm.h"
+#include "core_ProtectionSHC.h"
 #include "g_Structs.h"
 
 //--------------------- Константы-------------------------------------------
-#define PROTECT_SCALE (0.100 * Prd50HZ)
+#define PROTECT_SCALE (0.100 * PRD_50HZ)
 
 // Номера битов g_Structs.h -> TProcessReg
 
@@ -54,10 +56,10 @@
 #define Memory2_bit			2
 #define Rtc_bit				3
 #define TSens_bit			4
-#define Th_BCP_bit			5
-#define Tl_BCP_bit			6
-#define Th_BCD_bit			7
-#define Tl_BCD_bit			8
+#define Th_bit			        5
+#define Tl_bit			        6
+#define DriveTemper_bit			7
+#define ModuleTemper_bit		8
 
 //--------------------- Макросы --------------------------------------------
 #define PRT_CFG_SET(CanBeReseted, Level, Bit, Hyst) \
@@ -65,10 +67,38 @@
 //-------------------- Структуры -------------------------------------------
 
 typedef struct {
-		TFltUnion			        outFaults;			// Аварии
-		TFltUnion			        outDefects;			// Неисправности
-			// Флаг по которому сбрасывается КЗ
-		Uns					FaultDelay;			// Пауза после инициализации для включения защит
+		// -------- Р”РёР°РіРЅРѕСЃС‚РёРєР° СЃРµС‚Рё ----------------
+		TAlarmElem 			underVoltageR;		// РџРѕРЅРёР¶РµРЅРёРµ РЅР°РїСЂСЏР¶РµРЅРёСЏ R  - Р°РІР°СЂРёСЏ
+		TAlarmElem 			underVoltageS;		// РџРѕРЅРёР¶РµРЅРёРµ РЅР°РїСЂСЏР¶РµРЅРёСЏ S  - Р°РІР°СЂРёСЏ
+		TAlarmElem 			underVoltageT;		// РџРѕРЅРёР¶РµРЅРёРµ РЅР°РїСЂСЏР¶РµРЅРёСЏ T  - Р°РІР°СЂРёСЏ
+		TAlarmElem 			overVoltageR;		// РџСЂРµРІС‹С€РµРЅРёРµ РЅР°РїСЂСЏР¶РµРЅРёСЏ R - Р°РІР°СЂРёСЏ
+		TAlarmElem 			overVoltageS;		// РџСЂРµРІС‹С€РµРЅРёРµ РЅР°РїСЂСЏР¶РµРЅРёСЏ S - Р°РІР°СЂРёСЏ
+		TAlarmElem 			overVoltageT;		// РџСЂРµРІС‹С€РµРЅРёРµ РЅР°РїСЂСЏР¶РµРЅРёСЏ T - Р°РІР°СЂРёСЏ
+		TAlarmElem 			breakVoltR;		// РћР±СЂС‹РІ С„Р°Р·С‹ R - Р°РІР°СЂРёСЏ
+		TAlarmElem 			breakVoltS;		// РћР±СЂС‹РІ С„Р°Р·С‹ S - Р°РІР°СЂРёСЏ
+		TAlarmElem 			breakVoltT;		// РћР±СЂС‹РІ С„Р°Р·С‹ T - Р°РІР°СЂРёСЏ
+                
+                TAlarmElem                      VDCmax;
+  	// -------- Р”РёР°РіРЅРѕСЃС‚РёРєР° РЅР°РіСЂСѓСЃРєРё ------------
+		TAlarmElem			breakCurrU;			// РћР±СЂС‹РІ С„Р°Р·С‹ U	- Р°РІР°СЂРёСЏ
+		TAlarmElem			breakCurrV;			// РћР±СЂС‹РІ С„Р°Р·С‹ V - Р°РІР°СЂРёСЏ
+		TAlarmElem			breakCurrW;			// РћР±СЂС‹РІ С„Р°Р·С‹ W - Р°РІР°СЂРёСЏ
+		TAlarmSHC			ShC_U;				// РљРѕСЂРѕС‚РєРѕРµ Р·Р°РјС‹РєР°РЅРёРµ С„Р°Р·С‹ U - Р°РІР°СЂРёСЏ
+		TAlarmSHC			ShC_V;				// РљРѕСЂРѕС‚РєРѕРµ Р·Р°РјС‹РєР°РЅРёРµ С„Р°Р·С‹ V - Р°РІР°СЂРёСЏ
+		TAlarmSHC			ShC_W;				// РљРѕСЂРѕС‚РєРѕРµ Р·Р°РјС‹РєР°РЅРёРµ С„Р°Р·С‹ W - Р°РІР°СЂРёСЏ      
+                
+                TAlarmElem                      IbreakMax;
+    // -------- Р”РёР°РіРЅРѕСЃС‚РёРєР° СѓСЃС‚СЂРѕР№СЃС‚РІР° ----------
+
+		TAlarmElem			overHeat;			// РџРµСЂРµРіСЂРµРІ Р‘РљР” - РЅРµРёСЃРїСЂР°РІРЅРѕСЃС‚СЊ
+		TAlarmElem			underCold; 			// РџРµСЂРµРѕС…Р»Р°Р¶РґРµРЅРёРµ Р‘РљР” - РЅРµРёСЃРїСЂР°РІРЅРѕСЃС‚СЊ    
+                
+                TAlarmElem			driveTemper;               
+                TAlarmElem			moduleTemper;
+                      
+                TFltUnion		        outFaults;			// Аварии
+                Uns				ShcTmpState;		// Промежуточная переменная для определения КЗ
+		Uns				FaultDelay;			// Пауза после инициализации для включения защит
 }TCoreProtections;
 
 void Core_ProtectionsInit(TCoreProtections *);			// Инициализация модуля защит
