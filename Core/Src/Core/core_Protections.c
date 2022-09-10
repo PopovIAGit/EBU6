@@ -3,6 +3,7 @@
 #include "g_Core.h"
 #include "peref.h"
 
+Uns U,V,W;
 
 void Core_ProtectionsInit(TCoreProtections *p)
 {
@@ -135,9 +136,9 @@ void Core_ProtectionsInit(TCoreProtections *p)
 	p->ShC_V.Cfg.bit.Hyst = HYST_OFF;
 	p->ShC_W.Cfg.bit.Hyst = HYST_OFF;
 
-	p->ShC_U.InputCurrent = (Uns *) &g_Peref.adcData3[1];
-	p->ShC_V.InputCurrent = (Uns *) &g_Peref.adcData3[2];
-	p->ShC_W.InputCurrent = (Uns *) &g_Peref.adcData3[3];
+	p->ShC_U.InputCurrent = (Uns *)&U;
+	p->ShC_V.InputCurrent = (Uns *)&V;
+	p->ShC_W.InputCurrent = (Uns *)&W;
 
 	p->ShC_U.HighCurrentLevel = &g_Ram.FactoryParam.ShC_Up;
 	p->ShC_V.HighCurrentLevel = &g_Ram.FactoryParam.ShC_Up;
@@ -278,6 +279,9 @@ void Core_Protections18kHzUpdate(TCoreProtections *p)
 	if (p->FaultDelay > 0)
 		return;
         
+        U = g_Peref.adcData3[1];
+        V = g_Peref.adcData3[2];
+        W = g_Peref.adcData3[3];
         
         Core_ProtecionSHC_Update(&p->ShC_U);
 	Core_ProtecionSHC_Update(&p->ShC_V);

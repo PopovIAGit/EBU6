@@ -165,21 +165,12 @@ void Core_CalibControl(TCore *p)
 
 void core18kHZupdate(void)
 {
-     
-  g_Core.Mash3 = g_Core.rg1.Freq * 50.0;
-  
-  
-    ModuleTemper = g_Peref.adcData1[5]; // all in 
-    IDC  = g_Peref.adcData3[0];
-    // SHC Protect Test--------------------------------------------------
-
-    if (( g_Peref.adcData3[1] > ShC_Level) ||  (g_Peref.adcData3[2] > ShC_Level)  || (g_Peref.adcData3[3] > ShC_Level))
-    {
-    //  g_Core.Status.bit.Fault = 1;
-    }
-      ModFault = HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
-      if (!ModFault)  
-        g_Core.Status.bit.Fault = 1;
+    
+    
+  g_Core.Mash3 = fabs(g_Core.rg1.Freq * 50.0);
+    // not work
+    //  g_Core.Protections.outFaults.Dev.bit.ModuleFault = HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
+      
 
     //--------------------------------------------------------------------------
 
@@ -248,9 +239,9 @@ void StopPowerControl(void)
          
       //  g_Core.MotorControl.WorkMode = wmStop;
         
-        // pf\\заглушка для теста
+        
         if (g_Core.Status.bit.Fault){
-            g_Core.MotorControl.WorkMode = wmDynBreak ;
+            g_Core.MotorControl.WorkMode = wmStop ;
             TimeSpeedStop = g_Ram.UserParam.TimeSpeedStop;
         }
         else  

@@ -70,9 +70,9 @@ typedef struct _TUserParam
 	TTimeVar 	DevTime;		// B13. 53 Время
 	TDateVar 	DevDate;		// B14. 54 Дата
 	Uns		reserv55;		// B15. 55 reserv
-	Uns		reserv56;		// B16. 56 Резерв
-	TMuDuSetup  	MuDuSetup;              // B17. 57 Настройка режима МУ/ДУ
-	Uns		reserv57;		// B18. 58 Резерв
+	TMuDuSetup		MuDuSetup;		// B16. 56 Резерв
+	Uns  	reserv57;              // B17. 57 Настройка режима МУ/ДУ
+	Uns		reserv58;		// B18. 58 Резерв
         TDuSource	DuSource;		// B19. 59 Источник команд ДУ
 	Uns         	TuLockSeal;             // B20. 60 Блокировка залипани
 	Uns         	TuTime;                 // B21. 61 Время команды
@@ -93,7 +93,7 @@ typedef struct _TUserParam
 	Uns		DcBreakTime;		// B36. 76 Резерв
  	Uns		SetPosition;		// B37. 77 задание для приезда в точку 1000 - 100%
  	Uns		Kp;		        // B38. 78 пропорциональный кэф 
- 	Uns		reserv79;		// B39. 79 Резерв
+ 	Uns		FaultPosition;		// B39. 79 Резерв
  	Uns		reserv80;		// B40. 80 Резерв
         Uns		reserv81;		// B41. 81 Резерв
         Uns		reserv82;		// B42. 82 Резерв

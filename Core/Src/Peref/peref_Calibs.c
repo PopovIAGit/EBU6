@@ -21,7 +21,7 @@ void Peref_CalibInit(TPerefPosition *p)
 {
 	p->ResetFlag 	= false;
 	p->CancelFlag 	= false;
-	p->GearRatio 	= 100;//g_Ram.FactoryParam.GearRatio;
+	p->GearRatio 	= g_Ram.FactoryParam.GearRatio;
 	p->Zone 		= 0;
 	p->RevMax 		= REV_MAX;
 	p->LinePos		= 0;

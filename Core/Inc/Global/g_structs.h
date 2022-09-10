@@ -101,7 +101,8 @@ typedef union _TProcessReg {
 		Uns NoCalib:1;		// 4     Калибровка не выполнена
 		Uns Overway:1;		// 5     Уплотнение не достигнуто
 		Uns Mufta:1;		// 6	 Муфта
-		Uns Rsvd:9;		// 7-15  Резерв
+		Uns DAC_no_con:1;       // 7     цап не подключен
+                Uns Rsvd:8;		// 8-15  Резерв
 	} bit;
 } TProcessReg;
 
@@ -177,7 +178,7 @@ typedef union _TDeviceReg {
                 Uns ModuleTemper:1;     // 8     перегрев силового модуля
 		Uns Dac:1;		// 9     Сбой ЦАП
 		Uns LowPower:1;		// 10    Выключение 
-		Uns Rsvd11:1;           // 11   Резерв
+		Uns ModuleFault:1;           // 11   Резерв
 		Uns Rsvd12:1;	        // 12   Резерв
 		Uns Rsvd13:1;	        // 13	Резерв
 		Uns Rsvd14:1;           // 14	Резерв

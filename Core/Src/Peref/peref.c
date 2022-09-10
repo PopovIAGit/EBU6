@@ -459,14 +459,14 @@ void peref_200HzCalc(TPeref *p)
   
      HAL_FDCAN_GetErrorCounters(&hfdcan2, &FDCANerrCount);      
       HAL_FDCAN_GetProtocolStatus(&hfdcan2, &FDCANStatus);
-  
-
       
          Cms58mRxHandler(&p->cms58m_1);
          if (FDCANerrCount.RxErrorPassive)
          g_Core.Protections.outFaults.Dev.bit.PosSens = 1; 
          else 
          g_Ram.HideParam.Position = p->cms58m_1.value;
+
+
 
         
       /*   if (tmpData != p->cms58m_1.value && tmpData2 != tmpData && tmpData2 != p->cms58m_1.value) 
@@ -504,12 +504,20 @@ void peref_50HzCalc(TPeref *p)
      ADS1118_update(&g_Peref);  // считали ацп
     //--АДЦ в проценты--------------------------------------------------------------
       
+  if (p->ADC_Out_data < 2000){
+  g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 1; 
+    
+        }
+    
+  else {    
+    g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 0;
    p->ADCToProcfltr.Input = (float)p->ADC_Out_data;    // отдали в фильтр Uns в float
    peref_ApFilter1Calc(&p->ADCToProcfltr);             // пофильтровали
    p->ADCtoProc.input = (Uns)p->ADCToProcfltr.Output;  // отдали в интерполяцию float в Uns
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ADCtoProc); //посчитали интерполяцию
    g_Ram.UserParam.SetPosition = g_Peref.ADCtoProc.output;
-   //g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
+  }
+     //g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
      if (g_Ram.Status.CalibState == csCalib){
         tmpDACData = g_Ram.Status.PositionPr;     
         if (tmpDACData > 1000) tmpDACData = 10000;
