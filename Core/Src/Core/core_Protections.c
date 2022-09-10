@@ -292,7 +292,8 @@ void Core_Protections18kHzUpdate(TCoreProtections *p)
         if (p->outFaults.Dev.all || p->outFaults.Load.all || p->outFaults.Net.all || p->outFaults.Proc.all)
 	{
           g_Core.Status.bit.Fault = 1;
-	}
+	
+        }
 	else
 	  g_Core.Status.bit.Fault = 0;
 
@@ -308,7 +309,3 @@ void Core_Protections18kHzUpdate(TCoreProtections *p)
 	}
 
 }
-
-
-
-

@@ -504,12 +504,13 @@ void peref_50HzCalc(TPeref *p)
      ADS1118_update(&g_Peref);  // считали ацп
     //--АДЦ в проценты--------------------------------------------------------------
       
-  if (p->ADC_Out_data < 2000){
-  g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 1; 
+  if (p->ADC_Out_data < 2500){
+  
+    if (g_Core.VlvDrvCtrl.Status->bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac)
+      g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 1; 
     
-        }
-    
-  else {    
+  }
+  else if (g_Core.VlvDrvCtrl.MuDuInput == 0 && g_Ram.UserParam.DuSource == mdsDac) {    
     g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 0;
    p->ADCToProcfltr.Input = (float)p->ADC_Out_data;    // отдали в фильтр Uns в float
    peref_ApFilter1Calc(&p->ADCToProcfltr);             // пофильтровали

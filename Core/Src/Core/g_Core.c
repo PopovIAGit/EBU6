@@ -165,13 +165,9 @@ void Core_CalibControl(TCore *p)
 
 void core18kHZupdate(void)
 {
-    
-    
   g_Core.Mash3 = fabs(g_Core.rg1.Freq * 50.0);
     // not work
     //  g_Core.Protections.outFaults.Dev.bit.ModuleFault = HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
-      
-
     //--------------------------------------------------------------------------
 
    if (/*!g_Core.Status.bit.Fault && */SpeedRef)
@@ -318,7 +314,7 @@ static void StopMode(void)
   
            SpeedEnable = 0;
            SpeedMax = 0;
-       //    SpeedRef = 0.0;
+           SpeedRef = 0.0;
            PWM_keys_disable();
           // g_Core.VlvDrvCtrl.StartDelay = (Uns)START_DELAY_TIME;
      
@@ -350,7 +346,34 @@ double tmpdata = 0;
 double tmpdata2 = 0;
 static void MoveMode(void)
 {
-    // что то делаем пока едем
+  if (g_Ram.UserParam.RegEnable == 0)
+  {
+      if (g_Ram.Status.Status.bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac)
+      {
+        tmpdata   = p_Controller(g_Ram.UserParam.SetPosition, g_Ram.Status.PositionPr);
+        tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
+        SpeedRef = tmpdata2 * tmpdata;
+      }
+      else if (g_Ram.Status.Status.bit.MuDu == 1 || (g_Ram.Status.Status.bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDigital))
+      {
+          tmpdata   = p_Controller(g_Core.MotorControl.RequestPos, g_Ram.Status.PositionPr);
+          tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
+          SpeedRef = tmpdata2 * tmpdata;
+      }
+  }
+  else 
+  {
+    
+        tmpdata   = p_Controller(g_Ram.UserParam.SetPosition, g_Ram.Status.PositionPr);
+        tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
+        SpeedRef = tmpdata2 * tmpdata;
+    
+  }
+
+
+/*
+
+  // что то делаем пока едем
    if (g_Ram.UserParam.DuSource == mdsDac)
     {
       tmpdata   = p_Controller(g_Ram.UserParam.SetPosition, g_Ram.Status.PositionPr);
@@ -364,7 +387,7 @@ static void MoveMode(void)
       tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
       SpeedRef = tmpdata2 * tmpdata;
    }
-  
+  */
 }
 
 static void DynBreakMode(void)

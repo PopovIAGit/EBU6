@@ -93,9 +93,9 @@ typedef struct _TUserParam
 	Uns		DcBreakTime;		// B36. 76 Резерв
  	Uns		SetPosition;		// B37. 77 задание для приезда в точку 1000 - 100%
  	Uns		Kp;		        // B38. 78 пропорциональный кэф 
- 	Uns		FaultPosition;		// B39. 79 Резерв
- 	Uns		reserv80;		// B40. 80 Резерв
-        Uns		reserv81;		// B41. 81 Резерв
+ 	Uns		FaultPosition;		// B39. 79 Заданное положение при аварии
+ 	Uns		RegEnable;		// B40. 80 Если активен то по командам катаемсяв заданную точку
+        Uns		SavePosOn;		// B41. 81 Резерв
         Uns		reserv82;		// B42. 82 Резерв
         Uns		reserv83;		// B43. 83 Резерв
         Uns		reserv84;		// B44. 84 Резерв
@@ -146,8 +146,8 @@ typedef struct _TFactoryParam
         Uns		PosSensPow;		// С33. 123  Тип датчика положения
  	Int		BreakZone;		// C34. 124 Число оборотов дв за которое начинаем тормозить
  	Uns		reserv125;		// С35. 125 Резерв
-        Uns		reserv126;		// С36. 126 Резерв
-        Uns		reserv127;		// С37. 127 Резерв
+        Uns		ADC_Data;		// С36. 126 Резерв
+        Uns		DAC_Data;		// С37. 127 Резерв
         Uns		ReversADC;		// С38. 128 Резерв
         Uns		ReversDAC;		// С39. 129 Резерв
         Uns             ADCdots[33];            // C40-C72 130-162 точки для преобразования АЦП в 4-20

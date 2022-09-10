@@ -77,8 +77,10 @@ void Core_ValveDriveUpdate(TCoreVlvDrvCtrl *p)
         GetActiveControls(p);	        // ѕолучение данных по активированному типу управлени€ (местное/дистанци€)
 	TeleControl(p);			// ѕодача команд дистанционного управлени€
 	MpuControl(p);			// ѕодача команд местного управлени€
+        
         if (p->ActiveControls & CMD_SRC_ANALOG)
         Core_ValveDriveMove(&g_Core.VlvDrvCtrl, g_Ram.UserParam.SetPosition);
+  
         
         UnitControl(p);			// ƒейстаи€ в зависимости от команды (открыть/закрыть/стоп)
         
@@ -104,8 +106,8 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
     Position = (LgInt)Positiontmp3;
    // Position = (LgInt)((g_Peref.Position.FullStep * (LgUns)Percent * 131Ul)>>17);
     
-    if (Position< (g_Peref.Position.LinePos - POS_ERR)) MoveControl = vcwClose;
-    if (Position> (g_Peref.Position.LinePos + POS_ERR)) MoveControl = vcwOpen;
+    if (Position < (g_Peref.Position.LinePos - POS_ERR)) MoveControl = vcwClose;
+    if (Position > (g_Peref.Position.LinePos + POS_ERR)) MoveControl = vcwOpen;
     
     if (MoveControl != vcwNone)
     {
@@ -113,7 +115,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
       p->Valve.Position = Position;
       p->EvLog.Value = CMD_MOVE;
       p->StartControl(MoveControl);
-        
+     
     }
 }
 
@@ -232,6 +234,21 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
  void UnitControl(TCoreVlvDrvCtrl *p)
 {
 		UpdateComm(p);
+                
+                if (g_Ram.UserParam.RegEnable == 1)
+                {
+                    if (*p->ControlWord)
+                    {
+                  Core_ValveDriveMove(&g_Core.VlvDrvCtrl, g_Ram.UserParam.SetPosition);      
+                      
+                          *p->ControlWord = vcwNone;
+                    }
+                        
+                  
+                      
+                    
+                }
+                else{
 
 		if (p->StartDelay > 0) p->StartDelay--;
 		else if (*p->ControlWord)
@@ -249,6 +266,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 			}
 			*p->ControlWord = vcwNone;
 		}
+                }
 }
 
  void DriveStop(TCoreVlvDrvCtrl *p)
@@ -267,7 +285,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 	 	return;
 	}
 	if(p->Status->bit.Closing) return;								// ≈сли идет закрытие то уходим
-	if (p->Status->bit.Opening) {/*ReverseDrive(p);*/ return;}
+	if (p->Status->bit.Opening) {ReverseDrive(p); return;}
 
 	p->Valve.BreakFlag = False;										//
 	FreeRun = (*p->ControlWord == vcwTestClose) || !(*p->Valve.CalibStates == VLV_CLB_FLAG);		// –ежим свободного движени€ - ≈сли тестовое открытие или не откалиброванно
@@ -296,7 +314,7 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 	 	return;
 	}
 	if (p->Status->bit.Opening) return;
-	if (p->Status->bit.Closing) {/*ReverseDrive(p);*/ return;}
+	if (p->Status->bit.Closing) {ReverseDrive(p); return;}
 
 	p->Valve.BreakFlag = False;
 	FreeRun = (*p->ControlWord == vcwTestOpen) || !(*p->Valve.CalibStates == VLV_CLB_FLAG);

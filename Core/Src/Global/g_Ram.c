@@ -54,7 +54,7 @@ void g_Ram_Update(TRam *p)
 	p->HideParam.IwPr = (g_Peref.Ic.Output * 10) / p->FactoryParam.Inom;
       }
     g_Ram.Status.Position = g_Ram.HideParam.Position;
-    
+    g_Ram.FactoryParam.ADC_Data =(Uns) g_Peref.ADCToProcfltr.Output;
       
      //------------------------------------------------------
     Uns PassAddr;
