@@ -754,7 +754,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>C:\work\ebu6\EBU6\EWARM\stm32h743xx_flash.icf</state>
+                    <state>D:\WorkOther\EBU6\EWARM\stm32h743xx_flash.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>

@@ -743,7 +743,7 @@ void coreTS(TCore *p)
    g_Ram.HideParam.HideStateTs.bit.Closed       = p->Status.bit.Closed  ^ g_Ram.UserParam.TsInvert.bit.Dout1;
    g_Ram.HideParam.HideStateTs.bit.Opening      = p->Status.bit.Opening ^ g_Ram.UserParam.TsInvert.bit.Dout2;
    g_Ram.HideParam.HideStateTs.bit.Closing      = p->Status.bit.Closing ^ g_Ram.UserParam.TsInvert.bit.Dout3;
-   g_Ram.HideParam.HideStateTs.bit.Fault        = p->Status.bit.Fault   ^ g_Ram.UserParam.TsInvert.bit.Dout4;
+   g_Ram.HideParam.HideStateTs.bit.Fault        = (p->Status.bit.Fault || g_Core.Protections.Dac_No_Conn_Tmp) ^ g_Ram.UserParam.TsInvert.bit.Dout4;
    g_Ram.HideParam.HideStateTs.bit.MuftaOpen    = p->Status.bit.Mufta   ^ g_Ram.UserParam.TsInvert.bit.Dout5;
    g_Ram.HideParam.HideStateTs.bit.MuftaClose   = p->Status.bit.Mufta   ^ g_Ram.UserParam.TsInvert.bit.Dout6;
    g_Ram.HideParam.HideStateTs.bit.MUDU         = p->Status.bit.MuDu    ^ g_Ram.UserParam.TsInvert.bit.Dout7; 

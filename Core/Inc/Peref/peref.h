@@ -20,6 +20,8 @@
 #define BTN_LEVEL			1
 #define NUM_OF_INPUT_TU                 0x1f   // колличество входов ТУ с микросхемы 11111
 
+#define POSITION_ERROR_CONFORM 10 // допустимое значение ошибки положения 10 = 1%
+
 //==========Функция линейной интерполяции==============================
 // Формула:		F(x1) - F(x0)
 //  F(x) = F(x0) + --------------- * (x - x0)
@@ -248,6 +250,7 @@ typedef struct {
         Uns                     Modul_Off;      // out: 
         Uns                     Mcu220380;      // out:1 220  0 380
         Uns                     Ref15;          // out: 1 3квт   0 1.5квт
+        Int                     tmpSetPosition;
       
 } TPeref;
 

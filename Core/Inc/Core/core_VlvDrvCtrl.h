@@ -35,7 +35,7 @@
 #define CMD_SRC_BLUETOOTH	0x200   // источник команды Bluetooth интерфейс
 // Константы для работы с положением
 #define POS_UNDEF	0x7FFFFFFF
-#define POS_ERR		50
+#define POS_ERR		5
 
 // Состояния входов ТУ
 #define TU_OPEN			0x1
@@ -50,12 +50,12 @@
 // Команда управления
 typedef enum {
   vcwNone=0,		// Нет команды
-  vcwStop,			// Стоп
-  vcwClose,			// Закрыть
-  vcwOpen,			// Открыть
+  vcwStop,		// Стоп
+  vcwClose,		// Закрыть
+  vcwOpen,		// Открыть
   vcwTestClose,		// Тестовое закрыть
   vcwTestOpen,		// Тестовое открыть
-  vcwDemo,			// Демо режим
+  vcwDemo,		// Демо режим
   vcwTestEng		// Тест двигателя
 } TValveCmd;
 

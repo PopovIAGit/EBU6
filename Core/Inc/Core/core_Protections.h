@@ -95,6 +95,7 @@ typedef struct {
                 TFltUnion		        outFaults;			// Аварии
                 Uns				ShcTmpState;		// Промежуточная переменная для определения КЗ
 		Uns				FaultDelay;			// Пауза после инициализации для включения защит
+                Uns                             Dac_No_Conn_Tmp;
 }TCoreProtections;
 
 void Core_ProtectionsInit(TCoreProtections *);			// Инициализация модуля защит

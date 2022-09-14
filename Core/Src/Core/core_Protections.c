@@ -258,7 +258,7 @@ void Core_ProtectionsClear(TCoreProtections *p)
 	p->outFaults.Net.all = 0;
 	p->outFaults.Load.all = 0;
 	p->outFaults.Proc.all = 0;
-
+        p->Dac_No_Conn_Tmp = 0;
 }
 
 void Core_Protections50HZUpdate(TCoreProtections *p)
@@ -301,7 +301,7 @@ void Core_Protections18kHzUpdate(TCoreProtections *p)
 	if (!g_Core.Status.bit.Stop)
 	{
 
-		if (g_Core.Status.bit.Fault )   	
+		if (g_Core.Status.bit.Fault)   	
 		{
 			Core_ValveDriveStop(&g_Core.VlvDrvCtrl);
 			g_Core.VlvDrvCtrl.EvLog.Value = CMD_DEFSTOP;

@@ -202,8 +202,8 @@ void Peref_CalibUpdate(TPerefPosition *p)
 			//if (*p->CurWay >= ((Int)*p->FullWay - (Int)*p->PositionAcc)) p->Zone |= CLB_OPEN;
       
 			*p->PositionPr = DivKQ1(p->LinePos, p->FullStep, 1000, 0);
-                        if (*p->PositionPr <= 0 ) p->Zone |= CLB_CLOSE;
-                        if (*p->PositionPr >= 1000 ) p->Zone |= CLB_OPEN;
+                        if (*p->PositionPr <= (Int)*p->PositionAcc ) p->Zone |= CLB_CLOSE;
+                        if (*p->PositionPr >= ((Int)*p->FullWay - (Int)*p->PositionAcc) ) p->Zone |= CLB_OPEN;
 			//*p->PositionPr = (p->LinePos*1000UL)/p->FullStep;
 			//if ((p->Zone & CLB_CLOSE) && (*p->PositionPr > 0))    *p->PositionPr = 0;
 			//if ((p->Zone & CLB_OPEN)  && (*p->PositionPr < 1000)) *p->PositionPr = 1000;

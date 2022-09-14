@@ -496,6 +496,7 @@ void peref_200HzCalc(TPeref *p)
 }
 
 //-----------------------------------
+
 void peref_50HzCalc(TPeref *p)
 { 
    Int tmpDACData; 
@@ -506,17 +507,25 @@ void peref_50HzCalc(TPeref *p)
       
   if (p->ADC_Out_data < 2500){
   
-    if (g_Core.VlvDrvCtrl.Status->bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac)
-      g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 1; 
+    if (g_Core.VlvDrvCtrl.Status->bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac){
+        g_Core.Protections.Dac_No_Conn_Tmp = 1;
+        if (g_Ram.UserParam.SavePosOn && (abs((Int)g_Ram.Status.PositionPr - (Int)g_Ram.UserParam.SetPosition)> POSITION_ERROR_CONFORM))  g_Ram.UserParam.SetPosition = g_Ram.UserParam.FaultPosition;
+        else g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 1; 
+    }
     
   }
   else if (g_Core.VlvDrvCtrl.MuDuInput == 0 && g_Ram.UserParam.DuSource == mdsDac) {    
     g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 0;
-   p->ADCToProcfltr.Input = (float)p->ADC_Out_data;    // отдали в фильтр Uns в float
-   peref_ApFilter1Calc(&p->ADCToProcfltr);             // пофильтровали
-   p->ADCtoProc.input = (Uns)p->ADCToProcfltr.Output;  // отдали в интерполяцию float в Uns
+    p->ADCToProcfltr.Input = (float)p->ADC_Out_data;    // отдали в фильтр Uns в float
+    peref_ApFilter1Calc(&p->ADCToProcfltr);             // пофильтровали
+    p->ADCtoProc.input = (Uns)p->ADCToProcfltr.Output;  // отдали в интерполяцию float в Uns
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ADCtoProc); //посчитали интерполяцию
-   g_Ram.UserParam.SetPosition = g_Peref.ADCtoProc.output;
+    
+      if (abs(p->tmpSetPosition - (Int)g_Peref.ADCtoProc.output) > POSITION_ERROR_CONFORM){     
+        g_Ram.UserParam.SetPosition = g_Peref.ADCtoProc.output;
+          g_Core.VlvDrvCtrl.Command = vcwDemo;
+      }
+      p->tmpSetPosition = g_Ram.UserParam.SetPosition;
   }
      //g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
      if (g_Ram.Status.CalibState == csCalib){
@@ -570,14 +579,14 @@ void peref_10HzCalc(TPeref *p)//
   // LED control--------------------------------------------------------------------------
   if (g_Ram.TestParam.Mode == 1)
   {
-    HAL_GPIO_WritePin(ALARM_SD_GPIO_Port, ALARM_SD_Pin, g_Ram.TestParam.LedsReg.bit.Fault);
+    HAL_GPIO_WritePin(ALARM_SD_GPIO_Port, ALARM_SD_Pin, (g_Ram.TestParam.LedsReg.bit.Fault ));
     HAL_GPIO_WritePin(MU_DU_SD_GPIO_Port, MU_DU_SD_Pin, g_Ram.TestParam.LedsReg.bit.MuDu);
     HAL_GPIO_WritePin(OPENED_SD_GPIO_Port, OPENED_SD_Pin, g_Ram.TestParam.LedsReg.bit.Opened);
     HAL_GPIO_WritePin(CLOSED_SD_GPIO_Port, CLOSED_SD_Pin, g_Ram.TestParam.LedsReg.bit.Closed);
   }
   else 
   {
-    HAL_GPIO_WritePin(ALARM_SD_GPIO_Port, ALARM_SD_Pin, g_Ram.Status.Status.bit.Fault);
+    HAL_GPIO_WritePin(ALARM_SD_GPIO_Port, ALARM_SD_Pin, (g_Ram.Status.Status.bit.Fault || g_Core.Protections.Dac_No_Conn_Tmp));
     HAL_GPIO_WritePin(MU_DU_SD_GPIO_Port, MU_DU_SD_Pin, g_Ram.Status.Status.bit.MuDu);
     
     if (g_Ram.Status.Status.bit.Opening)

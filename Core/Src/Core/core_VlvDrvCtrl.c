@@ -77,20 +77,17 @@ void Core_ValveDriveUpdate(TCoreVlvDrvCtrl *p)
         GetActiveControls(p);	        // Получение данных по активированному типу управления (местное/дистанция)
 	TeleControl(p);			// Подача команд дистанционного управления
 	MpuControl(p);			// Подача команд местного управления
-        
-        if (p->ActiveControls & CMD_SRC_ANALOG)
-        Core_ValveDriveMove(&g_Core.VlvDrvCtrl, g_Ram.UserParam.SetPosition);
-  
-        
+       // if (p->ActiveControls & CMD_SRC_ANALOG)
+       // Core_ValveDriveMove(&g_Core.VlvDrvCtrl, g_Ram.UserParam.SetPosition);
         UnitControl(p);			// Дейстаия в зависимости от команды (открыть/закрыть/стоп)
         
 }
 
 void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 {
-    TValveCmd MoveControl = vcwNone;
-    LgInt Position;
-     LgInt Positiontmp;
+      TValveCmd MoveControl = vcwNone;
+      LgInt Position;
+      LgInt Positiontmp;
       LgInt Positiontmp2;
       LgInt Positiontmp3;
     
@@ -235,36 +232,41 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 {
 		UpdateComm(p);
                 
-                if (g_Ram.UserParam.RegEnable == 1)
+                if (g_Ram.UserParam.RegEnable == 1 || p->ActiveControls & CMD_SRC_ANALOG)
                 {
                     if (*p->ControlWord)
                     {
-                  Core_ValveDriveMove(&g_Core.VlvDrvCtrl, g_Ram.UserParam.SetPosition);      
-                      
+                         switch(*p->ControlWord)
+                            {
+                                    case vcwStop:      DriveStop(p);  	break;
+                                    case vcwClose:
+                                    case vcwTestClose: 
+                                    case vcwOpen:
+                                    case vcwTestOpen:  	
+                                    case vcwDemo:      Core_ValveDriveMove(&g_Core.VlvDrvCtrl, g_Ram.UserParam.SetPosition);  break;
+                                    //case vcwTestEng:
+                                    default: break;//p->StartControl(*p->ControlWord);
+                            }   
                           *p->ControlWord = vcwNone;
                     }
-                        
-                  
-                      
-                    
                 }
                 else{
 
-		if (p->StartDelay > 0) p->StartDelay--;
-		else if (*p->ControlWord)
-		{
-			switch(*p->ControlWord)
-			{
-				case vcwStop:      DriveStop(p);  	break;
-				case vcwClose:
-				case vcwTestClose: DriveClose(p); 	break;
-				case vcwOpen:
-				case vcwTestOpen:  DriveOpen(p);  	break;
-				//case vcwDemo:        				break;
-				//case vcwTestEng:
-				default: break;//p->StartControl(*p->ControlWord);
-			}
-			*p->ControlWord = vcwNone;
+                    if (p->StartDelay > 0) p->StartDelay--;
+                    else if (*p->ControlWord)
+                    {
+                            switch(*p->ControlWord)
+                            {
+                                    case vcwStop:      DriveStop(p);  	break;
+                                    case vcwClose:
+                                    case vcwTestClose: DriveClose(p); 	break;
+                                    case vcwOpen:
+                                    case vcwTestOpen:  DriveOpen(p);  	break;
+                                    //case vcwDemo:        				break;
+                                    //case vcwTestEng:
+                                    default: break;//p->StartControl(*p->ControlWord);
+                            }
+                            *p->ControlWord = vcwNone;
 		}
                 }
 }
@@ -333,14 +335,14 @@ void Core_ValveDriveMove(TCoreVlvDrvCtrl *p, Uns Percent)
 	p->StartControl(*p->ControlWord);
 }
 
- void UpdateComm(TCoreVlvDrvCtrl *p)		// Функция автоматической подачи команды при реверсе ()
+ void UpdateComm(TCoreVlvDrvCtrl *p)		                        // Функция автоматической подачи команды при реверсе ()
 {
 	if (p->Command != vcwNone)					// Если пришла внутренняя
 	{
 		if (p->Command == vcwStop) *p->ControlWord = vcwStop;	// Если команда для реверса Стоп, подаем нормальную команду стоп
-		else if (!p->Status->bit.Stop) return;					// Ждем пока остановимся
-		else *p->ControlWord = p->Command;						// Подаем команду в противоположном направленииы
-		p->Command = vcwNone;									// Сбрасываем внутреннюю команду
+		else if (!p->Status->bit.Stop) return;			// Ждем пока остановимся
+		else *p->ControlWord = p->Command;			// Подаем команду в противоположном направленииы
+		p->Command = vcwNone;					// Сбрасываем внутреннюю команду
 	}
 }
 
