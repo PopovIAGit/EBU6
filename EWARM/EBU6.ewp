@@ -1082,6 +1082,9 @@
                 <group>
                     <name>Core</name>
                     <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Core\aci.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\Core\Src\Core\core_InverterControl.c</name>
                     </file>
                     <file>
@@ -1101,6 +1104,9 @@
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Src\Core\g_Core.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Core\volt_calc.c</name>
                     </file>
                 </group>
                 <group>
@@ -1184,6 +1190,9 @@
                 <group>
                     <name>Core</name>
                     <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\aci.h</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Core\core_InverterControl.h</name>
                     </file>
                     <file>
@@ -1215,6 +1224,9 @@
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Core\peref_ApFilter3.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Core\volt_calc.h</name>
                     </file>
                 </group>
                 <group>

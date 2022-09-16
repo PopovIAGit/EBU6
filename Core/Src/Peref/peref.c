@@ -500,43 +500,69 @@ void peref_200HzCalc(TPeref *p)
 void peref_50HzCalc(TPeref *p)
 { 
    Int tmpDACData; 
-      
-     //ADC 4-20 мА ---------------------------------------------------------------
-     ADS1118_update(&g_Peref);  // считали ацп
-    //--АДЦ в проценты--------------------------------------------------------------
-      
-  if (p->ADC_Out_data < 2500){
-  
-    if (g_Core.VlvDrvCtrl.Status->bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac){
-        g_Core.Protections.Dac_No_Conn_Tmp = 1;
-        if (g_Ram.UserParam.SavePosOn && (abs((Int)g_Ram.Status.PositionPr - (Int)g_Ram.UserParam.SetPosition)> POSITION_ERROR_CONFORM))  g_Ram.UserParam.SetPosition = g_Ram.UserParam.FaultPosition;
-        else g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 1; 
-    }
-    
-  }
-  else if (g_Core.VlvDrvCtrl.MuDuInput == 0 && g_Ram.UserParam.DuSource == mdsDac) {    
-    g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 0;
+   //--АДЦ в проценты--------------------------------------------------------------
     p->ADCToProcfltr.Input = (float)p->ADC_Out_data;    // отдали в фильтр Uns в float
     peref_ApFilter1Calc(&p->ADCToProcfltr);             // пофильтровали
     p->ADCtoProc.input = (Uns)p->ADCToProcfltr.Output;  // отдали в интерполяцию float в Uns
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ADCtoProc); //посчитали интерполяцию
+
     
-      if (abs(p->tmpSetPosition - (Int)g_Peref.ADCtoProc.output) > POSITION_ERROR_CONFORM){     
-        g_Ram.UserParam.SetPosition = g_Peref.ADCtoProc.output;
+     //ADC 4-20 мА ---------------------------------------------------------------
+    ADS1118_update(&g_Peref);  // считали ацп
+    if (g_Core.Protections.FaultDelay > 0) return;    
+     // управление по АЦП 
+  if (p->ADC_Out_data < DAC_OFF_DATA)
+  {
+    if (g_Core.VlvDrvCtrl.Status->bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac && !g_Core.Status.bit.Fault)
+    {
+      
+          p->tmpSetPositionForSavePos = abs((Int)g_Ram.Status.PositionPr - (Int)g_Ram.UserParam.FaultPosition);
+          if (g_Core.Protections.Dac_No_Conn_Tmp == 1)
+          {
+              if (g_Ram.UserParam.SavePosOn && ( p->tmpSetPositionForSavePos > POSITION_ERROR_CONFORM))  
+              {
+              g_Ram.UserParam.SetPosition = g_Ram.UserParam.FaultPosition;
+              g_Core.VlvDrvCtrl.Command = vcwDemo;
+              }
+           }
+          else 
+          {           
+            if (!g_Core.Status.bit.Stop) Core_ValveDriveStop(&g_Core.VlvDrvCtrl);
+            g_Core.Protections.Dac_No_Conn_Tmp = 1;
+          }
+     
+      } 
+          
+      if (g_Ram.UserParam.SavePosOn && g_Core.Protections.Dac_No_Conn_Tmp &&  p->tmpSetPositionForSavePos < 2)
+      g_Core.Protections.outFaults.Proc.bit.DAC_no_con = 1; 
+    
+  }
+  else if (g_Core.Status.bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac) 
+  {    
+
+      p->tmpSetPosition = abs((Int)g_Ram.Status.PositionPr - (Int)g_Peref.ADCtoProc.output);
+      if (p->tmpSetPosition  > POSITION_ERROR_CONFORM && !g_Core.Status.bit.Fault && !g_Core.Protections.Dac_No_Conn_Tmp)
+      {     
+          g_Ram.UserParam.SetPosition = g_Peref.ADCtoProc.output;
           g_Core.VlvDrvCtrl.Command = vcwDemo;
       }
-      p->tmpSetPosition = g_Ram.UserParam.SetPosition;
   }
      //g_Peref.ProctoDAC.input = g_Peref.ADCtoProc.output; //!!!!!!!!!! заглушка
-     if (g_Ram.Status.CalibState == csCalib){
+     if (g_Ram.Status.CalibState == csCalib)
+     {
         tmpDACData = g_Ram.Status.PositionPr;     
         if (tmpDACData > 1000) tmpDACData = 10000;
         if (tmpDACData < 0) tmpDACData = 0;
         g_Peref.ProctoDAC.input = (Uns)tmpDACData; 
      }
-     else{ 
+     else
+     { 
       g_Peref.ProctoDAC.input = 1; 
-    }
+     }
+
+
+
+
     //-- проценты в ЦАП--------------------------------------------------------------
     peref_ADCDACtoPRCObserverUpdate(&g_Peref.ProctoDAC);      
    // DAC----------------------------------------------------------------------

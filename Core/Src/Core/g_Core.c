@@ -77,8 +77,46 @@ void Core_Init(TCore *p)
    g_Core.pidData.kp = 0.01;
    g_Core.pidData.MAX_OUT = 1.0;
    g_Core.pidData.MIN_OUT = 0.1;
-
+        
+     	g_Core.fe.Kp                 = (0.75);
+	g_Core.fe.Kir                = (5.994);
+        g_Core.fe.Ki                 = (10.0) * PwmDeltat;
+   
+        aci_fe_init(&g_Core.fe);
 }
+
+void SpeedEstemation(TCore *v)
+{
+	v->volt.DcBusVolt = v->Control.Udc * v->Control.UdcMash; 
+	v->volt.MfuncV1   = v->svgen3ph.Ta;
+	v->volt.MfuncV2   = v->svgen3ph.Tb;
+	v->volt.MfuncV3   = v->svgen3ph.Tc;
+	phase_voltage_calc(&v->volt);
+	
+ 	v->fe.UDsS = v->volt.Valpha;
+	v->fe.UQsS = v->volt.Vbeta;
+ 	v->fe.IDsS = v->park.Alpha;
+	v->fe.IQsS = v->park.Beta;
+ 	aci_fe_calc(&v->fe);
+	
+ 	/*v->FiltrLoad.Input = v->fe.Te_est;
+	ApFilter3Calc(&v->FiltrLoad);
+	v->TorqComp.LoadTorque = v->FiltrLoad.Output;
+	v->SleepCompScal.Load = v->FiltrLoad.Output;
+	 	
+ 	v->se.IDsS      = v->park.Alpha;
+	v->se.IQsS      = v->park.Beta;
+ 	v->se.PsiDrS    = v->fe.PsiDrS;
+	v->se.PsiQrS    = v->fe.PsiQrS;
+	v->se.ThetaFlux = v->fe.ThetaFlux;
+ 	aci_se_calc(&v->se);
+	
+
+	
+	v->Status.EstSpeed = v->se.WrHat;*/
+}
+
+
 
 // Остановка по калибровке
 void Core_CalibStop (TCore *p)

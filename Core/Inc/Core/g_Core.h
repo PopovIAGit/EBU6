@@ -16,6 +16,8 @@ Outputs
 #include "core_VlvDrvCtrl.h"
 #include "core_TorqueObserver.h"
 #include "stat_fm25v10.h"
+#include "aci.h"
+#include "volt_calc.h"
 
 #define CANCEL_TOUT				(2.000 * PRD_10HZ)
 #define START_DELAY_TIME		(2.000 * PRD_50HZ)	// Ограничение времени паузы между остановом и след. запуском
@@ -184,7 +186,10 @@ typedef struct {
     Float Mash1;			// Масштабный коэффициент для перевода в о.е. (GLOBAL_Q)
     Float Mash2;			// Масштабный коэффициент по времени расчета (GLOBAL_Q)
     Float Mash3;			// Масштабный коэффициент по текущей частоте (Q21)    
-            
+    
+    ACIFE             	        fe;  // Модель восстановления потока ротора
+    PHASEVOLTAGE		volt;		// Расчет мгновенного значения напряжения на выходе инвертора     
+          
     Uns				NoErrFlag;
     Uns                         DisplayTimer;
     Uns                         DisplayRestartTimer;
