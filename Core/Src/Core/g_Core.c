@@ -83,11 +83,13 @@ void Core_Init(TCore *p)
         g_Core.fe.Ki                 = (10.0) * PwmDeltat;
    
         aci_fe_init(&g_Core.fe);
+        
+        g_Core.volt.OutOfPhase       = 1;
 }
 
 void SpeedEstemation(TCore *v)
 {
-	v->volt.DcBusVolt = v->Control.Udc * v->Control.UdcMash; 
+	v->volt.DcBusVolt = (float)g_Ram.Status.VDC; 
 	v->volt.MfuncV1   = v->svgen3ph.Ta;
 	v->volt.MfuncV2   = v->svgen3ph.Tb;
 	v->volt.MfuncV3   = v->svgen3ph.Tc;
@@ -114,6 +116,8 @@ void SpeedEstemation(TCore *v)
 
 	
 	v->Status.EstSpeed = v->se.WrHat;*/
+        
+        
 }
 
 
@@ -243,6 +247,9 @@ void core18kHZupdate(void)
         TIM1->CCR1 = g_Core.Pwm.Cmpr1;
         TIM1->CCR2 = g_Core.Pwm.Cmpr3;
         TIM1->CCR3 = g_Core.Pwm.Cmpr2;  
+        
+        
+        SpeedEstemation(&g_Core);
                            
         InvCtrlTimer = 0;
     }

@@ -36,7 +36,7 @@ void phase_voltage_calc(PHASEVOLTAGE *v)
 	
 	// Voltage transformation (a,b,c)  ->  (Alpha,Beta)
 	v->Valpha = v->VphaseA;
-	v->Vbeta  = _IQmpy(v->VphaseA + (v->VphaseB << 1), (M_1_SQRT3));
+	v->Vbeta  = _IQmpy(v->VphaseA + (v->VphaseB * 2), (M_1_SQRT3));
 }
 
 

@@ -154,11 +154,11 @@ void aci_fe_calc(ACIFE *v)
 	// Compute the estimated stator flux based on the integral of back emf		
 	OldEmf = v->EmfDsS;
 	v->EmfDsS = v->UDsS - UCompDsS - _IQmpy(v->K[5], v->IDsS);
-	v->PsiDsS = v->PsiDsS + _IQmpy(_IQ(0.5), _IQmpy(v->K[6], (v->EmfDsS + OldEmf))); 
+	v->PsiDsS = v->PsiDsS + _IQmpy((0.5), _IQmpy(v->K[6], (v->EmfDsS + OldEmf))); 
 
 	OldEmf = v->EmfQsS;
 	v->EmfQsS = v->UQsS - UCompQsS - _IQmpy(v->K[5], v->IQsS);
-	v->PsiQsS = v->PsiQsS + _IQmpy(_IQ(0.5), _IQmpy(v->K[6], (v->EmfQsS + OldEmf))); 
+	v->PsiQsS = v->PsiQsS + _IQmpy((0.5), _IQmpy(v->K[6], (v->EmfQsS + OldEmf))); 
 
 	// Compute the estimated rotor flux based on the stator flux from the integral of back emf
 	v->PsiDrS = _IQmpy(v->K[7], v->PsiDsS) - _IQmpy(v->K[8], v->IDsS);
