@@ -23,6 +23,7 @@ extern "C" {
 #define   _IQmpy(A,B)         ((A) * (B))
 #define   _IQabs(A)           fabs(A)
 #define   _IQdiv(A,B)         ((float)(A) / (float)(B))
+  #define   _IQsat(A, Pos, Neg)  (fmax(((fmin((A),(Pos)))),(Neg)))
 
 #define   _IQatan2PU(A,B)     ((atan2(A,B)*(1.0/6.283185307)) >= 0.0 ? (atan2(A,B)*(1.0/6.283185307)):1.0 + (atan2(A,B)*(1.0/6.283185307)))
 typedef struct {
@@ -128,7 +129,7 @@ void aci_fe_init(ACIFE *);
 void aci_fe_calc(ACIFE *);
 
 //--------------------------------------------------------------------------------------------
-/*
+
 typedef struct {
 	Float IDsS;				// Вход:       Ток оси D
 	Float IQsS;				// Вход:       Ток оси Q 
@@ -142,16 +143,16 @@ typedef struct {
 	Float fc;				// Параметр:   Частота среза низкочастотного фильтра
 	Float K[4];				// Параметр:   Константы расчета
 } ACISE;
-
+/*
 __INLINE void aci_se_reset(ACISE *v)
 {
 	v->WPsi = 0;
 	v->WrHat = 0;
-}
+}*/
 
 void aci_se_init(ACISE *);
 void aci_se_calc(ACISE *);
-*/
+
 #ifdef __cplusplus
 }
 #endif // extern "C"

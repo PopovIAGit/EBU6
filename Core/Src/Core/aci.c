@@ -171,20 +171,20 @@ void aci_fe_calc(ACIFE *v)
 	// Compute the rotor flux angle
 	v->ThetaFlux = _IQatan2PU(v->PsiQrS,v->PsiDrS);
 }
-/*
+
 //--------------------------------------------------------------------------------------------
-#define DIFF_MAX_LIMIT		_IQ(0.90)
-#define DIFF_MIN_LIMIT		_IQ(0.10)
+#define DIFF_MAX_LIMIT		0.90
+#define DIFF_MIN_LIMIT		0.10
 
 void aci_se_init(ACISE *v)
 {	
-	LgInt tr, tc;
+	Float tr, tc;
 
 	tr = _IQdiv(aci_ad.lr + aci_ad.lm, aci_ad.rr);
-	tc = _IQdiv(_IQ(1.0), _IQmpy(_IQ(2.0*M_PI), v->fc));
+	tc = _IQdiv(1.0, _IQmpy(2.0*M_PI, v->fc));
 	
-	v->K[0] = _IQdiv(_IQ21(1.0), _IQmpy(aci_base.wb, tr));
-	v->K[1] = _IQ21div(_IQ21(1.0), _IQmpy(aci_base.fb, aci_base.ts));
+	v->K[0] = _IQdiv(1.0, _IQmpy(aci_base.wb, tr));
+	v->K[1] = (1.0, _IQmpy(aci_base.fb, aci_base.ts));
 	v->K[2] = _IQdiv(tc, tc + aci_base.ts);
 	v->K[3] = _IQdiv(aci_base.ts, tc + aci_base.ts);
 }
@@ -210,8 +210,8 @@ void aci_se_calc(ACISE *v)
 	v->OldThetaFlux = v->ThetaFlux;
 
 	// Limit the estimated speed between -1 and 1 per-unit
-	v->WrHat = _IQsat(_IQ21toIQ(v->WPsi - _IQtoIQ21(WSlip)), _IQ(1.0), _IQ(-1.0));
+	v->WrHat = _IQsat((v->WPsi - (WSlip)), (1.0), (-1.0));
 }
-*/
+
 
 

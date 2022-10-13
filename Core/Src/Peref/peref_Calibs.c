@@ -93,7 +93,7 @@ void Peref_Calibration(TPerefPosition *p)
                                   case 2: // Снимаем
                                           if (!CheckStatus(p, 0)) break;
                                          				p->Indication->ClosePos[0] = 0;
-                                p->Indication->ClosePos[1] = 0;
+                                            p->Indication->ClosePos[1] = 0;
                                           p->Indication->Status &= CLB_OPEN;
                                           break;
                           }
@@ -127,7 +127,6 @@ void Peref_Calibration(TPerefPosition *p)
                         g_Ram.Comands.TaskOpen = 0;
 		}
 
-		
 
 }
 
@@ -152,7 +151,7 @@ void Peref_CalibUpdate(TPerefPosition *p)
 	}
 	p->Zone = 0;
 
-		if(Indic->Status == CLB_FLAG)
+	if(Indic->Status == CLB_FLAG)
 	{
 		if (!p->FullStep)//Если путь еще не расчитан
 		{
@@ -216,12 +215,15 @@ void Peref_CalibUpdate(TPerefPosition *p)
 		 p->FullStep 	= 0;
 
 		if (!Indic->Status) {*p->CurWay = 9999; return;}
-		else if (Indic->Status & CLB_CLOSE) p->LinePos = (Position - ClosePos) & p->RevMax;
-		else if (Indic->Status & CLB_OPEN)  p->LinePos = (OpenPos - Position)  & p->RevMax;
+		else if (Indic->Status & CLB_CLOSE) 
+                  p->LinePos = (Position - ClosePos) & p->RevMax;
+		else if (Indic->Status & CLB_OPEN)  
+                  p->LinePos = (OpenPos - Position)  & p->RevMax;
 
 		*p->CurWay = CalcClbGearRev(p, p->LinePos);
 		//*p->CurWay = ((p->LinePos * 10) >> *p->PosSensPow)/ p->GearRatio;
-		if (*p->CurWay <= (Int)*p->PositionAcc) p->Zone |= Indic->Status;
+		if (*p->CurWay <= (Int)*p->PositionAcc) 
+                  p->Zone |= Indic->Status;
 	}
 }
 

@@ -612,7 +612,7 @@ void peref_10HzCalc(TPeref *p)//
   }
   else 
   {
-    HAL_GPIO_WritePin(ALARM_SD_GPIO_Port, ALARM_SD_Pin, (g_Ram.Status.Status.bit.Fault || g_Core.Protections.Dac_No_Conn_Tmp));
+    HAL_GPIO_WritePin(ALARM_SD_GPIO_Port, ALARM_SD_Pin, (g_Ram.Status.Status.bit.Fault ));
     HAL_GPIO_WritePin(MU_DU_SD_GPIO_Port, MU_DU_SD_Pin, g_Ram.Status.Status.bit.MuDu);
     
     if (g_Ram.Status.Status.bit.Opening)

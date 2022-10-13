@@ -340,16 +340,16 @@ const struct MENU_PARAM params[] = {
                 //------------------------------------------------------------------
 		"D0.SET CLOSE    ", "    ",      0,      2,      0, M_COMM|M_SADR(156),						//0 290
 		"D1.SET OPEN     ", "    ",      0,      2,      0, M_COMM|M_SADR(156),						//1 291
-		"D2.TO OPEN      ", "    ",      0,   1000,      0, M_DCOM|M_RMAX(3)|M_PREC(1),				        //2 292
-		"D3.TO CLOSE     ", "    ",      0,   1000,      0, M_DCOM|M_RMAX(3)|M_PREC(1),				        //3 293
+		"  D4.RESERV     ", "    ",      0,  65535,      0, M_SHOW|M_RMAX(4),				        //2 292
+		"  D4.RESERV     ", "    ",      0,  65535,      0, M_SHOW|M_RMAX(4),			        //3 293
 		"  D4.RESERV     ", "    ",      0,  65535,      0, M_SHOW|M_RMAX(4),						//4 294
 		"D5.CALIB RESET  ", "    ",      0,      1,      0, M_COMM|M_SADR(159),						//5 295
 		"D6.COMANDS      ", "    ",      0,     19,      0, M_COMM|M_SADR(161),						//6 296
-		" D7.ERR RESET   ", "    ",      0,      1,      0, M_COMM|M_SADR(161),						//7 297
+		" D7.ERR RESET   ", "    ",      0,      1,      0, M_COMM|M_SADR(159),						//7 297
 		" D8.SET DEFOULT ", "    ",      0,      1,      0, M_COMM|M_SADR(156),						//8 298
 		"   D9.RESERV    ", "    ",      0,  65535,  	0, M_SHOW|M_SADR(4),						//9 299
-		"D10.CYCLE RESET ", "    ",      0,      1,     0, M_COMM|M_SADR(161),						//10 300
-		"D11.COMM RESET  ", "    ", 	 0,  	 1,  	0, M_COMM|M_SADR(161),						//11 301
+		"D10.CYCLE RESET ", "    ",      0,      1,     0, M_COMM|M_SADR(159),						//10 300
+		"D11.COMM RESET  ", "    ", 	 0,  	 1,  	0, M_COMM|M_SADR(159),						//11 301
 		"   D12.RESERV   ", "    ", 	 0,  65535,  	0, M_SHOW|M_RMAX(4),						//12 302
 		"   D13.RESERV   ", "    ", 	 0,  65535,  	0, M_SHOW|M_RMAX(4),						//13 303
 		"   D14.RESERV   ", "    ", 	 0,  65535,  	0, M_SHOW|M_RMAX(4),						//14 304

@@ -81,15 +81,37 @@ void Core_Init(TCore *p)
      	g_Core.fe.Kp                 = (0.75);
 	g_Core.fe.Kir                = (5.994);
         g_Core.fe.Ki                 = (10.0) * PwmDeltat;
-   
+       
+         
+           aci_base.fb = 50.0;
+   aci_base.ib = 6.0;
+     aci_base.lb = 1;
+       aci_base.tb = 1;
+         aci_base.ts = 0.1;
+           aci_base.ub = 220;
+             aci_base.wb = 157.07;
+       
+         aci_ad.b = 1;
+           aci_ad.cosf = 0.8;
+             aci_ad.j = 1;
+               aci_ad.lm = 1;
+                 aci_ad.lr = 1;
+                   aci_ad.ls = 1;
+                     aci_ad.rr = 1;
+                       aci_ad.rs = 1;
+                         aci_ad.zp = 4;
+           
+        g_Core.se.fc = 1.0;     
         aci_fe_init(&g_Core.fe);
+          
+        aci_se_init(&g_Core.se);
         
         g_Core.volt.OutOfPhase       = 1;
 }
-
+float vdcMash = 1.0;
 void SpeedEstemation(TCore *v)
 {
-	v->volt.DcBusVolt = (float)g_Ram.Status.VDC; 
+	v->volt.DcBusVolt = (float)g_Ram.Status.VDC * vdcMash; 
 	v->volt.MfuncV1   = v->svgen3ph.Ta;
 	v->volt.MfuncV2   = v->svgen3ph.Tb;
 	v->volt.MfuncV3   = v->svgen3ph.Tc;
@@ -97,17 +119,17 @@ void SpeedEstemation(TCore *v)
 	
  	v->fe.UDsS = v->volt.Valpha;
 	v->fe.UQsS = v->volt.Vbeta;
- 	v->fe.IDsS = v->park.Alpha;
-	v->fe.IQsS = v->park.Beta;
+ 	v->fe.IDsS = v->ipark.Alpha;
+	v->fe.IQsS = v->ipark.Beta;
  	aci_fe_calc(&v->fe);
 	
  	/*v->FiltrLoad.Input = v->fe.Te_est;
 	ApFilter3Calc(&v->FiltrLoad);
 	v->TorqComp.LoadTorque = v->FiltrLoad.Output;
-	v->SleepCompScal.Load = v->FiltrLoad.Output;
+	v->SleepCompScal.Load = v->FiltrLoad.Output;*/
 	 	
- 	v->se.IDsS      = v->park.Alpha;
-	v->se.IQsS      = v->park.Beta;
+ 	v->se.IDsS      = v->ipark.Alpha;
+	v->se.IQsS      = v->ipark.Beta;
  	v->se.PsiDrS    = v->fe.PsiDrS;
 	v->se.PsiQrS    = v->fe.PsiQrS;
 	v->se.ThetaFlux = v->fe.ThetaFlux;
@@ -115,7 +137,7 @@ void SpeedEstemation(TCore *v)
 	
 
 	
-	v->Status.EstSpeed = v->se.WrHat;*/
+	//v->Status.EstSpeed = v->se.WrHat;
         
         
 }
@@ -369,9 +391,8 @@ static void StopMode(void)
 static void StartMode(void)
 {
       // что то делаем при старте
-    g_Core.MotorControl.WorkMode = wmMove;
-   /* if (g_Ram.UserParam.MuDuSetup != mdDac)
-    {
+  //  g_Core.MotorControl.WorkMode = wmMove;
+
           if (SpeedEnable == 1 && SpeedRef < fabs(SpeedMax))
           {
             SpeedRef = AngleInterp(speedstart, SpeedMax, g_Ram.UserParam.TimeSpeedStart);
@@ -380,18 +401,14 @@ static void StartMode(void)
           {
               g_Core.MotorControl.WorkMode = wmMove;
           }
-    }
-    else 
-    {
-         g_Core.MotorControl.WorkMode = wmMove;
-    }*/
+
 }
 
 double tmpdata = 0;
 double tmpdata2 = 0;
 static void MoveMode(void)
 {
-  if (g_Ram.UserParam.RegEnable == 0)
+ /* if (g_Ram.UserParam.RegEnable == 0)
   {
       if (g_Ram.Status.Status.bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac)
       {
@@ -413,26 +430,7 @@ static void MoveMode(void)
         tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
         SpeedRef = tmpdata2 * tmpdata;
     
-  }
-
-
-/*
-
-  // что то делаем пока едем
-   if (g_Ram.UserParam.DuSource == mdsDac)
-    {
-      tmpdata   = p_Controller(g_Ram.UserParam.SetPosition, g_Ram.Status.PositionPr);
-      tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
-      SpeedRef = tmpdata2 * tmpdata;
-      //Core_ValveDriveMove(&g_Core.VlvDrvCtrl, g_Ram.UserParam.SetPosition);
-    }
-   else 
-   {    
-      tmpdata   = p_Controller(g_Core.MotorControl.RequestPos, g_Ram.Status.PositionPr);
-      tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
-      SpeedRef = tmpdata2 * tmpdata;
-   }
-  */
+  }*/
 }
 
 static void DynBreakMode(void)
