@@ -78,7 +78,10 @@ void Core_Init(TCore *p)
    g_Core.pidData.MAX_OUT = 1.0;
    g_Core.pidData.MIN_OUT = 0.1;
         
-     	g_Core.fe.Kp                 = (0.75);
+   Core_TorqueInit(&p->TorqObs);			// Расчет моментов
+
+   
+   /*  	g_Core.fe.Kp                 = (0.75);
 	g_Core.fe.Kir                = (5.994);
         g_Core.fe.Ki                 = (10.0) * PwmDeltat;
        
@@ -106,7 +109,7 @@ void Core_Init(TCore *p)
           
         aci_se_init(&g_Core.se);
         
-        g_Core.volt.OutOfPhase       = 1;
+        g_Core.volt.OutOfPhase       = 1;*/
 }
 float vdcMash = 1.0;
 void SpeedEstemation(TCore *v)
@@ -227,6 +230,69 @@ void Core_CalibControl(TCore *p)
 }
 
 
+// Функция задания момента в зависимости от положения и направления движения
+void Core_DefineCtrlParams(TCore *p) // 50 hz
+{
+	Int MaxZone, CloseZone, OpenZone;	// максимальный размер зоны, зона открытия, зона закрытия
+
+
+	g_Ram.UserParam.BreakMode = vtNone;			// всегда работаем без уплотнения
+
+
+	MaxZone = (g_Ram.Status.FullWay >> 1) - 1;	// определяем максимальный размер зон открыто/закрыто
+
+	CloseZone = g_Ram.UserParam.CloseZone;
+	if (CloseZone > MaxZone) CloseZone = MaxZone; // если заданя больше максимума задаем максимум
+
+	OpenZone = g_Ram.UserParam.OpenZone;
+	if (OpenZone > MaxZone) OpenZone = MaxZone;   // если заданя больше максимума задаем максимум
+	OpenZone = g_Ram.Status.FullWay - OpenZone;
+
+	if(!p->MotorControl.RequestDir) p->MotorControl.TorqueSet = 0; // Если не задано необходиоме направление вращения то задние момента 0
+	else if(p->MotorControl.RequestDir > 0)	 // Выставляем задание на момент в зависимости от направления и калибровки
+	{
+		p->MotorControl.TorqueSet = g_Ram.UserParam.MoveOpenTorque;
+		p->MotorControl.BreakFlag = 0;
+
+		if(g_Ram.HideParam.CalibState == csCalib)
+		{
+			if(g_Ram.Status.CurWay <= CloseZone)
+			{
+				p->MotorControl.TorqueSet = g_Ram.UserParam.StartCloseTorque;
+				p->MotorControl.BreakFlag = 0;
+			}
+			else if (g_Ram.Status.CurWay >= OpenZone)
+			{
+				p->MotorControl.TorqueSet = g_Ram.UserParam.BreakOpenTorque;
+				p->MotorControl.BreakFlag = 1;
+			}
+		}
+	}
+	else
+	{
+		p->MotorControl.TorqueSet = g_Ram.UserParam.MoveCloseTorque;
+		p->MotorControl.BreakFlag = 0;
+
+		if(g_Ram.HideParam.CalibState == csCalib)
+		{
+			if(g_Ram.Status.CurWay <= CloseZone)
+			{
+				p->MotorControl.TorqueSet = g_Ram.UserParam.BreakCloseTorque;
+				p->MotorControl.BreakFlag = 1;
+			}
+			else if (g_Ram.Status.CurWay >= OpenZone)
+			{
+				p->MotorControl.TorqueSet = g_Ram.UserParam.StartOpenTorque;
+				p->MotorControl.BreakFlag = 0;
+			}
+		}
+	}
+
+	// пересчитываем задание на момент
+	p->MotorControl.TorqueSetPr = (Uns)(((LgUns)p->MotorControl.TorqueSet * 100)/p->TorqObs.TorqueMax);
+
+}
+
 void core18kHZupdate(void)
 {
   g_Core.Mash3 = fabs(g_Core.rg1.Freq * 50.0);
@@ -271,7 +337,7 @@ void core18kHZupdate(void)
         TIM1->CCR3 = g_Core.Pwm.Cmpr2;  
         
         
-        SpeedEstemation(&g_Core);
+      //  SpeedEstemation(&g_Core);
                            
         InvCtrlTimer = 0;
     }
@@ -314,7 +380,9 @@ void StopPowerControl(void)
               TimeSpeedStop = 1;
           }else g_Core.MotorControl.WorkMode = wmStop;
         }
-        g_Core.VlvDrvCtrl.StartDelay = (Uns)START_DELAY_TIME;
+        g_Core.VlvDrvCtrl.StartDelay    = (Uns)START_DELAY_TIME;
+        g_Core.TorqObs.ObsEnable        = false;
+        
 }        
 
 // Действия при пуске
@@ -341,7 +409,8 @@ void StartPowerControl(TValveCmd ControlWord)
         
         if(g_Core.MotorControl.RequestDir > 0) g_Core.Status.bit.Opening = 1; 
         if(g_Core.MotorControl.RequestDir < 0) g_Core.Status.bit.Closing = 1; 
-   
+          
+          g_Core.TorqObs.ObsEnable 				= true;
           SpeedEnable = 1;
           speedstart = 0;
           TimerInterp = 0;      
@@ -391,16 +460,16 @@ static void StopMode(void)
 static void StartMode(void)
 {
       // что то делаем при старте
-  //  g_Core.MotorControl.WorkMode = wmMove;
+    g_Core.MotorControl.WorkMode = wmMove;
 
-          if (SpeedEnable == 1 && SpeedRef < fabs(SpeedMax))
+     /*     if (SpeedEnable == 1 && SpeedRef < fabs(SpeedMax))
           {
             SpeedRef = AngleInterp(speedstart, SpeedMax, g_Ram.UserParam.TimeSpeedStart);
           }
-          else if (SpeedEnable == 1 && SpeedRef == fabs(SpeedMax))
+          else if (SpeedEnable == 1 && SpeedRef > (fabs(SpeedMax))-0.1)
           {
               g_Core.MotorControl.WorkMode = wmMove;
-          }
+          }*/
 
 }
 
@@ -408,7 +477,7 @@ double tmpdata = 0;
 double tmpdata2 = 0;
 static void MoveMode(void)
 {
- /* if (g_Ram.UserParam.RegEnable == 0)
+  if (g_Ram.UserParam.RegEnable == 0)
   {
       if (g_Ram.Status.Status.bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac)
       {
@@ -430,7 +499,9 @@ static void MoveMode(void)
         tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
         SpeedRef = tmpdata2 * tmpdata;
     
-  }*/
+  }
+  
+    g_Ram.Status.Torque = g_Core.TorqObs.Indication;
 }
 
 static void DynBreakMode(void)
@@ -721,8 +792,6 @@ void coreTU(TCore *p)
   static Byte clrReset = 0;
   
   if (g_Ram.UserParam.DuSource == mdsDigital){
-    
-   
     
     if (g_Ram.UserParam.InputType == it24)
     {
@@ -1033,4 +1102,63 @@ void Coast_stop_calc(TInvControl *v)
 }
 */
 
+Int drive1[72] = {1,38,55,75,95,100,1,38,55,75,95,100,1,38,55,75,95,100,1,38,55,75,95,100};
+	Int InomDef[1]  	     = {63};		// default значения для Inom для разных приводов
+	Int MomMaxDef[1]  	     = {500};	//				для Mmax
+	Int TransCurrDef[1] 	 = {0};				//				для TransCur править
+	Int GearRatioDef[1] 	 = {600};		//для передаточного числа редуктора
+
+
+
+
+	Uns FirstUpdate = 0;
+void Core_Drive_Update(void)
+	{
+		//WAIT_FOR_EEPROM_READY();
+		switch(g_Ram.FactoryParam.DriveType)
+		{
+			case 1:
+				PFUNC_blkRead(&drive1,  	(Int *)(&g_Ram.HideParam.TqCurr),               24);
+			 	PFUNC_blkRead(&TransCurrDef[0], (Int *)(&g_Ram.HideParam.TransCurr),		  1);
+				break;
+			
+		}
+                
+                if ((g_Ram.FactoryParam.DriveType < 2)&&(g_Ram.FactoryParam.DriveType != 0))
+		{
+			if ((g_Ram.FactoryParam.GearRatio != GearRatioDef[g_Ram.FactoryParam.DriveType - 1])
+					|| (g_Ram.FactoryParam.Inom!= InomDef[g_Ram.FactoryParam.DriveType - 1])
+					|| (g_Ram.FactoryParam.MaxTorque != MomMaxDef[g_Ram.FactoryParam.DriveType - 1]))
+			{
+				if (FirstUpdate==0)
+				{
+					g_Ram.FactoryParam.GearRatio = GearRatioDef[g_Ram.FactoryParam.DriveType - 1];
+					g_Ram.FactoryParam.Inom = InomDef[g_Ram.FactoryParam.DriveType - 1];
+					g_Ram.FactoryParam.MaxTorque = MomMaxDef[g_Ram.FactoryParam.DriveType - 1];
+					//Core_ProtectionI2TInit(&g_Core.Protections.I2t);
+				}
+			}
+		}
+		FirstUpdate=1;
+        }
+
+void Drive_ReWrite_Update(void)
+	{
+		if ((g_Ram.FactoryParam.DriveType < 30)&&(g_Ram.FactoryParam.DriveType != 0))
+		{
+			if ((g_Ram.FactoryParam.GearRatio != GearRatioDef[g_Ram.FactoryParam.DriveType - 1])
+					|| (g_Ram.FactoryParam.Inom!= InomDef[g_Ram.FactoryParam.DriveType - 1])
+					|| (g_Ram.FactoryParam.MaxTorque != MomMaxDef[g_Ram.FactoryParam.DriveType - 1]))
+			{
+				if (IsMemParReady())
+				{
+					g_Ram.FactoryParam.GearRatio = GearRatioDef[g_Ram.FactoryParam.DriveType - 1];
+					g_Ram.FactoryParam.Inom = InomDef[g_Ram.FactoryParam.DriveType - 1];
+					g_Ram.FactoryParam.MaxTorque = MomMaxDef[g_Ram.FactoryParam.DriveType - 1];
+					
+					WriteToEeprom(REG_MAX_TRQE, &g_Ram.FactoryParam.MaxTorque, 3);
+				}
+			}
+		}
+	}
 

@@ -44,6 +44,11 @@ Outputs
 #define   _IQmpy(A,B)         ((A) * (B))
 #define   _IQdiv(A,B)        ((float)(A) / (float)(B))
 
+#define LENGTH_TRQ		72	// Размер буфера коэффициентов расчета момента
+
+//------------------- Глобальные переменные --------------------------------
+
+
 typedef struct {
 	Float Alpha;	// Выход: Переменная оси D неподвижной двухфазной системы координат
 	Float Beta;		// Выход: Переменная оси Q неподвижной двухфазной системы координат
@@ -199,7 +204,7 @@ typedef struct {
     bool                        DynBreakEnable;
       
 } TCore;
-
+//------------------- Протатипы функций ------------------------------------
 void Core_Init(TCore *);
 void core18kHZupdate(void);
 void core200HZupdate(void);
@@ -208,7 +213,7 @@ void core10HZupdate(void);
 
 void Core_CalibControl(TCore *);			// Управление калибровкой
 void Core_CalibStop(TCore *);				// стоп по калибровке
-
+void Core_DefineCtrlParams(TCore *);		// Задача контролируемых параметров (Моменты - Движения, трогания, уплотнения. Определение текущей зоны и т.д)
 void Core_ControlMode(TCore *);				// Стэйт машина
 void StopPowerControl(void);					// действия при стопе
 void StartPowerControl(TValveCmd ControlWord);                  // Действия при старте
@@ -225,6 +230,9 @@ void park_calc(PARK *);
 void svgendq3ph_calc(SVGENDQ_3PH *);
 void pwm_calc(PWM *);
 
+
+void Core_Drive_Update(void);
+void Drive_ReWrite_Update(void);
 double p_Controller(LgInt setPoint, LgInt processValue);
 
 extern TCore g_Core;

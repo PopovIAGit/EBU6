@@ -2,7 +2,7 @@
 
 
 TRam g_Ram;
-
+Uns RefreshCub=0;
 Uns size = 0;
 
 void ReWriteParams(void);
@@ -43,17 +43,23 @@ void g_Ram_Update(TRam *p)
         p->HideParam.IuPr = 0;
         p->HideParam.IvPr = 0;
         p->HideParam.IwPr = 0;
+        p->HideParam.Imid = 0;
+        p->HideParam.Imidpr = 0;  
       }
       else {
         p->Status.Iu = g_Peref.Ia.Output*10;
         p->Status.Iv = g_Peref.Ib.Output*10;
         p->Status.Iw = g_Peref.Ic.Output*10;
           
-        p->HideParam.IuPr = (g_Peref.Ia.Output * 10) / p->FactoryParam.Inom;
-	p->HideParam.IvPr = (g_Peref.Ib.Output * 10) / p->FactoryParam.Inom;
-	p->HideParam.IwPr = (g_Peref.Ic.Output * 10) / p->FactoryParam.Inom;
+        p->HideParam.IuPr = (p->Status.Iu*1000) / p->FactoryParam.Inom;
+	p->HideParam.IvPr = (p->Status.Iv*1000) / p->FactoryParam.Inom;
+	p->HideParam.IwPr = (p->Status.Iw*1000) / p->FactoryParam.Inom;
+          
+         p->HideParam.Imid = (Uns)(g_Peref.Imfltr.Output*10);
+         p->HideParam.Imidpr = (p->HideParam.Imid*1000) / p->FactoryParam.Inom;
+         
       }
-    g_Ram.Status.Position = g_Ram.HideParam.Position;
+    g_Ram.Status.Position = g_Ram.HideParam.Position & 0xFFFF;
     g_Ram.FactoryParam.ADC_Data =(Uns) g_Peref.ADCToProcfltr.Output;
       
      //------------------------------------------------------
@@ -79,7 +85,14 @@ void g_Ram_Update(TRam *p)
 
 void ReWriteParams(void)
 {
-
+  	Drive_ReWrite_Update();
+        if (RefreshCub==1){
+		if (IsMemParReady())
+		{
+			RefreshCub = 0;
+                          WriteToEeprom(GetAdr(HideParam.TqCurr.Data[0][0])-1, &g_Ram.HideParam.TransCurr, 6);
+		}
+	}
 
 }
 
@@ -99,6 +112,16 @@ void RefreshParams(Uns addr)
 		      peref_ADCtoPRCObserverInit(&g_Peref);
 	}else if (addr >= REG_DAC_REVERS ){
                       peref_ProctoDACObserverInit(&g_Peref);
+        }else if (addr == REG_DRIVE_TYPE) {
+
+		Core_Drive_Update();
+		CubRefresh(&g_Core.TorqObs.Cub1, &g_Ram.HideParam.TqCurr);
+		RefreshCub = 1;
+        }else if (addr == REG_MAX_TRQE)
+	{
+		 g_Core.TorqObs.TorqueMax = g_Ram.FactoryParam.MaxTorque * 10; //??? убрать в обновление параметров
+	}else if (addr == REG_I_NOM){
+                g_Core.Mash1 = (1.0 / (float)g_Ram.FactoryParam.Inom);
         }
           
 

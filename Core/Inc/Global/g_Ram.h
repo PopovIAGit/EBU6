@@ -70,8 +70,8 @@ typedef struct _TUserParam
 	TTimeVar 	DevTime;		// B13. 53 Время
 	TDateVar 	DevDate;		// B14. 54 Дата
 	Uns		reserv55;		// B15. 55 reserv
-	TMuDuSetup		MuDuSetup;		// B16. 56 Резерв
-	Uns  	reserv57;              // B17. 57 Настройка режима МУ/ДУ
+	TMuDuSetup	MuDuSetup;		// B16. 56 Резерв
+	Uns  	        reserv57;              // B17. 57 Настройка режима МУ/ДУ
 	Uns		reserv58;		// B18. 58 Резерв
         TDuSource	DuSource;		// B19. 59 Источник команд ДУ
 	Uns         	TuLockSeal;             // B20. 60 Блокировка залипани
@@ -145,7 +145,7 @@ typedef struct _TFactoryParam
  	Uns		MCU220380;		// С32. 122 выбор типа питания 220 380    
         Uns		PosSensPow;		// С33. 123  Тип датчика положения
  	Int		BreakZone;		// C34. 124 Число оборотов дв за которое начинаем тормозить
- 	Uns		reserv125;		// С35. 125 Резерв
+ 	Uns             MuffZone;           	// C35. 125 Расстояние сброса муфты
         Uns		ADC_Data;		// С36. 126 Резерв
         Uns		DAC_Data;		// С37. 127 Резерв
         Uns		ReversADC;		// С38. 128 Резерв
@@ -496,7 +496,7 @@ typedef struct _TTestRam
 #define REG_MAX_TRQE			GetAdr(FactoryParam.MaxTorque)
 #define REG_I_NOM			GetAdr(FactoryParam.Inom)
 #define REG_GEAR_RATIO			GetAdr(FactoryParam.GearRatio)
-#define REG_DRIVE_TYPE			GetAdr(UserParam.DriveType)
+#define REG_DRIVE_TYPE			GetAdr(FactoryParam.DriveType)
 
 #define REG_ADC_REVERS                  GetAdr(FactoryParam.ReversADC)
 #define REG_DAC_REVERS                  GetAdr(FactoryParam.ReversADC)

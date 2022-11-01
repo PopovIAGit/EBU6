@@ -27,7 +27,7 @@ typedef struct {
 	Int Z;
 } TCubPoint;
 
-#define CUB_COUNT1		4
+#define CUB_COUNT1		1
 #define CUB_COUNT2		6
 typedef struct {
 	Int Data[CUB_COUNT1][CUB_COUNT2];

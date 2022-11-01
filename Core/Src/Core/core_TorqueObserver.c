@@ -7,24 +7,16 @@
 модуль управления задвижкой
 ======================================================================*/
 
-#include "core.h"
+#include "g_Core.h"
 #include "peref.h"
 
 // фиксированные точки для снятия момента
-Int VoltArray[CUB_COUNT1] 	= {160, 190,  220,  250};
-
+//Int VoltArray[CUB_COUNT1] 	= {160, 190,  220,  250};
+Int VoltArray[CUB_COUNT1] 	= 220;
+                                  //1   38     55       
 Int CurrArray[CUB_COUNT2] 	= {400, 800, 1200, 1600, 2000, 3000};		// добавил 3000 PIA 14.11.17
-//Int CurrArray[CUB_COUNT2] 	= {400,600, 800, 1200, 1600, 2000}; // для эпц 50000
 
-//Int AnUIArray[CUB_COUNT2] 	= { 50,  55,   65,   69,   73};//для эпц100а50
 Int AnUIArray[CUB_COUNT2] 	= {25, 35, 50, 65, 70,  80};	// добавил 70 	PIA 14.11.17
-//Int AnUIArray[CUB_COUNT2] 	= {50,  61,   69,   74,   80};// для эпцр 100 а25
-
-/*
-Int CurrArray[CUB_COUNT2] 	= {400, 800, 1200, 1600, 2000, 3000};
-Int AnUIArray[CUB_COUNT2] 	= { 25,  35,   50,   65, 70,   80};	// добавил 70 	PIA 19.05.15s
-  */
-
 
 void CubInit(TCubStr *p, TCubConfig *Cfg)	//инициализация куба
 {
@@ -119,41 +111,29 @@ void CubCalc(TCubStr *p)
 // Инициализация
 void Core_TorqueInit(TTorqObs *p)
 {
-	if (g_Ram.ramGroupC.DriveType == dt35000_F48)
-	{
-		// первая поверхность U и I - большие токи
-		Int VoltTmp = 0;
-		Float Volt = 0;
-		if (Volt != 0)
-		{
-			Volt = g_Ram.ramGroupB.VoltCorr / 10;
-		}
 
-		VoltTmp = g_Ram.ramGroupA.VoltageDown * Volt;
-	}
-
-	p->TqCurr.X_Value = (Int *)&g_Ram.ramGroupH.Umid;// - VoltTmp;
+	p->TqCurr.X_Value = (Int *)&g_Ram.HideParam.Umid;// - VoltTmp;
 	p->TqCurr.X_Array = VoltArray;
-	p->TqCurr.Y_Value = (Int *)&g_Ram.ramGroupH.Imidpr;
+	p->TqCurr.Y_Value = (Int *)&g_Ram.HideParam.Imidpr;
 	p->TqCurr.Y_Array = CurrArray;
 
 	// вторая поверхность U и AngFi - малые токи
-	p->TqAngUI.X_Value = (Int *)&g_Ram.ramGroupH.Umid;
+/*	p->TqAngUI.X_Value = (Int *)&g_Ram.HideParam.Umid;
 	p->TqAngUI.X_Array = VoltArray;
 	p->TqAngUI.Y_Value = (Int *)&g_Ram.ramGroupA.AngleUI;
-	p->TqAngUI.Y_Array = AnUIArray;
+	p->TqAngUI.Y_Array = AnUIArray;*/
 
 	// Забираем средний ток
-	p->Imidpr 	= &g_Ram.ramGroupH.Imidpr;
+	p->Imidpr 	= &g_Ram.HideParam.Imidpr;
 	p->TorqueSetPr 	= &g_Core.MotorControl.TorqueSetPr;
-	p->TransCurr 	= &g_Ram.ramGroupH.TransCurr;
+	p->TransCurr 	= &g_Ram.HideParam.TransCurr;
 
 	// Инициализируем поверхности
 	CubInit(&p->Cub1, &p->TqCurr);		 // инициализация структуры куба для расчета момента
-	CubInit(&p->Cub2, &p->TqAngUI);
+	//CubInit(&p->Cub2, &p->TqAngUI);
 
 	// Инициализируем фильтр момента
-	peref_ApFilter3Init(&p->Trqfltr, (Uns)Prd18kHZ, 1);
+	peref_ApFilter3Init(&p->Trqfltr, (Uns)PRD_18KHZ, 1);
 }
 
 // Расчет момента
@@ -165,11 +145,11 @@ void Core_TorqueCalc(TTorqObs *p)
 		//p->ObsEnable=true;
 		if (!p->ObsEnable) {p->Indication = 0; return;} //если выключен расчет момента то индикация 0 и закрываем тиристоры и выходим
 
-		Cub = (*p->Imidpr >= *p->TransCurr) ? &p->Cub1 : &p->Cub2;  // выбераем по какому кубу работаем для маленьких или больших токов
-
+		//Cub = (*p->Imidpr >= *p->TransCurr) ? &p->Cub1 : &p->Cub2;  // выбераем по какому кубу работаем для маленьких или больших токов
+                Cub = &p->Cub1; 
 		CubCalc(Cub);	// считаем выбранный куб
 
-		if (g_Core.MotorControl.RequestDir == -1)
+	/*	if (g_Core.MotorControl.RequestDir == -1)
 		{
 		    if      (*p->TorqueSetPr < 30) 	Add = g_Ram.ramGroupC.CorrClose30Trq;		// Добавил PIA 09.10.2012
 		    else if (*p->TorqueSetPr < 40)	Add = g_Ram.ramGroupC.CorrClose40Trq;
@@ -185,8 +165,8 @@ void Core_TorqueCalc(TTorqObs *p)
 		    else if (*p->TorqueSetPr < 80)	Add = g_Ram.ramGroupC.CorrOpen80Trq;
 		    else if (*p->TorqueSetPr < 110)	Add = g_Ram.ramGroupC.CorrOpen110Trq;
 		}
-		else if (g_Core.MotorControl.RequestDir == 0) Add = 0;
-
+		else if (g_Core.MotorControl.RequestDir == 0) Add = 0;*/
+                Add = 0; // del
 
 		p->Trqfltr.Input = (Float)Cub->Output; // фильтруем значение момента
 		peref_ApFilter3Calc(&p->Trqfltr);
@@ -202,25 +182,4 @@ void Core_TorqueCalc(TTorqObs *p)
 		p->Indication = ((Uns)((((LgUns)p->Tmp + Add) * p->TorqueMax) / 100));
 }
 
-void Core_VoltageDown(void)
-{
-	Float Ro 		= 53.1; 	//   /10
-	Float Xl 		= 0.08;		//   /100
-	Float Cur 		= g_Ram.ramGroupH.Imid / 10;
-	Float CosFi 	= cos(((double)g_Ram.ramGroupA.AngleUI*3.14)/180);
-	Float SinFi 	= sin(((double)g_Ram.ramGroupA.AngleUI*3.14)/180);
-	Float Length 	= g_Ram.ramGroupB.ConductorLength;
-	Float Section 	= g_Ram.ramGroupB.ConductorSection;
-	Float Volt 		= 0;
-	Float Ra 		= 0;
-
-	Length = Length/1000;
-	Section = Section/1000;
-	Ra =  1/(Ro * Section);
-	Volt = 1.732 * Cur * Length * ((Ra * CosFi) + (Xl* SinFi));
-	//Volt = ((Ra * CosFi) + (Xl* SinFi))*100;
-	//Volt = CosFi*100;
-	g_Ram.ramGroupA.VoltageDown = Volt;
-
-}
 

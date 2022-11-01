@@ -67,23 +67,25 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
  
     PrdElemInit(Core_SetDeff,				&menu),
     PrdElemInit(coreTS,					&g_Core),
+    PrdElemInit(Core_DefineCtrlParams, 			&g_Core),
     PrdElemInit(coreTLocalControl,			&g_Core),
     PrdElemInit(coreTU,			                &g_Core),
     PrdElemInit(Core_ProtectionsEnable,		    &g_Core.Protections),
     PrdElemInit(Core_Protections50HZUpdate,		&g_Core.Protections),
-    PrdElemInit(LogInputCalc,			&g_Peref.BtnClose),	//	3
-    PrdElemInit(LogInputCalc,			&g_Peref.BtnStop1),	//	4
-    PrdElemInit(LogInputCalc,			&g_Peref.BtnStop2),	//	5
-    PrdElemInit(LogInputCalc,			&g_Peref.BtnOpen),	//	6
-    PrdElemInit(LogInputCalc,			&g_Peref.BtnProg1),	//	5
-    PrdElemInit(LogInputCalc,			&g_Peref.BtnProg2),	//	6
+    PrdElemInit(LogInputCalc,			        &g_Peref.BtnClose),	//	3
+    PrdElemInit(LogInputCalc,			        &g_Peref.BtnStop1),	//	4
+    PrdElemInit(LogInputCalc,			        &g_Peref.BtnStop2),	//	5
+    PrdElemInit(LogInputCalc,			        &g_Peref.BtnOpen),	//	6
+    PrdElemInit(LogInputCalc,			        &g_Peref.BtnProg1),	//	5
+    PrdElemInit(LogInputCalc,			        &g_Peref.BtnProg2),	//	6
     PrdElemInit(Core_CalibControl, 				&g_Core),
     PrdElemInit(Core_CalibStop, 				&g_Core),
-    PrdElemInit(core50HZupdate,			NULL),	//	20
+    PrdElemInit(core50HZupdate,			        NULL),	//	20
     PrdElemInit(Comm_50HzCalc,					&g_Comm),
     PrdElemInit(Comm_CommandUpdate,				&g_Comm),
     PrdElemInit(Core_ControlMode, 				&g_Core),
     PrdElemInit(Core_ValveDriveUpdate, 			&g_Core.VlvDrvCtrl),
+    PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.NoMove),
         PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.overVoltageR),
 	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.overVoltageS),
 	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.overVoltageT),
@@ -100,7 +102,7 @@ TPeriodicalFunction Task50Hz[] =        //не более  80-ти задач
 	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.underCold),
 	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.driveTemper),
 	PrdElemInit(Core_ProtectionsAlarmUpdate,	&g_Core.Protections.moduleTemper),
-
+    PrdElemInit(Core_TorqueCalc, 				&g_Core.TorqObs),
     PrdElemInit(peref_50HzCalc,                 &g_Peref)
 };
 

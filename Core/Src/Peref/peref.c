@@ -320,7 +320,9 @@ void peref_Init(void)
     peref_ApFilter1Init(&g_Peref.IWfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
     
     peref_ApFilter1Init(&g_Peref.VDCfltr, PRD_18KHZ, g_Ram.FactoryParam.RmsTf);
-    
+    peref_ApFilter3Init(&g_Peref.Imfltr,  PRD_50HZ, g_Ram.FactoryParam.RmsTf);
+      peref_ApFilter1Init(&g_Peref.Umfltr,  PRD_50HZ, g_Ram.FactoryParam.RmsTf);
+      
     Peref_SensObserverInit(&g_Peref.sensObserver); // Инициализируем обработку синусойды
 
     memset(&g_Peref.sinObserver, 0, sizeof(TSinObserver));
@@ -581,8 +583,20 @@ void peref_50HzCalc(TPeref *p)
    // TU------------------------------------------------------------------------
   //  MCP23S17_update(p);
      
-
-
+   if (p->Mcu220380 == 1) //220
+  {
+    g_Ram.HideParam.Umid  = (Uns)p->sinObserver.UR.Output;  
+  }
+  else  //380
+  {
+    p->Umfltr.Input = (p->sinObserver.UR.Output + p->sinObserver.US.Output + p->sinObserver.UT.Output)/3;
+    peref_ApFilter1Calc(&p->Umfltr);
+    g_Ram.HideParam.Umid = (Uns)(p->Umfltr.Output);
+  }
+    
+    p->Imfltr.Input = ((p->Ia.Output + p->Ib.Output + p->Ic.Output)/3.0);
+    peref_ApFilter3Calc(&p->Imfltr);
+   
 }
 
 void peref_10HzCalc(TPeref *p)//
@@ -687,6 +701,7 @@ void peref_10HzCalc(TPeref *p)//
     g_Ram.Status.Ur  = p->sinObserver.UR.Output;
     g_Ram.Status.Us  = 1;
     g_Ram.Status.Ut  = 1;
+    
   }
   else  //380
   {

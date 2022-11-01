@@ -4,11 +4,23 @@
 #include "peref.h"
 
 Uns U,V,W;
+Uns State = 0;
 
 void Core_ProtectionsInit(TCoreProtections *p)
 {
     p->FaultDelay = (Uns) (PRD_50HZ * 3);
       
+    
+    	//---------Нет Движенния-----------------------------------------------
+
+	p->NoMove.Cfg.all = PRT_CFG_SET(CAN_BE_MUFTA, INP_LESS_LEVEL, NoMove_bit, HYST_OFF);
+	p->NoMove.Input = (Int *) &g_Ram.Status.Position;
+	p->NoMove.Output =  &p->NoMoveFlag;
+	p->NoMove.EnableLevel = (Int *) &g_Ram.FactoryParam.MuffZone;
+	p->NoMove.DisableLevel = (Int *) &g_Ram.FactoryParam.MuffZone;
+	p->NoMove.Timeout = &g_Ram.UserParam.NoMoveTime;
+	p->NoMove.Scale = PROTECT_SCALE;
+	p->NoMove.Signal = 0;
         //---------Защиты по напряжению---------------------------------------
 	//---------просадка напряжения---------------------------------------
 
@@ -191,18 +203,19 @@ void Core_ProtectionsInit(TCoreProtections *p)
 
 void Core_ProtectionsEnable(TCoreProtections *p)
 {
-	static Byte State = 0;
+
 	Bool Enable;
 
 	if (p->FaultDelay > 0)
 		return;
-
-	switch (++State)
+        State++;
+        
+	switch (State)
 	{
-	case 1:  //Muffta
-		
+            case 1:  //Muffta
+		p->NoMove.Cfg.bit.Enable = ((g_Core.MotorControl.WorkMode & wmMove) != 0);
 		break;
-	case 2:  // Защиты по наряжению
+            case 2:  // Защиты по наряжению
 		Enable = (g_Ram.FactoryParam.Uv != pmOff) && (!p->outFaults.Net.bit.BvR)&& (!p->outFaults.Net.bit.BvS)&& (!p->outFaults.Net.bit.BvT);						// Понижеие напряжения
 		p->underVoltageR.Cfg.bit.Enable = Enable;
 		p->underVoltageS.Cfg.bit.Enable = Enable & !g_Ram.FactoryParam.MCU220380;
@@ -218,7 +231,7 @@ void Core_ProtectionsEnable(TCoreProtections *p)
 		p->breakVoltS.Cfg.bit.Enable = Enable & !g_Ram.FactoryParam.MCU220380;
 		p->breakVoltT.Cfg.bit.Enable = Enable & !g_Ram.FactoryParam.MCU220380;
 		break;
-	case 3:  // Защиты по току
+            case 3:  // Защиты по току
 		Enable = (g_Ram.FactoryParam.Phl != pmOff) && (!g_Core.Status.bit.Stop);					// Обрыв выходных фаз (двиг.)
 		p->breakCurrU.Cfg.bit.Enable = Enable;
 		p->breakCurrV.Cfg.bit.Enable = Enable;
@@ -231,7 +244,7 @@ void Core_ProtectionsEnable(TCoreProtections *p)
 		p->ShC_W.Cfg.bit.Enable = Enable;
 
 		break;
-	case 4:  // Защиты устройства
+            case 4:  // Защиты устройства
 		Enable = g_Ram.FactoryParam.overHeat != pmOff;
 		p->overHeat.Cfg.bit.Enable = Enable;
                 
@@ -243,6 +256,8 @@ void Core_ProtectionsEnable(TCoreProtections *p)
                              
                 Enable = g_Ram.FactoryParam.moduleTemper != pmOff;
 		p->moduleTemper.Cfg.bit.Enable = Enable;
+                
+                State = 0;	// вернулись к истокам
 		break;
 	}
 }
@@ -259,6 +274,7 @@ void Core_ProtectionsClear(TCoreProtections *p)
 	p->outFaults.Load.all = 0;
 	p->outFaults.Proc.all = 0;
         p->Dac_No_Conn_Tmp = 0;
+        p->NoMoveFlag = 0;
 }
 
 void Core_Protections50HZUpdate(TCoreProtections *p)
@@ -286,8 +302,6 @@ void Core_Protections18kHzUpdate(TCoreProtections *p)
         Core_ProtecionSHC_Update(&p->ShC_U);
 	Core_ProtecionSHC_Update(&p->ShC_V);
 	Core_ProtecionSHC_Update(&p->ShC_W);
-        
-        
 
         if (p->outFaults.Dev.all || p->outFaults.Load.all || p->outFaults.Net.all || p->outFaults.Proc.all)
 	{
@@ -300,6 +314,12 @@ void Core_Protections18kHzUpdate(TCoreProtections *p)
 	
 	if (!g_Core.Status.bit.Stop)
 	{
+          
+          	if (p->NoMoveFlag)
+		{
+			p->outFaults.Proc.bit.NoMove = p->NoMoveFlag;
+
+		}
 
 		if (g_Core.Status.bit.Fault)   	
 		{
