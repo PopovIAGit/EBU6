@@ -112,7 +112,7 @@ const struct MENU_PARAM params[] = {
 		"B25.BAUD RATE   ", "    ", 	0,      6,  	3, M_LIST|M_SADR(147),						//64
 		"B26.ADRESS      ", "    ", 	1,     32,  	1, M_EDIT|M_RMAX(1),						//65
 		"B27.COMM TYPE   ", "    ", 	0,      2,  	0, M_LIST|M_SADR(225),						//66
-		"B28.MUFF TIME   ", "S   ", 	3,    100,     20, M_EDIT|M_RMAX(2)|M_PREC(1),				        //67
+		"B28.MUFF TIME   ", "S   ", 	1,    100,     20, M_EDIT|M_RMAX(2)|M_PREC(1),				        //67
 		"B29.бпел пюгцнмю", "    ", 	0,    100,    100, M_EDIT|M_RMAX(2)|M_PREC(1),					//68
 		"B30.яйнп люйя   ", "цж  ", 	0,    500,    500, M_EDIT|M_RMAX(2)|M_PREC(1),					//69
 		"B31.бпел рнплнф ", "    ", 	0,    100,    100, M_EDIT|M_RMAX(2)|M_PREC(1),					//70
@@ -120,7 +120,7 @@ const struct MENU_PARAM params[] = {
 		"B33.NO MOVE TIME", "S   ", 	3,    100,     20, M_EDIT|M_RMAX(2)|M_PREC(1),				        //72
 		"B34.SEAL WAY    ", "OB  ", 	1,   1000,    100, M_EDIT|M_RMAX(3)|M_PREC(1),				        //73
 		"B35.рхо рнплнфем", "    ", 	0,      2,  	0, M_SHOW|M_RMAX(4),						//74 0 БШЙК 1 ОН МЮОПЪФ 2 ОН РНЙС
-		"B36.бпелъ рнпл  ", "    ", 	0,    100,  	0, M_SHOW|M_RMAX(4)|M_PREC(1),					//75
+		"B36.бпелъ рнпл  ", "    ", 	0,    100,  	0, M_EDIT|M_RMAX(4)|M_PREC(1),					//75
 		"B37.гюдюм онкнф ", "%   ", 	0,   1000,      0, MT_DEC|M_PWP1|M_RMAX(3)|M_PREC(1),					//76
 		" B38.йо пец     ", "    ", 	0,  65535,     30, M_EDIT|M_RMAX(4)|M_PREC(3),					//77
 		"B39.юбюп онкнф  ", "%   ", 	0,   1000,  	0, M_EDIT|M_RMAX(4),						//78

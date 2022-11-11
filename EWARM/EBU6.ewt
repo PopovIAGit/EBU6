@@ -1462,6 +1462,9 @@
                         <name>$PROJ_DIR$\..\Core\Src\Core\core_ProtectionSHC.c</name>
                     </file>
                     <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Core\core_TorqueObserver.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\Core\Src\Core\core_VlvDrvCtrl.c</name>
                     </file>
                     <file>

@@ -57,6 +57,7 @@ TPeriodicalFunction Task200Hz[] =       	//не более  20-ти задач
      PrdElemInit(DISPL_Update,                   &g_Peref.Display),
      PrdElemInit(core200HZupdate,			NULL),	//	20
      PrdElemInit(Peref_CalibUpdate, 						&g_Peref.Position),
+     PrdElemInit(Protections_MuffFlag,						NULL),
      PrdElemInit(peref_200HzCalc,                &g_Peref)
 };
 

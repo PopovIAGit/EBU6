@@ -142,6 +142,7 @@ typedef struct _TDmControl {
 	Uns 		CalibStop;				// Остановка по калибровке
 	Uns		accelTimer;				// Таймер разгона. Пока он считает, муфта не работает
         Int             RequestPos;
+       
 } TDmControl;
 
 

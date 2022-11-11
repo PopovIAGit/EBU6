@@ -2,7 +2,7 @@
 #include "g_Core.h"
 #include "stat_fm25v10.h"
 
-
+#define CTRLMODE_SCALE			(0.100 * PRD_50HZ)
 TFM25V10 Eeprom1;
 TCore	g_Core;
 
@@ -137,12 +137,8 @@ void SpeedEstemation(TCore *v)
 	v->se.PsiQrS    = v->fe.PsiQrS;
 	v->se.ThetaFlux = v->fe.ThetaFlux;
  	aci_se_calc(&v->se);
-	
-
-	
 	//v->Status.EstSpeed = v->se.WrHat;
-        
-        
+      
 }
 
 
@@ -370,14 +366,14 @@ void StopPowerControl(void)
         
         
         if (g_Core.Status.bit.Fault){
-            g_Core.MotorControl.WorkMode = wmStop ;
-            TimeSpeedStop = g_Ram.UserParam.TimeSpeedStop;
+            g_Core.MotorControl.WorkMode = wmStop;
+            TimeSpeedStop = g_Ram.UserParam.TimeSpeedStop * (Uns)CTRLMODE_SCALE;
         }
         else  
         {
           if (SpeedRef != 0){
               g_Core.MotorControl.WorkMode = wmDynBreak; 
-              TimeSpeedStop = 1;
+              TimeSpeedStop = g_Ram.UserParam.TimeSpeedStop * (Uns)CTRLMODE_SCALE;
           }else g_Core.MotorControl.WorkMode = wmStop;
         }
         g_Core.VlvDrvCtrl.StartDelay    = (Uns)START_DELAY_TIME;
@@ -432,7 +428,7 @@ void Core_ControlMode(TCore *p) // 50 Гц
 static void StopMode(void)
 {
 	// что то делаем в стопе
-    /* if (g_Ram.UserParam.MuDuSetup != mdDac)
+/*     if (g_Ram.UserParam.MuDuSetup != mdDac || g_Ram.UserParam.DuSource == 0)
       {
           if (SpeedEnable == 2 && SpeedRef != 0)
           { 
@@ -447,7 +443,7 @@ static void StopMode(void)
      else 
      {*/
       
-  
+           g_Ram.Status.Torque 			= 0;	
            SpeedEnable = 0;
            SpeedMax = 0;
            SpeedRef = 0.0;
@@ -455,53 +451,6 @@ static void StopMode(void)
           // g_Core.VlvDrvCtrl.StartDelay = (Uns)START_DELAY_TIME;
      
   
-}
-
-static void StartMode(void)
-{
-      // что то делаем при старте
-    g_Core.MotorControl.WorkMode = wmMove;
-
-     /*     if (SpeedEnable == 1 && SpeedRef < fabs(SpeedMax))
-          {
-            SpeedRef = AngleInterp(speedstart, SpeedMax, g_Ram.UserParam.TimeSpeedStart);
-          }
-          else if (SpeedEnable == 1 && SpeedRef > (fabs(SpeedMax))-0.1)
-          {
-              g_Core.MotorControl.WorkMode = wmMove;
-          }*/
-
-}
-
-double tmpdata = 0;
-double tmpdata2 = 0;
-static void MoveMode(void)
-{
-  if (g_Ram.UserParam.RegEnable == 0)
-  {
-      if (g_Ram.Status.Status.bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac)
-      {
-        tmpdata   = p_Controller(g_Ram.UserParam.SetPosition, g_Ram.Status.PositionPr);
-        tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
-        SpeedRef = tmpdata2 * tmpdata;
-      }
-      else if (g_Ram.Status.Status.bit.MuDu == 1 || (g_Ram.Status.Status.bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDigital))
-      {
-          tmpdata   = p_Controller(g_Core.MotorControl.RequestPos, g_Ram.Status.PositionPr);
-          tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
-          SpeedRef = tmpdata2 * tmpdata;
-      }
-  }
-  else 
-  {
-    
-        tmpdata   = p_Controller(g_Ram.UserParam.SetPosition, g_Ram.Status.PositionPr);
-        tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
-        SpeedRef = tmpdata2 * tmpdata;
-    
-  }
-  
-    g_Ram.Status.Torque = g_Core.TorqObs.Indication;
 }
 
 static void DynBreakMode(void)
@@ -555,6 +504,54 @@ static void DynBreakMode(void)
           }
   
 }
+
+static void StartMode(void)
+{
+      // что то делаем при старте
+   // g_Core.MotorControl.WorkMode = wmMove;
+
+          if (SpeedEnable == 1 && SpeedRef < fabs(SpeedMax))
+          {
+            SpeedRef = AngleInterp(speedstart, SpeedMax, g_Ram.UserParam.TimeSpeedStart);
+          }
+          else if (SpeedEnable == 1 && SpeedRef > (fabs(SpeedMax))-0.1)
+          {
+              g_Core.MotorControl.WorkMode = wmMove;
+          }
+
+}
+
+double tmpdata = 0;
+double tmpdata2 = 0;
+static void MoveMode(void)
+{
+  if (g_Ram.UserParam.RegEnable == 0)
+  {
+      if (g_Ram.Status.Status.bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDac)
+      {
+        tmpdata   = p_Controller(g_Ram.UserParam.SetPosition, g_Ram.Status.PositionPr);
+        tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
+        SpeedRef = tmpdata2 * tmpdata;
+      }
+      else if (g_Ram.Status.Status.bit.MuDu == 1 || (g_Ram.Status.Status.bit.MuDu == 0 && g_Ram.UserParam.DuSource == mdsDigital))
+      {
+          tmpdata   = p_Controller(g_Core.MotorControl.RequestPos, g_Ram.Status.PositionPr);
+          tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
+          SpeedRef = tmpdata2 * tmpdata;
+      }
+  }
+  else 
+  {
+    
+        tmpdata   = p_Controller(g_Ram.UserParam.SetPosition, g_Ram.Status.PositionPr);
+        tmpdata2 = g_Core.MotorControl.RequestDir * -1.0;
+        SpeedRef = tmpdata2 * tmpdata;
+    
+  }
+  
+    g_Ram.Status.Torque = g_Core.TorqObs.Indication;
+}
+
 //-------------------------------------------------------------------------------
 
 void svgendq3ph_calc(SVGENDQ_3PH *v)
@@ -1101,12 +1098,13 @@ void Coast_stop_calc(TInvControl *v)
 		else v->Status.WorkMode = iwmReady;
 }
 */
-
-Int drive1[72] = {1,38,55,75,95,100,1,38,55,75,95,100,1,38,55,75,95,100,1,38,55,75,95,100};
-	Int InomDef[1]  	     = {63};		// default значения для Inom для разных приводов
-	Int MomMaxDef[1]  	     = {500};	//				для Mmax
-	Int TransCurrDef[1] 	 = {0};				//				для TransCur править
-	Int GearRatioDef[1] 	 = {600};		//для передаточного числа редуктора
+#define NUM_OF_DRIVE 2
+Int drive1[72] = {1,12,17,20,25,28,32,37,41,44,1,12,17,20,25,28,32,37,41,44,1,12,17,20,25,28,32,37,41,44,1,12,17,20,25,28,32,37,41,44};
+Int drive2[72] = {1,12,17,20,25,28,32,37,41,44,1,12,17,20,25,28,32,37,41,44,1,12,17,20,25,28,32,37,41,44,1,12,17,20,25,28,32,37,41,44};	
+int InomDef[NUM_OF_DRIVE]  	 = {63, 114};		// default значения для Inom для разных приводов
+Int MomMaxDef[NUM_OF_DRIVE]  	 = {600, 1200};	//				для Mmax
+Int TransCurrDef[NUM_OF_DRIVE] 	 = {0, 0};				//				для TransCur править
+Int GearRatioDef[NUM_OF_DRIVE] 	 = {600, 600};		//для передаточного числа редуктора
 
 
 
@@ -1118,13 +1116,18 @@ void Core_Drive_Update(void)
 		switch(g_Ram.FactoryParam.DriveType)
 		{
 			case 1:
-				PFUNC_blkRead(&drive1,  	(Int *)(&g_Ram.HideParam.TqCurr),               24);
+				PFUNC_blkRead(&drive1,  	(Int *)(&g_Ram.HideParam.TqCurr),               40);
 			 	PFUNC_blkRead(&TransCurrDef[0], (Int *)(&g_Ram.HideParam.TransCurr),		  1);
+				break;
+                                
+                        			case 2:
+				PFUNC_blkRead(&drive2,  	(Int *)(&g_Ram.HideParam.TqCurr),               40);
+			 	PFUNC_blkRead(&TransCurrDef[1], (Int *)(&g_Ram.HideParam.TransCurr),		  1);
 				break;
 			
 		}
                 
-                if ((g_Ram.FactoryParam.DriveType < 2)&&(g_Ram.FactoryParam.DriveType != 0))
+                if ((g_Ram.FactoryParam.DriveType < NUM_OF_DRIVE+1)&&(g_Ram.FactoryParam.DriveType != 0))
 		{
 			if ((g_Ram.FactoryParam.GearRatio != GearRatioDef[g_Ram.FactoryParam.DriveType - 1])
 					|| (g_Ram.FactoryParam.Inom!= InomDef[g_Ram.FactoryParam.DriveType - 1])
@@ -1135,7 +1138,7 @@ void Core_Drive_Update(void)
 					g_Ram.FactoryParam.GearRatio = GearRatioDef[g_Ram.FactoryParam.DriveType - 1];
 					g_Ram.FactoryParam.Inom = InomDef[g_Ram.FactoryParam.DriveType - 1];
 					g_Ram.FactoryParam.MaxTorque = MomMaxDef[g_Ram.FactoryParam.DriveType - 1];
-					//Core_ProtectionI2TInit(&g_Core.Protections.I2t);
+					
 				}
 			}
 		}
@@ -1144,7 +1147,7 @@ void Core_Drive_Update(void)
 
 void Drive_ReWrite_Update(void)
 	{
-		if ((g_Ram.FactoryParam.DriveType < 30)&&(g_Ram.FactoryParam.DriveType != 0))
+		if ((g_Ram.FactoryParam.DriveType < NUM_OF_DRIVE+1)&&(g_Ram.FactoryParam.DriveType != 0))
 		{
 			if ((g_Ram.FactoryParam.GearRatio != GearRatioDef[g_Ram.FactoryParam.DriveType - 1])
 					|| (g_Ram.FactoryParam.Inom!= InomDef[g_Ram.FactoryParam.DriveType - 1])

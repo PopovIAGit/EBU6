@@ -99,6 +99,7 @@ typedef struct {
 		Uns				FaultDelay;			// Пауза после инициализации для включения защит
                 Uns                             Dac_No_Conn_Tmp;
                 Uns					NoMoveFlag;
+                  Uns 				MuffFlag200Hz;		// Р¤Р»Р°Рі РјСѓС„С‚С‹ РѕРїСЂРµРґРµР»РµСЏРµРјС‹Р№ РЅР° 200 Р“С†
 }TCoreProtections;
 
 void Core_ProtectionsInit(TCoreProtections *);			// Инициализация модуля защит
@@ -107,6 +108,6 @@ void Core_Protections50HZUpdate(TCoreProtections *);	        // Реакция системы 
 void Core_ProtectionsReset(TCoreProtections *);			// Сброс защит при повторном пуске
 void Core_ProtectionsClear(TCoreProtections *);			// Сброс всех защит
 void Core_ProtectionsEnable(TCoreProtections *);		// Включение/Выключение защит
-
+void Protections_MuffFlag(void);
 
 #endif

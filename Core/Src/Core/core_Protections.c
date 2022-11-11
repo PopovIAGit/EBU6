@@ -275,6 +275,7 @@ void Core_ProtectionsClear(TCoreProtections *p)
 	p->outFaults.Proc.all = 0;
         p->Dac_No_Conn_Tmp = 0;
         p->NoMoveFlag = 0;
+        p->MuffFlag200Hz = 0;
 }
 
 void Core_Protections50HZUpdate(TCoreProtections *p)
@@ -286,6 +287,7 @@ void Core_Protections50HZUpdate(TCoreProtections *p)
 	}
         
         p->outFaults.Proc.bit.Overway = g_Core.MotorControl.OverWayFlag;
+        p->outFaults.Dev.bit.ModuleFault = !g_Peref.ModFault;
 }
 
 void Core_Protections18kHzUpdate(TCoreProtections *p)
@@ -298,6 +300,8 @@ void Core_Protections18kHzUpdate(TCoreProtections *p)
         U = g_Peref.adcData3[1];
         V = g_Peref.adcData3[2];
         W = g_Peref.adcData3[3];
+        
+        p->outFaults.Proc.bit.Mufta = p->MuffFlag200Hz;
         
         Core_ProtecionSHC_Update(&p->ShC_U);
 	Core_ProtecionSHC_Update(&p->ShC_V);
@@ -328,4 +332,39 @@ void Core_Protections18kHzUpdate(TCoreProtections *p)
 		}
 	}
 
+}
+
+void Protections_MuffFlag(void)
+{
+	if(g_Core.Status.bit.Stop)				// Выключаем защиту от муфты в стопе
+	{
+		g_Core.MotorControl.MufTimer = 0;
+		g_Core.MotorControl.accelTimer = 0;
+		return; 
+	}
+
+	if (g_Core.MotorControl.accelTimer < g_Ram.UserParam.TimeSpeedStart*20) // 20 for 0.1
+	{
+		g_Core.MotorControl.accelTimer++;
+		
+	}
+	else
+	{
+		if(g_Ram.Status.Torque > g_Core.MotorControl.TorqueSet)
+		{
+			if(g_Core.MotorControl.MufTimer < (80 * g_Ram.UserParam.MuffTimer))
+			{
+				g_Core.MotorControl.MufTimer += 4;
+			}
+
+			if(g_Core.MotorControl.MufTimer >= (80 * g_Ram.UserParam.MuffTimer))
+			{
+				g_Core.Protections.MuffFlag200Hz = 1;	//  1 выставляем муфту
+			}
+		}
+		else
+		{
+			if(g_Core.MotorControl.MufTimer) g_Core.MotorControl.MufTimer--;
+		}
+	}
 }
