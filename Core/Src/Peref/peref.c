@@ -126,15 +126,15 @@ TDotTemper dotsTemper[8] = {	-40,   465,		//  525		0
                         120,   854};	       //  2535	7
 
 
-// Точки 		  темпер.  АЦП.        сопр.    №
-TDotTemper dotsTemperModule[8] = {	-40,   465,		//  525		0
-                                          0,     585,		//  577		1
-                                          25,    642,		//  1379	2
-                                          50,    687,		//  1569	3
-                                          80,    731,		//  1670	4
-                                          100,   773,		//  1993	5
-                                          110,   834,		//  2471	6
-                                          120,   854};	       //  2535	7
+// Точки 		                 темпер.  АЦП.              сопр.       №
+TDotTemper dotsTemperModule[8] = {	  25,    45477,		//  		0
+                                          35,    34000,		//  		1
+                                          50,    22837,		//  	2
+                                          60,    19000,		//  	3
+                                          70,    16880,		//  	4
+                                          85,    9000,		//  	5
+                                          100,   4964,		//  	6
+                                          125,   2383};	        //  	7
 
 
 char Icons[NUM_ICONS][7] =	{
@@ -346,7 +346,7 @@ void peref_Init(void)
 
       peref_ApFilter1Init(&g_Peref.TEMPERfltr, PRD_10HZ, g_Ram.FactoryParam.RmsTf); 
       TempObserverInit(&g_Peref.temperDrive);
-      TempObserverInit(&g_Peref.temperModule);  
+      TempModuleObserverInit(&g_Peref.temperModule);  
       
         
           g_Peref.DAC_on_off = 0x02; 
@@ -398,6 +398,8 @@ void peref_ProctoDACObserverInit(TPeref *p)
 
 void peref_18KHzCalc(TPeref *p)//
 {
+       //
+     p->ModFault = HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
    //RST UVW
   
     Peref_SensObserverUpdate(&p->sensObserver);
@@ -601,7 +603,6 @@ void peref_50HzCalc(TPeref *p)
 
 void peref_10HzCalc(TPeref *p)//
 {  
-   
    if (g_Core.Protections.FaultDelay > 0) return; 
      
    SPIReinit();
@@ -614,7 +615,7 @@ void peref_10HzCalc(TPeref *p)//
     
    // температура модуля ---------------------------------------------------------------------   
    p->temperModule.inputR =  (float)p->adcData1[5];    
-   TempObserverUpdate(&p->temperModule);
+   TempModuleObserverUpdate(&p->temperModule);
    g_Ram.Status.ModuleTempers = p->temperModule.outputT;  
   // LED control--------------------------------------------------------------------------
   if (g_Ram.TestParam.Mode == 1)
@@ -681,8 +682,7 @@ void peref_10HzCalc(TPeref *p)//
        
      // volt on control
      p->VoltOn = HAL_GPIO_ReadPin(VOLT_ON_GPIO_Port, VOLT_ON_Pin);
-     //
-     p->ModFault = HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
+
      
      p->Modul_Off = 1;
      HAL_GPIO_WritePin(Module_OFF_GPIO_Port, Module_OFF_Pin, p->Modul_Off);
@@ -1051,6 +1051,20 @@ void TempObserverInit(TTempObserver *p)
 	
 }
 
+void TempModuleObserverInit(TTempObserver *p)
+{
+	int i = 0;
+	
+          for (i = 0; i<8; i++)
+          {
+            p->dots[i] = dotsTemperModule[i]; 
+          }
+           p->maxResist = 50000;  // число максимума 
+           
+	
+	
+}
+
 //--------------------------------------------------------
 void TempObserverUpdate(TTempObserver *p)
 {
@@ -1097,5 +1111,47 @@ void TempObserverUpdate(TTempObserver *p)
 		p->outputT = LinearInterpolation(p->dots[i].adc, p->dots[i].temper ,p->dots[i+1].adc ,p->dots[i+1].temper, p->inputR);
 }
 
+void TempModuleObserverUpdate (TTempObserver *p)
+{
+	static Int i=0;
 
+	// Значение АЦП меньше минимально-допустимого или больше минимально-допустимого
+	if (p->inputR <= p->dots[7].adc)
+	{
+		p->fault = false;
+		p->outputT = 999;
+		return;
+	}
+	else if (p->inputR >= p->maxResist )
+	{
+		p->fault = true;					// это значит обрыв датчика температуры или его сбой
+		p->outputT = -999;
+		return;		
+	}
+	else 									// Значение АЦП в пределах
+		p->fault = false;					// - нет аварии 
 
+	// Определяем, между какими значениями dots находится R_входное
+	//while (! ((p->inputR >= p->dots[i].resist)&&(p->inputR < p->dots[i+1].resist)) )	// Для сопротивления (прямая зависимость)
+	while (! ((p->inputR >= p->dots[i].adc)&&(p->inputR < p->dots[i+1].adc)) )	// Для АЦП (обратная зависимость)
+	{
+		if (p->inputR > p->dots[i].adc)
+		{
+			i++;	// Движемся по характеристике вверх и вниз
+		//	if(i > 7) i = 7;
+		}
+		else
+		{
+			i--;
+		//	if(i < -1) i = -1;
+		}							// пока не окажемся между двумя точками
+	}
+	
+	if (i > 8) i = 8;
+	else if (i < 0) i = 0;
+
+	if (p->inputR == p->dots[i].adc)			// Если четко попали на точку
+		p->outputT = p->dots[i].temper;		// берем значение температуры этой точки
+	else// Линейная интерполяция			   в противном случае интерполируем
+		p->outputT = LinearInterpolation(p->dots[i].adc, p->dots[i].temper ,p->dots[i+1].adc ,p->dots[i+1].temper, p->inputR);
+}

@@ -293,7 +293,7 @@ void core18kHZupdate(void)
 {
   g_Core.Mash3 = fabs(g_Core.rg1.Freq * 50.0);
     // not work
-    //  g_Core.Protections.outFaults.Dev.bit.ModuleFault = HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
+      g_Core.Protections.outFaults.Dev.bit.ModuleFault = !g_Peref.ModFault; //HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
     //--------------------------------------------------------------------------
 
    if (/*!g_Core.Status.bit.Fault && */SpeedRef)

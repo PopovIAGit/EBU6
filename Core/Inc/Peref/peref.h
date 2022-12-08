@@ -293,7 +293,8 @@ void peref_ADCDACtoPRCObserverUpdate(TLineObserver *);
 //прототипы функций
 void TempObserverInit(TTempObserver *);
 void TempObserverUpdate (TTempObserver *);
-
+void TempModuleObserverInit(TTempObserver *);
+void TempModuleObserverUpdate (TTempObserver *);
 // Работа с Eeprom
 void memTest(void);
 
