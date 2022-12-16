@@ -13,7 +13,7 @@
     </Stack>
     <PlDriver>
         <FirstRun>0</FirstRun>
-        <MemConfigValue>D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\arm\CONFIG\debugger\ST\STM32H743IG.ddf</MemConfigValue>
+        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ST\STM32H743IG.ddf</MemConfigValue>
     </PlDriver>
     <ArmDriver>
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>

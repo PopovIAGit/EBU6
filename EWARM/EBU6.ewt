@@ -1522,6 +1522,21 @@
                         <name>$PROJ_DIR$\..\Core\Src\Stat\stat_fm25v10.c</name>
                     </file>
                 </group>
+                <group>
+                    <name>Vector</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Vector\pid_regulator.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Vector\speed_torq_ctrl.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Vector\sto_pll_speed_pos_fdbk.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Src\Vector\vector.c</name>
+                    </file>
+                </group>
                 <file>
                     <name>$PROJ_DIR$\..\Core\Src\add_ValueConv.c</name>
                 </file>
@@ -1646,6 +1661,33 @@
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\Core\Inc\Stat\stat_fm25v10.h</name>
+                    </file>
+                </group>
+                <group>
+                    <name>Vector</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Vector\mc_math.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Vector\mc_type.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Vector\pid_regulator.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Vector\speed_pos_fdbk.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Vector\speed_torq_ctrl.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Vector\sto_pll_speed_pos_fdbk.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Vector\sto_speed_pos_fdbk.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\Core\Inc\Vector\vector.h</name>
                     </file>
                 </group>
                 <file>

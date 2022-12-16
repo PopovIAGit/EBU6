@@ -42,9 +42,11 @@ void Core_Init(TCore *p)
 {	
   p->DisplayTimer = 1 * PRD_10HZ;
   p->Status.bit.Stop = 1;  
-  FM25V10_Init(&Eeprom1);   
-  Core_MenuInit(&menu);
+  FM25V10_Init(&Eeprom1);                       //
+  Core_MenuInit(&menu);                         //
   Core_ProtectionsInit(&p->Protections);	// Защиты
+ 
+#if !IS_VECTOR
    g_Core.rg1.Gain                 = 1.0;
    g_Core.rg1.Offset               = 0.0;
    
@@ -79,37 +81,9 @@ void Core_Init(TCore *p)
    g_Core.pidData.MIN_OUT = 0.1;
         
    Core_TorqueInit(&p->TorqObs);			// Расчет моментов
+#else
 
-   
-   /*  	g_Core.fe.Kp                 = (0.75);
-	g_Core.fe.Kir                = (5.994);
-        g_Core.fe.Ki                 = (10.0) * PwmDeltat;
-       
-         
-           aci_base.fb = 50.0;
-   aci_base.ib = 6.0;
-     aci_base.lb = 1;
-       aci_base.tb = 1;
-         aci_base.ts = 0.1;
-           aci_base.ub = 220;
-             aci_base.wb = 157.07;
-       
-         aci_ad.b = 1;
-           aci_ad.cosf = 0.8;
-             aci_ad.j = 1;
-               aci_ad.lm = 1;
-                 aci_ad.lr = 1;
-                   aci_ad.ls = 1;
-                     aci_ad.rr = 1;
-                       aci_ad.rs = 1;
-                         aci_ad.zp = 4;
-           
-        g_Core.se.fc = 1.0;     
-        aci_fe_init(&g_Core.fe);
-          
-        aci_se_init(&g_Core.se);
-        
-        g_Core.volt.OutOfPhase       = 1;*/
+#endif
 }
 float vdcMash = 1.0;
 void SpeedEstemation(TCore *v)
@@ -291,9 +265,9 @@ void Core_DefineCtrlParams(TCore *p) // 50 hz
 
 void core18kHZupdate(void)
 {
-  g_Core.Mash3 = fabs(g_Core.rg1.Freq * 50.0);
-    // not work
-      g_Core.Protections.outFaults.Dev.bit.ModuleFault = !g_Peref.ModFault; //HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
+#if IS_VECTOR
+    g_Core.Mash3 = fabs(g_Core.rg1.Freq * 50.0);
+    g_Core.Protections.outFaults.Dev.bit.ModuleFault = !g_Peref.ModFault; //HAL_GPIO_ReadPin(Module_Foult_GPIO_Port, Module_Foult_Pin);
     //--------------------------------------------------------------------------
 
    if (/*!g_Core.Status.bit.Fault && */SpeedRef)
@@ -342,6 +316,10 @@ void core18kHZupdate(void)
      {
      // 
      }
+   
+#else 
+   
+#endif
                 
 }
 

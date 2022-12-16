@@ -169,16 +169,20 @@ ToDo list
      memset(&g_Peref,	0, sizeof(TPeref));
      memset(&g_Stat,	0, sizeof(TStat));
      
+#if IS_VECTOR
+     memset(&g_Vector,	0, sizeof(TVector));
+#endif    
        HAL_ADC_Start_DMA(&hadc1, (uint32_t*) g_Peref.adcData1, ADC_CHANNELS_NUM_1);    
        HAL_ADC_Start_DMA(&hadc3, (uint32_t*) g_Peref.adcData3, ADC_CHANNELS_NUM_2);     
            
       Core_Init(&g_Core);
       g_Ram_Init(&g_Ram);
       Comm_Init(&g_Comm);
+      Vector_Init(&g_Vector);
       peref_Init();
       Stat_Init(&g_Stat);
       SerialCommInit();
-    SerialCommRefresh();
+      SerialCommRefresh();
       HAL_TIM_Base_Start(&htim1);
 
      
@@ -822,7 +826,7 @@ static void MX_TIM1_Init(void)
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
   sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = 50;
+  sBreakDeadTimeConfig.DeadTime = 50; 
   sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
   sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
   sBreakDeadTimeConfig.BreakFilter = 0;

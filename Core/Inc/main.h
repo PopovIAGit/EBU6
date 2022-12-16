@@ -39,6 +39,7 @@ extern "C" {
 #include "g_Ram.h"
 #include "g_Core.h"
 #include "stat.h"
+#include "vector.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

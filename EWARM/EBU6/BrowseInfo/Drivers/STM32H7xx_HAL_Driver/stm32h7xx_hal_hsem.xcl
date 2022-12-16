@@ -1,61 +1,65 @@
-"D:\WorkOther\EBU6\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_hsem.c"
+"E:\WorkOther\EBU6\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_hsem.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -funsigned-char
 -MD
 -MF
-D:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_hsem.pbi.dep
+E:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_hsem.pbi.dep
 -o
-D:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_hsem.pbi
+E:\WorkOther\EBU6\EWARM\EBU6\BrowseInfo\Drivers\STM32H7xx_HAL_Driver\stm32h7xx_hal_hsem.pbi
 -I
-D:\WorkOther\EBU6\Drivers\STM32H7xx_HAL_Driver\Src
+E:\WorkOther\EBU6\Drivers\STM32H7xx_HAL_Driver\Src
 -I
-D:\WorkOther\EBU6\EWARM/../Core/Inc
+E:\WorkOther\EBU6\EWARM/../Core/Inc
 -I
-D:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc
+E:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc
 -I
-D:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy
+E:\WorkOther\EBU6\EWARM/../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy
 -I
-D:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Device/ST/STM32H7xx/Include
+E:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Device/ST/STM32H7xx/Include
 -I
-D:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Include
+E:\WorkOther\EBU6\EWARM/../Drivers/CMSIS/Include
 -I
-D:\WorkOther\EBU6\EWARM\..\Core\Inc\Comm
+E:\WorkOther\EBU6\EWARM\..\Core\Inc\Comm
 -I
-D:\WorkOther\EBU6\EWARM\..\Core\Inc\Core
+E:\WorkOther\EBU6\EWARM\..\Core\Inc\Core
 -I
-D:\WorkOther\EBU6\EWARM\..\Core\Inc\Global
+E:\WorkOther\EBU6\EWARM\..\Core\Inc\Global
 -I
-D:\WorkOther\EBU6\EWARM\..\Core\Inc\Peref
+E:\WorkOther\EBU6\EWARM\..\Core\Inc\Peref
 -I
-D:\WorkOther\EBU6\EWARM\..\Core\Inc\Stat
+E:\WorkOther\EBU6\EWARM\..\Core\Inc\Stat
 -I
-D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\arm\inc\c\aarch32
+E:\WorkOther\EBU6\EWARM\..\Core\Inc\Vector
 -I
-D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\arm\inc
+C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\inc\c\aarch32
 -I
-D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\arm\inc\c
+C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\inc
 -I
-D:\WorkOther\EBU6\Core\Inc
+C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\inc\c
 -I
-D:\WorkOther\EBU6\Drivers\STM32H7xx_HAL_Driver\Inc
+E:\WorkOther\EBU6\Core\Inc
 -I
-D:\WorkOther\EBU6\Drivers\STM32H7xx_HAL_Driver\Inc\Legacy
+E:\WorkOther\EBU6\Drivers\STM32H7xx_HAL_Driver\Inc
 -I
-D:\WorkOther\EBU6\Drivers\CMSIS\Device\ST\STM32H7xx\Include
+E:\WorkOther\EBU6\Drivers\STM32H7xx_HAL_Driver\Inc\Legacy
 -I
-D:\WorkOther\EBU6\Drivers\CMSIS\Include
+E:\WorkOther\EBU6\Drivers\CMSIS\Device\ST\STM32H7xx\Include
 -I
-D:\WorkOther\EBU6\Core\Inc\Comm
+E:\WorkOther\EBU6\Drivers\CMSIS\Include
 -I
-D:\WorkOther\EBU6\Core\Inc\Core
+E:\WorkOther\EBU6\Core\Inc\Comm
 -I
-D:\WorkOther\EBU6\Core\Inc\Global
+E:\WorkOther\EBU6\Core\Inc\Core
 -I
-D:\WorkOther\EBU6\Core\Inc\Peref
+E:\WorkOther\EBU6\Core\Inc\Global
 -I
-D:\WorkOther\EBU6\Core\Inc\Stat
+E:\WorkOther\EBU6\Core\Inc\Peref
+-I
+E:\WorkOther\EBU6\Core\Inc\Stat
+-I
+E:\WorkOther\EBU6\Core\Inc\Vector
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
@@ -359,8 +363,8 @@ D:\WorkOther\EBU6\Core\Inc\Stat
 -D__EDG_INT128_EXTENSIONS_ALLOWED=0
 -DUSE_HAL_DRIVER=1
 -DSTM32H743xx=1
--D_DLIB_CONFIG_FILE_HEADER_NAME="D:\Distr\IAR Embedded Workbench for ARM v9.10.2 x64\arm\inc\c\DLib_Config_Normal.h"
--D_DLIB_CONFIG_FILE_STRING="D:\\Distr\\IAR Embedded Workbench for ARM v9.10.2 x64\\arm\\inc\\c\\DLib_Config_Normal.h"
+-D_DLIB_CONFIG_FILE_HEADER_NAME="C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\inc\c\DLib_Config_Normal.h"
+-D_DLIB_CONFIG_FILE_STRING="C:\\Program Files\\IAR Systems\\Embedded Workbench 9.0\\arm\\inc\\c\\DLib_Config_Normal.h"
 -D__VERSION__="IAR ANSI C/C++ Compiler V9.10.2.313/W64 for ARM"
 -D_VA_DEFINED=
 -D_VA_LIST=struct __va_list
